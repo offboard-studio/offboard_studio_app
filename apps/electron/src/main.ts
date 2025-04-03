@@ -66,9 +66,7 @@ export default class ElectronApp {
 
   setWindowTitle(window: BrowserWindow) {
     window.on('page-title-updated', (e) => e.preventDefault());
-    window.setTitle(
-      `Offboard Studio App - v${packageJson.version}`
-    );
+    window.setTitle(`Offboard Studio App - v${packageJson.version}`);
   }
 
   addWindowToWindowsMap(key: string, window: BrowserWindow) {
@@ -91,6 +89,10 @@ export default class ElectronApp {
       icon: getAssetPath('icon.png'),
       webPreferences: {
         preload: this.PRELOAD_SCRIPT,
+        contextIsolation: true,
+        // enableRemoteModule: false,
+        nodeIntegration: false,
+        // contentSecurityPolicy: "default-src 'self'; script-src 'self'",
       },
     });
 
