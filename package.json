@@ -3,24 +3,22 @@
   "productName": "Offboard Studio App",
   "version": "0.0.0",
   "description": "A foundation for scalable desktop apps",
-  "author": "offboard_studio",
+  "author": "renderer",
   "license": "MIT",
   "main": "./release/build/electron/main.js",
   "private": true,
   "scripts": {
-    "dev": "npx nx run-many -t serve -p  offboard_studio electron",
+    "dev": "npx nx run-many -t serve -p  renderer electron",
     "test:unit": "NODE_ENV=test npx nx run-many -t test -p renderer api components",
     "test:e2e": "E2E='true' npx nx e2e e2e --skipInstall",
     "lint:api": "npx nx lint api",
     "lint:electron": "npx nx lint electron",
     "lint:renderer": "npx nx lint renderer",
-    "lint:offboard_studio": "npx nx lint offboard_studio",
     "lint:components": "npx nx lint components",
     "lint:all": "npx nx run-many -t lint -p api electron renderer components",
     "build:electron": "npx nx build:prod electron --verbose",
     "build:renderer": "npx nx build renderer --prod",
-    "build:offboard_studio": "npx nx build offboard_studio --prod",
-    "build:app": "npm run clean-release-build && npm run build:offboard_studio && npm run build:electron ",
+    "build:app": "npm run clean-release-build && npm run build:renderer && npm run build:electron ",
     "package:electron-app:mac": "electron-builder build --mac --publish never",
     "package:electron-app:win": "npx electron-builder@22.14.13 --win --publish never",
     "clean-release-build": "rm -rf ./release/build ./release/out",
@@ -134,9 +132,9 @@
   },
   "build": {
     "extraResources": [
-      "release/build/offboard_studio/index.html",
-      "release/build/offboard_studio/assets",
-      "release/build/offboard_studio/assets/**/*"
+      "release/build/renderer/index.html",
+      "release/build/renderer/assets",
+      "release/build/renderer/assets/**/*"
     ],
     "files": [
       "release/build",
@@ -154,10 +152,10 @@
     "publish": {
       "provider": "github",
       "owner": "offboard-studio",
-      "repo": "offboard_studio"
+      "repo": "renderer"
     },
     "productName": "Offboard Studio",
-    "appId": "offboard_studio.app",
+    "appId": "renderer.app",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
     "afterSign": ".config/scripts/notarize.js",

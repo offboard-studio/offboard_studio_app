@@ -1,22 +1,22 @@
 {
-  "name": "offboard_studio-e2e",
+  "name": "renderer-e2e",
   "$schema": "../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
-  "sourceRoot": "offboard_studio-e2e/src",
+  "sourceRoot": "renderer-e2e/src",
   "targets": {
     "e2e": {
       "executor": "@nx/cypress:cypress",
       "options": {
-        "cypressConfig": "offboard_studio-e2e/cypress.config.ts",
+        "cypressConfig": "renderer-e2e/cypress.config.ts",
         "testingType": "e2e",
-        "devServerTarget": "offboard_studio:serve"
+        "devServerTarget": "renderer:serve"
       },
       "configurations": {
         "production": {
-          "devServerTarget": "offboard_studio:serve:production"
+          "devServerTarget": "renderer:serve:production"
         },
         "ci": {
-          "devServerTarget": "offboard_studio:serve-static"
+          "devServerTarget": "renderer:serve-static"
         }
       }
     },
@@ -24,10 +24,10 @@
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["offboard_studio-e2e/**/*.{js,ts}"]
+        "lintFilePatterns": ["renderer-e2e/**/*.{js,ts}"]
       }
     }
   },
-  "implicitDependencies": ["offboard_studio"],
+  "implicitDependencies": ["renderer"],
   "tags": []
 }

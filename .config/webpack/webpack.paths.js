@@ -6,7 +6,7 @@ const rootAppsPath = path.join(rootPath, 'apps');
 const dllPath = path.join(__dirname, './dll');
 
 const rootElectronPath = path.join(rootAppsPath, 'electron');
-const rootSrcPath = path.join(rootAppsPath, 'offboard_studio');
+const rootSrcPath = path.join(rootAppsPath, 'renderer');
 
 const releasePath = path.join(rootPath, 'release');
 const appPath = path.join(releasePath, 'app');
@@ -17,7 +17,7 @@ const rootNodeModulesPath = path.join(rootPath, 'node_modules');
 
 const buildPath = path.join(rootPath, 'build');
 const releaseBuildElectronPath = path.join(releaseBuildPath, 'electron');
-const releaseBuildRendererPath = path.join(releaseBuildPath, 'offboard_studio');
+const releaseBuildRendererPath = path.join(releaseBuildPath, 'renderer');
 
 module.exports = {
   rootPath,

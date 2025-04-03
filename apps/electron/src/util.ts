@@ -19,5 +19,5 @@ export const resolveHtmlPath = (htmlFileName: string): string => {
     return url.href;
   }
 
-  return `file://${path.resolve(__dirname, '../offboard_studio/', htmlFileName)}`;
+  return `file://${path.resolve(__dirname, '../renderer/', htmlFileName)}`;
 };

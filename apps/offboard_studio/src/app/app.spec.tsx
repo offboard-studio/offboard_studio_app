@@ -20,6 +20,6 @@ describe('App', () => {
         <App />
       </BrowserRouter>
     );
-    expect(getByText(/Welcome offboard_studio/gi)).toBeTruthy();
+    expect(getByText(/Welcome renderer/gi)).toBeTruthy();
   });
 });

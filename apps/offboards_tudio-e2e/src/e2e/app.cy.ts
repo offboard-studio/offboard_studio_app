@@ -1,6 +1,6 @@
 import { getGreeting } from '../support/app.po';
 
-describe('offboard_studio-e2e', () => {
+describe('renderer-e2e', () => {
   beforeEach(() => cy.visit('/'));
 
   it('should display welcome message', () => {
