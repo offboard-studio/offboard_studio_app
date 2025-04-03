@@ -1,5 +1,5 @@
 {
-  "name": "nx-electron-node-react-boilerplate",
+  "name": "offboard.studio.app",
   "productName": "Offboard Studio App",
   "version": "0.0.0",
   "description": "A foundation for scalable desktop apps",
@@ -8,7 +8,7 @@
   "main": "./release/build/electron/main.js",
   "private": true,
   "scripts": {
-    "dev": "npx nx run-many -t serve -p  renderer electron",
+    "dev": "npx nx run-many -t serve -p renderer electron",
     "test:unit": "NODE_ENV=test npx nx run-many -t test -p renderer api components",
     "test:e2e": "E2E='true' npx nx e2e e2e --skipInstall",
     "lint:api": "npx nx lint api",

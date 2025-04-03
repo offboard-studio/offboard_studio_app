@@ -1,6 +1,6 @@
 {
   "name": "renderer",
-  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/renderer/src",
   "projectType": "application",
   "targets": {
@@ -26,7 +26,8 @@
       "executor": "@nx/vite:dev-server",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "renderer:build"
+        "buildTarget": "renderer:build",
+        "proxyConfig": "apps/renderer/proxy.conf.json"
       },
       "configurations": {
         "development": {
@@ -55,24 +56,17 @@
       }
     },
     "test": {
-      "executor": "@nx/vite:test",
+      "executor": "@nx/jest:jest",
       "outputs": ["{options.reportsDirectory}"],
       "options": {
-        "passWithNoTests": true,
-        "reportsDirectory": "../coverage/renderer"
+        "jestConfig": "apps/renderer/jest.config.ts"
       }
     },
     "lint": {
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["renderer/**/*.{ts,tsx,js,jsx}"]
-      }
-    },
-    "serve-static": {
-      "executor": "@nx/web:file-server",
-      "options": {
-        "buildTarget": "renderer:build"
+        "lintFilePatterns": ["apps/renderer/**/*.{ts,tsx,js,jsx}"]
       }
     }
   },

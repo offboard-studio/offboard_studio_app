@@ -1,20 +1,29 @@
 {
-
-  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "jsx": "react-jsx",
-    "allowJs": false,
-    "esModuleInterop": false,
+    "target": "ESNext",
+    "module": "ES2022",
+    "allowJs": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "moduleResolution": "node",
     "strict": true,
     "types": ["vite/client", "vitest"],
-    "lib": [
-      "esnext",
-      "dom"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"]
   },
-  
   "files": [],
   "include": [],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.spec.json"
+    }
+  ],
+  "extends": "../../tsconfig.base.json"
 }
-
