@@ -1,0 +1,30 @@
+{
+  "extends": ["../../.eslintrc.json"],
+  "ignorePatterns": ["!**/*"],
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "rules": {}
+    },
+    {
+      "files": ["*.ts", "*.tsx"],
+      "excludedFiles": ["*.spec.ts", "*.spec.tsx", "*.spec.js", "*.spec.jsx"],
+      "parserOptions": {
+        "project": ["apps/electron/tsconfig.app.json"]
+      },
+      "rules": {
+        "@nx/enforce-module-boundaries": [
+          "error",
+          {
+            "allow": ["@api/**"]
+          }
+        ],
+        "@typescript-eslint/no-var-requires": 0
+      }
+    },
+    {
+      "files": ["*.js", "*.jsx"],
+      "rules": {}
+    }
+  ]
+}

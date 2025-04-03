@@ -1,0 +1,42 @@
+name: Pull request
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  unit_test_and_lint:
+    runs-on: macos-latest
+
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🐧 This job is running on a ${{ runner.os }} server hosted by GitHub!"
+
+      - name: Check out Git repository
+        uses: actions/checkout@v3.5.2
+        with:
+          lfs: true
+
+      - name: Install Node.js and NPM
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'yarn'
+
+      - name: Yarn install
+        run: yarn install --immutable-cache
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+
+      - name: Yarn lint
+        run: |
+          yarn lint:all
+
+      - name: Run renderer unit tests
+        run: |
+          yarn test:unit:renderer --runInBand --reporters=default
+
+      - name: Run API unit tests
+        run: |
+          yarn test:unit:api --runInBand --reporters=default

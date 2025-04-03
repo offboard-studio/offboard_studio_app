@@ -1,0 +1,35 @@
+export default {
+  displayName: 'api',
+  preset: '../../jest.preset.js',
+  testEnvironment: 'node',
+  transform: {
+    '^.+\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }],
+  },
+  moduleFileExtensions: ['ts', 'js', 'html'],
+  coverageDirectory: '../../coverage/apps/api',
+  collectCoverage: true,
+  collectCoverageFrom: [
+    '**/*.{ts,js}',
+    '!**/*.spec.{ts,js}',
+    '!**/*.d.ts',
+    '!src/assets/**',
+    '!coverage/**',
+    '!types/**',
+    '!mocks/**',
+    '!jest-setup.ts',
+    '!src/types/**',
+    '!jest.config.ts',
+    '!webpack.config.js',
+  ],
+  setupFiles: ['./jest-setup.ts'],
+  coverageReporters: ['json', 'lcov', 'text', 'json-summary'],
+  reporters: ['default', 'jest-ratchet'],
+  coverageThreshold: {
+    global: {
+      branches: 0,
+      functions: 0,
+      lines: 0,
+      statements: 0,
+    },
+  },
+};

@@ -1,0 +1,74 @@
+{
+  "name": "renderer",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/renderer/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/vite:build",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "release/build/renderer"
+      },
+      "configurations": {
+        "development": {
+          "mode": "development",
+          "baseHref": "/"
+        },
+        "production": {
+          "mode": "production",
+          "baseHref": "./"
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/vite:dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "renderer:build",
+        "proxyConfig": "apps/renderer/proxy.conf.json"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "renderer:build:development",
+          "hmr": true
+        },
+        "production": {
+          "buildTarget": "renderer:build:production",
+          "hmr": false
+        }
+      }
+    },
+    "preview": {
+      "executor": "@nx/vite:preview-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "renderer:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "renderer:build:development"
+        },
+        "production": {
+          "buildTarget": "renderer:build:production"
+        }
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "jestConfig": "apps/renderer/jest.config.ts"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/renderer/**/*.{ts,tsx,js,jsx}"]
+      }
+    }
+  },
+  "tags": []
+}

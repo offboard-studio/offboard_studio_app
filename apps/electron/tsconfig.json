@@ -1,0 +1,22 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["node"],
+    "target": "ESNext",
+    "module": "CommonJS",
+    "sourceMap": true,
+    "strict": true,
+    "outDir": "../../release/build", // Output transpiled files to build/electron/
+    "noEmitOnError": true,
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "typeRoots": ["node_modules/@types"]
+  },
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  },
+  "include": ["**/*.ts"]
+}

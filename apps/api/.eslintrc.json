@@ -1,0 +1,68 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["prettier", "@typescript-eslint", "unused-imports"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended",
+    "prettier",
+    "plugin:import/typescript"
+  ],
+  "rules": {
+    "@typescript-eslint/no-misused-promises": "off",
+    "@typescript-eslint/naming-convention": "off",
+    "@typescript-eslint/no-explicit-any": "error",
+    "@typescript-eslint/explicit-module-boundary-types": "error",
+    "@typescript-eslint/no-var-requires": "off",
+    "class-methods-use-this": "off",
+    "import/extensions": "off",
+    "import/no-extraneous-dependencies": "off",
+    "import/prefer-default-export": "off",
+    "no-alert": "off",
+    "no-new": "off",
+    "prettier/prettier": "error",
+    "global-require": "off",
+    "unused-imports/no-unused-vars": [
+      "warn",
+      {
+        "vars": "all",
+        "varsIgnorePattern": "^_",
+        "args": "after-used",
+        "argsIgnorePattern": "^_"
+      }
+    ]
+  },
+  "ignorePatterns": [
+    "coverage/*",
+    "assets/*",
+    "mocks/**",
+    "jest-setup.ts",
+    "jest.config.ts"
+  ],
+  "overrides": [
+    {
+      "files": ["*.spec.ts", "*.spec.tsx", "*.spec.js", "*.spec.jsx"],
+      "env": {
+        "jest": true
+      },
+      "parserOptions": {
+        "project": ["apps/api/tsconfig.spec.json"]
+      },
+      "rules": {
+        "no-undefined": "off",
+        "@typescript-eslint/no-unsafe-return": "off",
+        "@typescript-eslint/explicit-function-return-type": "off"
+      }
+    },
+    {
+      "files": ["*.ts", "*.tsx"],
+      "excludedFiles": ["*.spec.ts", "*.spec.tsx", "*.spec.js", "*.spec.jsx"],
+      "parserOptions": {
+        "project": ["apps/api/tsconfig.app.json"]
+      },
+      "rules": {}
+    }
+  ]
+}

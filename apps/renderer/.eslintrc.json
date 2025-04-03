@@ -1,0 +1,86 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "extends": [
+    "plugin:@nx/react",
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended",
+    "prettier",
+    "../../.eslintrc.json"
+  ],
+  "plugins": [
+    "react",
+    "prettier",
+    "@typescript-eslint",
+    "unused-imports",
+    "react-hooks"
+  ],
+  "rules": {
+    "import/extensions": "off",
+    "import/no-extraneous-dependencies": "off",
+    "import/prefer-default-export": "off",
+    "react/react-in-jsx-scope": "off",
+    "react-hooks/exhaustive-deps": "warn",
+    "react-hooks/rules-of-hooks": "error",
+    "react/function-component-definition": [
+      2,
+      { "namedComponents": "arrow-function" }
+    ],
+    "jsx-a11y/anchor-is-valid": [
+      "error",
+      {
+        "components": ["Link"],
+        "specialLink": ["hrefLeft", "hrefRight"],
+        "aspects": ["invalidHref", "preferButton"]
+      }
+    ],
+    "@typescript-eslint/naming-convention": "off",
+    "@typescript-eslint/no-explicit-any": "error",
+    "@typescript-eslint/explicit-module-boundary-types": "error",
+    "@typescript-eslint/no-var-requires": "off",
+    "class-methods-use-this": "off",
+    "no-alert": "off",
+    "prettier/prettier": "error",
+    "global-require": "off"
+  },
+  "ignorePatterns": [
+    "!**/*",
+    "vite.config.ts",
+    "testUtils/*",
+    "mocks/*",
+    "public/*",
+    "jest.config.ts"
+  ],
+  "overrides": [
+    {
+      "files": ["*.spec.ts", "*.spec.tsx", "*.spec.js", "*.spec.jsx"],
+      "env": {
+        "jest": true
+      },
+      "parserOptions": {
+        "project": ["apps/renderer/tsconfig.spec.json"]
+      },
+      "rules": {
+        "no-undefined": "off",
+        "@typescript-eslint/explicit-function-return-type": "off"
+      }
+    },
+    {
+      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "rules": {}
+    },
+    {
+      "files": ["*.ts", "*.tsx"],
+      "excludedFiles": ["*.spec.ts", "*.spec.tsx", "*.spec.js", "*.spec.jsx"],
+      "parserOptions": {
+        "project": ["apps/renderer/tsconfig.app.json"]
+      },
+      "rules": {}
+    },
+    {
+      "files": ["*.js", "*.jsx"],
+      "rules": {}
+    }
+  ]
+}

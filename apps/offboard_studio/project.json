@@ -1,0 +1,80 @@
+{
+  "name": "offboard_studio",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/offboard_studio/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/vite:build",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "release/build/offboard_studio"
+      },
+      "configurations": {
+        "development": {
+          "mode": "development",
+          "baseHref": "/"
+        },
+        "production": {
+          "mode": "production",
+          "baseHref": "./"
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/vite:dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "offboard_studio:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "offboard_studio:build:development",
+          "hmr": true
+        },
+        "production": {
+          "buildTarget": "offboard_studio:build:production",
+          "hmr": false
+        }
+      }
+    },
+    "preview": {
+      "executor": "@nx/vite:preview-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "offboard_studio:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "offboard_studio:build:development"
+        },
+        "production": {
+          "buildTarget": "offboard_studio:build:production"
+        }
+      }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "passWithNoTests": true,
+        "reportsDirectory": "../coverage/offboard_studio"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["offboard_studio/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "offboard_studio:build"
+      }
+    }
+  },
+  "tags": []
+}
