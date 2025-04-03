@@ -1,15 +1,15 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../dist/out-tsc",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "outDir": "../dist/out-tsc",
     "types": [
       "vitest/globals",
       "vitest/importMeta",
       "vite/client",
       "node",
       "vitest",
-      "@testing-library/jest-dom"
+      "@nx/react/typings/cssmodule.d.ts",
+      "@nx/react/typings/image.d.ts"
     ]
   },
   "include": [
@@ -23,11 +23,5 @@
     "src/**/*.test.jsx",
     "src/**/*.spec.jsx",
     "src/**/*.d.ts"
-  ],
-  "types": [
-    "@nx/react/typings/cssmodule.d.ts",
-    "@nx/react/typings/image.d.ts",
-    "jest",
-    "@testing-library/jest-dom"
   ]
 }

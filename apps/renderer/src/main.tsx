@@ -1,13 +1,17 @@
+import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
-import './main.module.scss';
-import App from './app/App';
+import { BrowserRouter } from 'react-router-dom';
 
-const htmlRoot = document.getElementById('root');
+import App from './app/app';
+import React from 'react';
 
-if (htmlRoot) {
-  const ReactRoot = ReactDOM.createRoot(htmlRoot);
-
-  ReactRoot.render(<App />);
-} else {
-  console.log('No root HTML element found.');
-}
+const root = ReactDOM.createRoot(
+  document.getElementById('root') as HTMLElement
+);
+root.render(
+  <StrictMode>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </StrictMode>
+);
