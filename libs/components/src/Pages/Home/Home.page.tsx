@@ -5,7 +5,7 @@ export const HomePage = (): JSX.Element => {
   return (
     <>
       <header className={styles['header']}>
-        <h1 data-testid="header">Offboard StudioApp</h1>
+        <h1 data-testid="header">Offboard Studio App</h1>
       </header>
       <p>Welcome to the boilerplate NX Electron Node React app</p>
 

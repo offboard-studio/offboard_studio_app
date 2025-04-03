@@ -131,11 +131,6 @@
     "webpack-merge": "^5.8.0"
   },
   "build": {
-    "extraResources": [
-      "release/build/renderer/index.html",
-      "release/build/renderer/assets",
-      "release/build/renderer/assets/**/*"
-    ],
     "files": [
       "release/build",
       "node_modules",
