@@ -14,5 +14,5 @@ test.afterEach(async () => {
 test('app starts', async () => {
   const headerText = electronApp.firstWindow.getByTestId('header');
 
-  await expect(headerText).toHaveText('Offboard StudioApp');
+  await expect(headerText).toHaveText('Offboard Studio App');
 });

@@ -67,7 +67,7 @@ export default class ElectronApp {
   setWindowTitle(window: BrowserWindow) {
     window.on('page-title-updated', (e) => e.preventDefault());
     window.setTitle(
-      `Offboard StudioApp - v${packageJson.version}`
+      `Offboard Studio App - v${packageJson.version}`
     );
   }
 
