@@ -9,3 +9,4 @@ export * from './utilsPages/ErrorPage';
 
 export * from './dashboard';
 export * from './initalPage';
+export * from './board/boardPage'

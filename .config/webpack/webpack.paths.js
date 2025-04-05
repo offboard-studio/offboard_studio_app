@@ -13,6 +13,7 @@ const appPath = path.join(releasePath, 'app');
 const releaseBuildPath = path.join(releasePath, 'build');
 const releasePackagePath = path.join(releasePath, 'package.json');
 const releaseNodeModulesPath = path.join(releasePath, 'node_modules');
+const releaseBoardApiModulesPath = path.join(releasePath, 'node_modules');
 const rootNodeModulesPath = path.join(rootPath, 'node_modules');
 
 const buildPath = path.join(rootPath, 'build');
@@ -27,6 +28,7 @@ module.exports = {
   releasePath,
   appPath,
   releasePackagePath,
+  releaseBoardApiModulesPath,
   releaseNodeModulesPath,
   rootNodeModulesPath,
   buildPath,

@@ -16,10 +16,13 @@
     "importHelpers": true,
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
+    "resolveJsonModule": true,
+    
+    
     "baseUrl": ".",
     "paths": {
       "@api/api": ["apps/api/src/Api.ts"],
-      "@components": ["libs/components/src/index.ts"]
+      "@components": ["libs/components/src/index.ts","libs/components/src/*",],
     }
   },
   "exclude": ["node_modules", "tmp"]

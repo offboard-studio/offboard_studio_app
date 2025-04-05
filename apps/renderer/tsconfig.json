@@ -12,11 +12,15 @@
     "noFallthroughCasesInSwitch": true,
     "moduleResolution": "node",
     "strict": true,
-    "types": ["vite/client", "vitest"],
+    "types": [
+      "vite/client", "vitest"
+    ],
     "lib": ["dom", "dom.iterable", "esnext"]
   },
-  "files": [],
-  "include": [],
+  "files": ["../../node_modules/@nx/react/typings/cssmodule.d.ts", "../../node_modules/@nx/react/typings/image.d.ts"],
+  "include": [
+    "../../node_modules/@nx/react/typings/cssmodule.d.ts", "../../node_modules/@nx/react/typings/image.d.ts",
+  ],
   "references": [
     {
       "path": "./tsconfig.app.json"

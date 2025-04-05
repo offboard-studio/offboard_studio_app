@@ -1,14 +1,23 @@
 {
   "compilerOptions": {
     "jsx": "react-jsx",
+    "declaration": true,
     "allowJs": false,
     "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
     "strict": true,
     "types": ["vite/client"]
   },
-  "files": [],
-  "include": [],
+  "files": [
+    "../../node_modules/@nx/react/typings/cssmodule.d.ts",
+    "../../node_modules/@nx/react/typings/image.d.ts",
+  ],
+  "include": [
+    "../../node_modules/@nx/react/typings/cssmodule.d.ts",
+    "../../node_modules/@nx/react/typings/image.d.ts",
+
+  ],
   "references": [
     {
       "path": "./tsconfig.lib.json"

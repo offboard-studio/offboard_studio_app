@@ -57,5 +57,9 @@
         "jestConfig": "apps/electron/jest.config.ts"
       }
     }
-  }
+  },
+  "tags": [],
+  "assets": [
+    "apps/electron/src/assets"
+  ]
 }

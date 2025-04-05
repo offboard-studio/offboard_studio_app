@@ -19,7 +19,7 @@ const WelcomePage = () => {
       <Container maxWidth="lg">
         <Box display="flex" alignItems="center" justifyContent="space-between">
           {/* Sol Kısım - Metinler */}
-          <Box textAlign="left">
+          <Box textAlign="left" fontStyle={'italic'} color={'white'}>
             <Typography variant="h3" fontWeight="bold" gutterBottom>
               Welcome to a better way to build
             </Typography>

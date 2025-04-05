@@ -7,7 +7,7 @@ import { RootRouter } from './routers';
 import { ApiRouter } from './types';
 import { setAppHeaders } from './middlewares';
 
-export type ApiServer = Server<typeof IncomingMessage, typeof ServerResponse>;
+export type ApiServer = Server;
 
 /**
  * Creating a new instance of this Api class will create

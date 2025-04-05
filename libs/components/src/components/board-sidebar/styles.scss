@@ -1,0 +1,39 @@
+.sidebar-container {
+    width: 200px;
+    flex-shrink: 0;
+}
+
+.architecture-sidebar-container {
+    width: 30px;
+    flex-shrink: 0;
+}
+
+.sidebar {
+    width: 200px;
+    transition:
+        width 0.3s ease-in-out,
+        transform 0.3s ease-in-out;
+    transform-origin: left;
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.3);
+
+    &:hover {
+        width: 300px;
+        transform: translateX(0);
+    }
+
+    // When the screen size is smaller than 768px (for example)
+    @media (max-width: 300px) {
+        width: 60px;
+        transform: translateX(-100%);
+    }
+}
+
+// To show something else when the sidebar is collapsed (e.g., a button or different content)
+.sidebar-collapsed {
+    display: none;
+
+    @media (max-width: 300px) {
+        display: block;
+        // Styling for the collapsed sidebar content (e.g., an icon or button)
+    }
+}

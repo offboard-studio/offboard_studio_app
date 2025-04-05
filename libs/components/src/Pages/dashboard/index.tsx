@@ -12,8 +12,6 @@ import {
   ListItemText,
   Avatar,
   Button,
-  Card,
-  CardContent,
   Grid,
   Paper,
   Divider,
@@ -62,7 +60,6 @@ const theme = createTheme({
 });
 
 export const DashboardPage = (): JSX.Element => {
-
   // Yeni proje ve component oluşturma butonları için örnek fonksiyonlar
 
   const navigate = useNavigate();
@@ -245,26 +242,27 @@ export const DashboardPage = (): JSX.Element => {
           {/* Üstte İstatistik Kartları */}
           <Grid container spacing={2} sx={{ mb: 3 }}>
             {stats.map((item, index) => (
-              <Grid component="div" item xs={12} md={4} key={index}>
-                <Card
-                  sx={{
-                    height: '100%',
-                    boxShadow: 2,
-                  }}
-                >
-                  <CardContent>
-                    <Typography variant="subtitle2" color="text.secondary">
-                      {item.title}
-                    </Typography>
-                    <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
-                      {item.value}
-                    </Typography>
-                    <Typography variant="caption" color="success.main">
-                      {item.change}
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
+              <div></div>
+              // <Grid component="div" item xs={12} md={4} key={index}>
+              //   <Card
+              //     sx={{
+              //       height: '100%',
+              //       boxShadow: 2,
+              //     }}
+              //   >
+              //     <CardContent>
+              //       <Typography variant="subtitle2" color="text.secondary">
+              //         {item.title}
+              //       </Typography>
+              //       <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+              //         {item.value}
+              //       </Typography>
+              //       <Typography variant="caption" color="success.main">
+              //         {item.change}
+              //       </Typography>
+              //     </CardContent>
+              //   </Card>
+              // </Grid>
             ))}
           </Grid>
 
@@ -346,16 +344,17 @@ export const DashboardPage = (): JSX.Element => {
 
             <Grid container spacing={2}>
               {recentComponents.map((component, index) => (
-                <Grid item xs={12} md={4} key={index}>
-                  <Card sx={{ boxShadow: 2 }}>
-                    <CardContent>
-                      <Typography variant="subtitle1">{component.name}</Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        Status: {component.status}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
+                <div></div>
+                // <Grid item xs={12} md={4} key={index}>
+                //   <Card sx={{ boxShadow: 2 }}>
+                //     <CardContent>
+                //       <Typography variant="subtitle1">{component.name}</Typography>
+                //       <Typography variant="caption" color="text.secondary">
+                //         Status: {component.status}
+                //       </Typography>
+                //     </CardContent>
+                //   </Card>
+                // </Grid>
               ))}
             </Grid>
           </Paper>

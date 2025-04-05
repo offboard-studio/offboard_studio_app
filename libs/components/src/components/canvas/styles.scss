@@ -1,0 +1,60 @@
+
+
+$dark-appbar-background: #413f3f;
+$dark-canvas-background: rgb(107, 107, 107);
+$dark-canvas-grid: rgba(255,255,255, 0.05);
+
+
+
+$dark-constant-background: #f6a706;
+$dark-param-port: #f6a706;
+$dark-input-port: red;
+$dark-output-port: green;
+
+
+#board {
+    #canvas-container {
+
+        height: 100%;
+        background-size: 50px 50px;
+        display: flex;
+
+        >* {
+            height: 100%;
+            min-height: 100%;
+            width: 100%;
+        }
+    }
+
+}
+
+
+.theme-dark {
+    #board {
+        #canvas-container {
+            background-color: $dark-canvas-background;
+            overflow: auto;
+            background-image: linear-gradient(0deg,
+                    transparent 24%,
+                    $dark-canvas-grid 25%,
+                    $dark-canvas-grid 26%,
+                    transparent 27%,
+                    transparent 74%,
+                    $dark-canvas-grid 75%,
+                    $dark-canvas-grid 76%,
+                    transparent 77%,
+                    transparent),
+                linear-gradient(90deg,
+                    transparent 24%,
+                    $dark-canvas-grid 25%,
+                    $dark-canvas-grid 26%,
+                    transparent 27%,
+                    transparent 74%,
+                    $dark-canvas-grid 75%,
+                    $dark-canvas-grid 76%,
+                    transparent 77%,
+                    transparent);
+            background-attachment: local;
+        }
+    }
+}
