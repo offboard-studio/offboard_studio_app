@@ -6,7 +6,7 @@ export default class CodeBlockCreatorAI {
 
 
     openai = new OpenAI({
-        baseURL: 'https://openrouter.ai/api/v1', apiKey: "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" || "",
+        baseURL: 'https://openrouter.ai/api/v1', apiKey: "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",
         dangerouslyAllowBrowser: true,
     });
     codeBlockModel: CodeBlockModel | undefined;
@@ -30,6 +30,7 @@ export default class CodeBlockCreatorAI {
     - **F-Strings for String Formatting**: Use f-strings for better readability and performance.
     - **List Comprehensions**: Use list comprehensions where appropriate for cleaner and more efficient code.
     - **No Plotting or Displaying Windows**: Do not use \`cv2.imshow\` or similar functions.
+    - **Always read from image from this inputs.read_image("Img")
     
     ### Example 1: Blur Code
     
