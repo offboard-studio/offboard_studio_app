@@ -258,6 +258,7 @@ function MenuBar(props: MenuBarProps) {
                     theming={isDark ? 'dark' : undefined}>
                     <MenuItem onClick={() => setBlock('basic.constant')}>Constant</MenuItem>
                     <MenuItem onClick={() => setBlock('basic.code')}>Code</MenuItem>
+                    <MenuItem onClick={() => setBlock('basic.aicode')}>Code</MenuItem>
                     <MenuItem onClick={() => setBlock('basic.input')}>Input</MenuItem>
                     <MenuItem onClick={() => setBlock('basic.output')}>Output</MenuItem>
                     <MenuItem onClick={() => setBlock('basic.information')}>Information</MenuItem>

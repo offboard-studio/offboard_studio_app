@@ -12,6 +12,7 @@ import createEngine, {
   RightAngleLinkFactory,
 } from '@projectstorm/react-diagrams';
 import { CodeBlockFactory } from '../components/blocks/basic/code/code-factory';
+import { AiCodeBlockFactory } from '../components/blocks/basic/ai-code/code-factory';
 import { ConstantBlockFactory } from '../components/blocks/basic/constant/constant-factory';
 import { InputBlockFactory } from '../components/blocks/basic/input/input-factory';
 import { OutputBlockFactory } from '../components/blocks/basic/output/output-factory';
@@ -103,6 +104,7 @@ class Editor {
       .getNodeFactories()
       .registerFactory(new ConstantBlockFactory(this));
     this.engine.getNodeFactories().registerFactory(new CodeBlockFactory(this));
+    this.engine.getNodeFactories().registerFactory(new AiCodeBlockFactory(this));
     this.engine.getNodeFactories().registerFactory(new InputBlockFactory(this));
     this.engine
       .getNodeFactories()
@@ -239,6 +241,8 @@ class Editor {
       return 'Parameter';
     } else if (nodeType === 'basic.code') {
       return 'Code';
+    } else if (nodeType === 'basic.aicode') {
+      return 'AI Code';
     }
 
     return nodeType;
@@ -269,9 +273,8 @@ class Editor {
               if (node.getType() == 'block.package') {
                 label = `${options.info.name} -> : ${portOptions.label}`;
               } else {
-                label = `${this.getNodeName(node.getType())} -> : ${
-                  portOptions.label
-                }`;
+                label = `${this.getNodeName(node.getType())} -> : ${portOptions.label
+                  }`;
               }
               valueOne.push({ indexOne, label, id });
             }
@@ -282,9 +285,8 @@ class Editor {
             if (node.getType() == 'block.package') {
               label = `${options.info.name} -> : ${portOptions.label}`;
             } else {
-              label = `${this.getNodeName(node.getType())} -> : ${
-                portOptions.label
-              }`;
+              label = `${this.getNodeName(node.getType())} -> : ${portOptions.label
+                }`;
             }
             valueTwo.push({ indexTwo, label, id });
           }

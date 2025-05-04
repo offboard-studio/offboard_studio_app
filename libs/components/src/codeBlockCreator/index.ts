@@ -1,5 +1,5 @@
 import OpenAI from 'openai';
-import { CodeBlockModel, CodeBlockData, CodeBlockModelOptions } from "../components/blocks/basic/code/code-model"
+import { AiCodeBlockModel, CodeBlockData, CodeBlockModelOptions } from "../components/blocks/basic/ai-code/code-model"
 
 
 export default class CodeBlockCreatorAI {
@@ -9,8 +9,8 @@ export default class CodeBlockCreatorAI {
         baseURL: 'https://openrouter.ai/api/v1', apiKey: "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",
         dangerouslyAllowBrowser: true,
     });
-    codeBlockModel: CodeBlockModel | undefined;
-    constructor(parameters: CodeBlockModelOptions, codeBlockModel?: CodeBlockModel) {
+    codeBlockModel: AiCodeBlockModel | undefined;
+    constructor(parameters: CodeBlockModelOptions, codeBlockModel?: AiCodeBlockModel) {
         this.codeBlockModel = codeBlockModel;
 
     }
@@ -37,8 +37,12 @@ export default class CodeBlockCreatorAI {
     \`\`\`python
     import cv2
     import numpy as np
-    
-    def main(inputs, outputs, parameters, synchronise):
+    from lib.utils import Synchronise
+    from lib.inputs import Inputs
+    from lib.outputs import Outputs
+    from lib.parameters import Parameters
+
+    def main(inputs:Inputs, outputs:Outputs, parameters:Parameters, synchronise:Synchronise):
         blur_type = parameters.read_string("BlurType")
         kernel = tuple([int(x.strip()) for x in parameters.read_string("Kernel").split(',')])
         auto_enable = False
@@ -105,7 +109,14 @@ export default class CodeBlockCreatorAI {
             cv2.putText(img,f'{className[classIds[i]].upper()} {int(confs[i]*100)}%',
                         (x,y-10),cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255,0,255),2)
     
-    def main(inputs, outputs, parameters, synchronise):
+                "from lib.utils import Synchronise",
+    
+    from lib.utils import Synchronise
+    from lib.inputs import Inputs
+    from lib.outputs import Outputs
+    from lib.parameters import Parameters
+
+    def main(inputs:Inputs, outputs:Outputs, parameters:Parameters, synchronise:Synchronise):
         auto_enable = true
         try:
             enable = inputs.read_number("Enable")
@@ -151,7 +162,12 @@ export default class CodeBlockCreatorAI {
     import math
     from time import sleep
     
-    def main(inputs, outputs, parameters, synchronise):
+    from lib.utils import Synchronise
+    from lib.inputs import Inputs
+    from lib.outputs import Outputs
+    from lib.parameters import Parameters
+
+    def main(inputs:Inputs, outputs:Outputs, parameters:Parameters, synchronise:Synchronise):
         auto_enable = true
         try:
             enable = inputs.read_number("Enable")

@@ -2,27 +2,27 @@ import { AbstractReactFactory, GenerateModelEvent, GenerateWidgetEvent } from '@
 import { DiagramEngine } from '@projectstorm/react-diagrams-core';
 import React from 'react';
 import Editor from '../../../../core/editor';
-import { CodeBlockModel, CodeBlockModelOptions } from './code-model';
-import { CodeBlockWidget } from './code-widget';
+import { AiCodeBlockModel, CodeBlockModelOptions } from './code-model';
+import { AiCodeBlockWidget } from './code-widget';
 
 
 /**
  * Factory for Code block
  */
-export class CodeBlockFactory extends AbstractReactFactory<CodeBlockModel, DiagramEngine> {
+export class AiCodeBlockFactory extends AbstractReactFactory<AiCodeBlockModel, DiagramEngine> {
 
     private editor: Editor;
     constructor(editor: Editor) {
-        super('basic.code');
+        super('basic.aicode');
         this.editor = editor;
     }
 
-    generateModel(event: GenerateModelEvent): CodeBlockModel {
+    generateModel(event: GenerateModelEvent): AiCodeBlockModel {
         const options = event.initialConfig as CodeBlockModelOptions
-        return new CodeBlockModel(options);
+        return new AiCodeBlockModel(options);
     }
 
-    generateReactWidget(event: GenerateWidgetEvent<CodeBlockModel>): JSX.Element {
-        return <CodeBlockWidget engine={this.engine} node={event.model} editor={this.editor}/>;
+    generateReactWidget(event: GenerateWidgetEvent<AiCodeBlockModel>): JSX.Element {
+        return <AiCodeBlockWidget engine={this.engine} node={event.model} editor={this.editor}/>;
     }
 }

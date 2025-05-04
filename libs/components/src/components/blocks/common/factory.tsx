@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable no-case-declarations */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prefer-const */
@@ -8,6 +9,7 @@ import { RightAngleLinkModel } from "@projectstorm/react-diagrams-routing";
 import { PortTypes, ProjectInfo } from '../../../core/constants';
 import { Block, Dependency, ProjectDesign, Wire } from '../../../core/serialiser/interfaces';
 import createCodeDialog from '../../dialogs/code-block-dialog';
+import aiCreateCodeDialog from '../../dialogs/ai-code-block-dialog';
 import createConstantDialog from "../../dialogs/constant-block-dialog";
 import createIODialog from '../../dialogs/input-output-block-dialog';
 import { CodeBlockModel } from "../basic/code/code-model";
@@ -233,10 +235,37 @@ export const createBlock = async (name: string, blockCount: number) => {
                 data = await createConstantDialog({ isOpen: true });
                 // This is workaround to indicate how blocks should be sorted
                 data.id = blockCount.toString().padStart(4, '0') + '-' + Toolkit.UID();
+                // eslint-disable-next-line @typescript-eslint/no-use-before-define
                 block = new ConstantBlockModel(data)
                 break;
             case 'basic.code':
                 data = await createCodeDialog({ isOpen: true });
+                block = new CodeBlockModel(data);
+                // const codeBlockData = block1.getData();
+                // const codeBlock = await new CodeBlockCreatorAI(data, block1).generateCodeBlock(codeBlockData);
+
+                // const codeBlockString = await extractMainPythonFunctionBlock(codeBlock);
+
+                // const { inputCalls, outputCalls, parameterCalls } = extractFunctionCalls(codeBlockString);
+
+                // data = {
+                //     ...data,
+                //     code: codeBlockString,
+                //     inputs: inputCalls,
+                //     outputs: outputCalls,
+                //     params: parameterCalls,
+                // }
+                // block = new CodeBlockModel(data);
+
+                // Now, update the block with the new data
+                // block.setData({
+                //     ...block1.getData(),
+                //     // code: codeBlockString || '',
+                // });
+
+                break;
+            case 'basic.aicode':
+                data = await aiCreateCodeDialog({ isOpen: true });
                 const block1 = new CodeBlockModel(data);
                 const codeBlockData = block1.getData();
                 const codeBlock = await new CodeBlockCreatorAI(data, block1).generateCodeBlock(codeBlockData);
@@ -273,11 +302,11 @@ export const createBlock = async (name: string, blockCount: number) => {
                 data = await getCollectionBlock(name);
                 if (data && data.default) {
                     const { editor, design, dependencies, package: packageInfo } = data.default;
-                    block = loadPackage({ 
-                        editor, 
-                        design, 
-                        dependencies: dependencies as Dependency, 
-                        package: packageInfo 
+                    block = loadPackage({
+                        editor,
+                        design,
+                        dependencies: dependencies as Dependency,
+                        package: packageInfo
                     });
                 }
                 break;

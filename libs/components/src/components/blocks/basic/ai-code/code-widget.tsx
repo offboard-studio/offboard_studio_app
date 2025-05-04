@@ -7,7 +7,7 @@ import Editor from '../../../../core/editor';
 import { GlobalState } from '../../../../core/store';
 import BaseBlock, { ContextOption } from '../../common/base-block';
 import BasePort from '../../common/base-port';
-import { CodeBlockModel } from './code-model';
+import { AiCodeBlockModel } from './code-model';
 import { unitConversion } from '../../../utils/tooltip/index'
 import './styles.scss';
 
@@ -18,7 +18,7 @@ import './styles.scss';
  * Interface for code block widget props
  */
 export interface CodeBlockWidgetProps {
-    node: CodeBlockModel;
+    node: AiCodeBlockModel;
     engine: DiagramEngine;
     editor: Editor;
 }

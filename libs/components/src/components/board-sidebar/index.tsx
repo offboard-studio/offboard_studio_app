@@ -233,6 +233,11 @@ const BoardSidebar: React.FC<BoardSideBarProps> = (props: BoardSideBarProps) => 
                                                     Code
                                                 </Typography>
                                             </div>
+                                            <div onClick={() => setBlock('basic.aicode')}>
+                                                <Typography variant="body1" style={{ color: 'white', fontSize: '1.2em' }}>
+                                                    AI Code
+                                                </Typography>
+                                            </div>
                                             <div onClick={() => setBlock('basic.input')}>
                                                 <Typography variant="body1" style={{ color: 'white', fontSize: '1.2em' }}>
                                                     Input

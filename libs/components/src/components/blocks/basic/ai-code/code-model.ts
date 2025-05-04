@@ -34,14 +34,14 @@ export interface CodeBlockData {
 /**
  * Data model for Code block
  */
-export class CodeBlockModel extends BaseModel<CodeBlockData, NodeModelGenerics & CodeBlockModelOptions> {
+export class AiCodeBlockModel extends BaseModel<CodeBlockData, NodeModelGenerics & CodeBlockModelOptions> {
 
     codeBlockOptions!: CodeBlockModelOptions;
 
     constructor(options: CodeBlockModelOptions) {
         super({
             ...options,
-            type: 'basic.code'
+            type: 'basic.aicode'
         });
 
         this.codeBlockOptions = options;
@@ -52,7 +52,13 @@ export class CodeBlockModel extends BaseModel<CodeBlockData, NodeModelGenerics &
         // pass`);
 
         const generateCode = (options: CodeBlockModelOptions) => {
-            let codeLines = ['def main(inputs, outputs, parameters, synchronise):'];
+            let codeLines = [
+                "from lib.utils import Synchronise",
+                "from lib.inputs import Inputs",
+                "from lib.outputs import Outputs",
+                "from lib.parameters import Parameters",
+                "def main(inputs:Inputs, outputs:Outputs, parameters:Parameters, synchronise:Synchronise):"
+            ];
 
             // Add parameter retrieval
             if (options.params?.length) {
