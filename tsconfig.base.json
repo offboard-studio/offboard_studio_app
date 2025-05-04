@@ -21,7 +21,7 @@
     
     "baseUrl": ".",
     "paths": {
-      "@api/api": ["apps/api/src/Api.ts"],
+      "@api/api": ["apps/api/src/Api.ts","apps/api/src/*",],
       "@components": ["libs/components/src/index.ts","libs/components/src/*",],
     }
   },
