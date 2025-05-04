@@ -14,9 +14,9 @@ import { resolveHtmlPath } from './util';
 import packageJson from '../../../package.json';
 import MenuBuilder from './app/menu';
 
-import treeKill from 'tree-kill';
+// import treeKill from 'tree-kill';
 import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
-import axios from 'axios';
+// import axios from 'axios';
 // import { migrateDatabase } from './migrate';
 
 class AppUpdater {
@@ -169,20 +169,24 @@ export default class ElectronApp {
   waitForDjangoServer = async (retries: number = 30, delay: number = 5000) => {
     for (let i = 0; i < retries; i++) {
       try {
-        const response = await axios.get(
-          'http://127.0.0.1:' +
-            this.djangoServerPort.toString() +
-            '/api/healthcheck',
-          { withCredentials: true }
-        );
+        // const response = await axios.get(
+        //   'http://127.0.0.1:' +
+        //     this.djangoServerPort.toString() +
+        //     '/api/healthcheck',
+        //   { withCredentials: true }
+        // );
+
+        const response = await fetch('http://127.0.1:' + this.djangoServerPort.toString() + '/api/healthcheck', {
+          method: 'GET',
+          credentials: 'include',
+        });
         if (response.status === 200) {
           console.log('Django Server is available');
           return;
         }
       } catch (error) {
         console.log(
-          `Attempt ${
-            i + 1
+          `Attempt ${i + 1
           }: Django Server is not available yet. Retrying... (${error})`,
           this.djangoServerPort.toString()
         );
@@ -252,7 +256,7 @@ export default class ElectronApp {
           console.log('Stopping Django Server...');
           this.djangoServer.stdin.end();
           if (this.djangoServer.pid !== undefined) {
-            treeKill(this.djangoServer.pid, 'SIGKILL');
+            // treeKill(this.djangoServer.pid, 'SIGKILL');
           }
         }
         process.exit();
@@ -328,7 +332,7 @@ export default class ElectronApp {
         // Migrate if we are on the production server
         // await migrateDatabase();
       }
-      
+
       // Start the Django server
       await this.runDjangoServer();
     } catch (err) {
