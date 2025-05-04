@@ -2,6 +2,8 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 
 export const NotFound = (): JSX.Element => {
+  const isElectron = window.location.protocol === 'file:';
+  
   return (
     <div
       style={{
@@ -22,7 +24,7 @@ export const NotFound = (): JSX.Element => {
       </p>
       <br />
       <a
-        href="/"
+        href={isElectron ? '/index.html' : '/'}
         style={{
           marginTop: '20px',
           display: 'inline-block',

@@ -37,7 +37,7 @@ export interface CodeBlockWidgetState {
 /**
  * Widget for the code block
  */
-export class CodeBlockWidget extends React.Component<CodeBlockWidgetProps, CodeBlockWidgetState> {
+export class AiCodeBlockWidget extends React.Component<CodeBlockWidgetProps, CodeBlockWidgetState> {
 
     static contextType = GlobalState as React.Context<unknown>;
     readonly contextOptions: ContextOption[] = [{ key: 'delete', label: 'Delete' }];

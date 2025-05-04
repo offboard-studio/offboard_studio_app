@@ -76,7 +76,7 @@ function BoardSettings({ editor, onClose }: BoardSettingsProps) {
 
     function handleClose(): void {
 
-        console.log(editor.projectInfoData.version, "version");
+        // console.log(editor.projectInfoData.version, "version");
         setOpen(false);
         onClose();
 

@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createHashRouter, RouterProvider } from 'react-router-dom';
 import {
   SignIn,
   SignUp,
@@ -21,17 +21,14 @@ const darkTheme = createTheme({
   },
 });
 
-// Update the basename to match the correct path
-const router = createBrowserRouter(
-  [
-    { path: '/', element: <BoardPage />, errorElement: <ErrorPage /> },
-    { path: '/signin', element: <SignIn /> },
-    { path: '/signup', element: <SignUp /> },
-    { path: '/dashboard', element: <DashboardPage /> },
-    { path: '*', element: <NotFound /> },
-  ],
-  { basename: '/index.html' }
-);
+// createHashRouter solves basename issues in Electron
+const router = createHashRouter([
+  { path: '/', element: <BoardPage />, errorElement: <ErrorPage /> },
+  { path: '/signin', element: <SignIn /> },
+  { path: '/signup', element: <SignUp /> },
+  { path: '/dashboard', element: <DashboardPage /> },
+  { path: '*', element: <NotFound /> },
+]);
 
 const App = (): JSX.Element => (
   <QueryClientProvider client={queryClient}>

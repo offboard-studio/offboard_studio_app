@@ -51,6 +51,9 @@ export const BoardPage = (): JSX.Element => {
 
   const navigate = useNavigate();
 
+  const isElectron = window.location.protocol === 'file:';
+
+
   const [tabIndex, setTabIndex] = useState(0);
   const [tabIndexBoard, setTabIndexBoard] = useState(false);
 
@@ -75,6 +78,8 @@ export const BoardPage = (): JSX.Element => {
   };
 
   const buildAndDownload = () => {
+
+
     const model = editor.serialise();
     let filename = editor.getName();
     // if (process.env.REACT_APP_BACKEND_HOST && model) {
@@ -177,7 +182,7 @@ export const BoardPage = (): JSX.Element => {
         <BoardSettings
           editor={editor}
           onClose={() => {
-            navigate('/board');
+            navigate(isElectron ? '/index.html' : '/');
             setTabIndexBoard(false);
           }}
         />

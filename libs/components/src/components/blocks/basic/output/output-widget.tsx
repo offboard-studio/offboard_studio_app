@@ -52,6 +52,7 @@ export class OutputBlockWidget extends React.Component<OutputBlockWidgetProps> {
     }
 
     render() {
+        
         return (
             <BaseBlock selected={this.props.node.isSelected()} contextOptions={this.contextOptions} 
                 contextHandler={this.onContextMenu.bind(this)}>

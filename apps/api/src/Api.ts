@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import express from 'express';
 import type { Express } from 'express';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { IncomingMessage, ServerResponse, Server } from 'http';
 
 import { RootRouter } from './routers';

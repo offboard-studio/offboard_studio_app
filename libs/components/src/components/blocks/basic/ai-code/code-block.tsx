@@ -57,7 +57,6 @@ export const generateRandomString = (length: number, lowercase = false) => {
 const CodeBlock: FC<Props> = memo(({ language, value }) => {
     // const { isCopied, copyToClipboard } = useCopyToClipboard({ timeout: 2000 });
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const downloadAsFile = () => {
         if (typeof window === "undefined") {
             return;

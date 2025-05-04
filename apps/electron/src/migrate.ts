@@ -20,7 +20,7 @@ const setupVenv = async () => {
   const boardAPIPath = getBoardAPI();
   const venvDir = path.join(boardAPIPath, 'venv');
   const venvPath =
-    os.platform() === 'win32'
+    (os.platform() === 'win32')
       ? path.join(venvDir, 'Scripts', 'python')
       : path.join(venvDir, 'bin', 'python');
 
@@ -32,11 +32,15 @@ const setupVenv = async () => {
   console.log(`Sanal ortam oluşturuluyor: ${venvDir}`);
 
   try {
-    await execPromise(`python3 -m venv ${venvDir}`);
+    await execPromise(`python -m venv ${venvDir}`);
 
     console.log('Bağımlılıklar yükleniyor...');
+    console.log('pip güncelleniyor...');
+    await execPromise(`${venvPath} -m pip install --upgrade pip`);
+
     const requirementsPath = path.join(boardAPIPath, 'requirements.txt');
     if (fs.existsSync(requirementsPath)) {
+      console.log('Bağımlılıklar yükleniyor...');
       await execPromise(`${venvPath} -m pip install -r ${requirementsPath}`);
     } else {
       console.warn('requirements.txt bulunamadı, bağımlılıklar yüklenemedi.');
@@ -67,7 +71,7 @@ export const migrateDatabase = async () => {
 
     if (!fs.existsSync(venvPath)) {
       throw new Error(
-        `Sanal ortam bulunamadı: ${venvPath}. Lütfen "python3 -m venv venv" komutunu çalıştır.`
+        `Sanal ortam bulunamadı: ${venvPath}. Lütfen "python -m venv venv" komutunu çalıştır.`
       );
     }
 

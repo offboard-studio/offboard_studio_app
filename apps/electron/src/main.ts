@@ -18,7 +18,7 @@ import MenuBuilder from './app/menu';
 import treeKill from 'tree-kill';
 import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
 import axios from 'axios';
-import { migrateDatabase } from './migrate';
+// import { migrateDatabase } from './migrate';
 
 class AppUpdater {
   constructor() {
@@ -134,6 +134,7 @@ export default class ElectronApp {
     mainWindow.loadURL(this.INDEX_HTML_PATH);
 
     // Open urls in the user's browser
+    mainWindow.webContents.openDevTools();
     mainWindow.webContents.setWindowOpenHandler(({ url }) => {
       shell.openExternal(url);
       return { action: 'deny' };
@@ -324,10 +325,11 @@ export default class ElectronApp {
       this.createMainWindow();
       this.createServer();
 
-      if (app.isPackaged) {
+      if (app.isPackaged && process.env.NODE_ENV !== 'development') {
         // Migrate if we are on the production server
-        await migrateDatabase();
+        // await migrateDatabase();
       }
+      
       // Start the Django server
       await this.runDjangoServer();
     } catch (err) {
