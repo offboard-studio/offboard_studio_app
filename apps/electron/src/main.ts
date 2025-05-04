@@ -9,8 +9,7 @@
 import { app, BrowserWindow, shell, ipcMain, IpcMainEvent } from 'electron';
 import path from 'path';
 import os from 'os';
-
-import { ApiServer } from '@api/api';
+import { ServerController } from '@api/api';
 import { resolveHtmlPath } from './util';
 import packageJson from '../../../package.json';
 import MenuBuilder from './app/menu';
@@ -32,7 +31,7 @@ class AppUpdater {
 }
 
 export default class ElectronApp {
-  server: ApiServer | null = null;
+  server: ServerController | null = null;
   windows: Record<string, BrowserWindow | null> = {};
   PRELOAD_SCRIPT = '';
   RESOURCES_PATH = '';

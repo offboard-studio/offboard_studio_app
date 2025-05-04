@@ -3,7 +3,7 @@ import { DiagramEngine } from '@projectstorm/react-diagrams-core';
 import React from 'react';
 import Editor from '../../../../core/editor';
 import { CodeBlockModel, CodeBlockModelOptions } from './code-model';
-import { CodeBlockWidget } from './code-widget';
+import { AiCodeBlockWidget } from './code-widget';
 
 
 /**
@@ -23,6 +23,6 @@ export class CodeBlockFactory extends AbstractReactFactory<CodeBlockModel, Diagr
     }
 
     generateReactWidget(event: GenerateWidgetEvent<CodeBlockModel>): JSX.Element {
-        return <CodeBlockWidget engine={this.engine} node={event.model} editor={this.editor}/>;
+        return <AiCodeBlockWidget engine={this.engine} node={event.model} editor={this.editor}/>;
     }
 }
