@@ -17,7 +17,7 @@ import './styles.scss';
 /**
  * Interface for code block widget props
  */
-export interface CodeBlockWidgetProps {
+export interface AiCodeBlockWidgetProps {
     node: AiCodeBlockModel;
     engine: DiagramEngine;
     editor: Editor;
@@ -26,7 +26,7 @@ export interface CodeBlockWidgetProps {
 /**
  * Interface for code block widget state
  */
-export interface CodeBlockWidgetState {
+export interface AiCodeBlockWidgetState {
     // For code text
     code: string,
     width: string,
@@ -37,12 +37,12 @@ export interface CodeBlockWidgetState {
 /**
  * Widget for the code block
  */
-export class AiCodeBlockWidget extends React.Component<CodeBlockWidgetProps, CodeBlockWidgetState> {
+export class AiCodeBlockWidget extends React.Component<AiCodeBlockWidgetProps, AiCodeBlockWidgetState> {
 
     static contextType = GlobalState as React.Context<unknown>;
-    readonly contextOptions: ContextOption[] = [{ key: 'delete', label: 'Delete' }];
+    readonly contextOptions: ContextOption[] = [{ key: 'delete', label: 'Delete' }, { key: 'rename', label: 'Rename' }];
 
-    constructor(props: CodeBlockWidgetProps) {
+    constructor(props: AiCodeBlockWidgetProps) {
         super(props);
         this.state = {
             code: this.props.node.data.code || '',
@@ -81,6 +81,9 @@ export class AiCodeBlockWidget extends React.Component<CodeBlockWidgetProps, Cod
         switch (key) {
             case 'delete':
                 this.props.editor.removeNode(this.props.node);
+                break;
+            case 'rename':
+                this.props.editor.editNode(this.props.node);
                 break;
             default:
                 break;

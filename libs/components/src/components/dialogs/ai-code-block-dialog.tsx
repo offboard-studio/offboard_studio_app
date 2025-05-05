@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import { create, InstanceProps } from 'react-modal-promise';
-import { CodeBlockModelOptions } from '../blocks/basic/code/code-model';
+import { AiCodeBlockModelOptions } from '../blocks/basic/ai-code/code-model';
 
 
 /**
@@ -12,17 +12,17 @@ import { CodeBlockModelOptions } from '../blocks/basic/code/code-model';
  *          onReject: Will be called to indicate failure.
  *        }
  */
-const AiCodeBlockDialog = ({ isOpen, onResolve, onReject, inputs, outputs, params }: InstanceProps<CodeBlockModelOptions> & Partial<CodeBlockModelOptions>) => {
+const AiCodeBlockDialog = ({ isOpen, onResolve, onReject, inputs, outputs, params }: InstanceProps<AiCodeBlockModelOptions> & Partial<AiCodeBlockModelOptions>) => {
 
     // Comma separated list of inputs for the Code block
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [inputPorts, setInputPorts] = useState((inputs || []).join(', ') || '');
+    // const [inputPorts, setInputPorts] = useState((inputs || []).join(', ') || '');
     // Comma separated list of outputs for the Code block
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [outputPorts, setOutputPorts] = useState((outputs || []).join(', ') || '');
+    // const [outputPorts, setOutputPorts] = useState((outputs || []).join(', ') || '');
     // Comma separated list of parameters for the Code block
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [parameters, setParameters] = useState((params || []).join(', ') || '');
+    // const [parameters, setParameters] = useState((params || []).join(', ') || '');
     const [error, setError] = useState('');
 
     const [aiDescription, setAiDescription] = useState('AI Description');
@@ -36,9 +36,9 @@ const AiCodeBlockDialog = ({ isOpen, onResolve, onReject, inputs, outputs, param
             // Clear the previous error if any.
             setError('')
             // Split the inputs, outputs and parameters by comma 
-            const inputs = inputPorts.split(',').filter((port) => Boolean(port)).map((port) => port.trim());
-            const outputs = outputPorts.split(',').filter((port) => Boolean(port)).map((port) => port.trim());
-            const params = parameters.split(',').filter((port) => Boolean(port)).map((port) => port.trim());
+            // const inputs = inputPorts.split(',').filter((port) => Boolean(port)).map((port) => port.trim());
+            // const outputs = outputPorts.split(',').filter((port) => Boolean(port)).map((port) => port.trim());
+            // const params = parameters.split(',').filter((port) => Boolean(port)).map((port) => port.trim());
             // Send data back indicating as success
             onResolve({ inputs: inputs, outputs: outputs, params: params,aiDescription: aiDescription });
         } else {

@@ -13,6 +13,7 @@ import aiCreateCodeDialog from '../../dialogs/ai-code-block-dialog';
 import createConstantDialog from "../../dialogs/constant-block-dialog";
 import createIODialog from '../../dialogs/input-output-block-dialog';
 import { CodeBlockModel } from "../basic/code/code-model";
+import { AiCodeBlockModel } from "../basic/ai-code/code-model";
 import { ConstantBlockModel } from "../basic/constant/constant-model";
 import { InputBlockModel } from '../basic/input/input-model';
 import { OutputBlockModel } from '../basic/output/output-model';
@@ -69,12 +70,21 @@ export const editBlock = async (node: NodeModel) => {
         if (node instanceof ConstantBlockModel) {
             data = await createConstantDialog({ isOpen: true, name: node.getData().name, local: node.getData().local });
             node.setData(data);
-        } else if (node instanceof CodeBlockModel) {
+        }else if (node instanceof AiCodeBlockModel) {
+            console.log('AI Code Block', node.getData());
+            data = await aiCreateCodeDialog({
+                isOpen: true,
+            });
+            node.setData(data);
+
+        } 
+         else if (node instanceof CodeBlockModel) {
             data = await createCodeDialog({
                 isOpen: true,
                 inputs: node.getInputNames(), outputs: node.getOutputNames(), params: node.getParameterNames()
             });
             node.setData(data);
+
         } else if (node instanceof InputBlockModel || node instanceof OutputBlockModel) {
             data = await createIODialog({ isOpen: true, name: node.getData().name });
             node.setData(data);

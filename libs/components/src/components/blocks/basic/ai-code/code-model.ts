@@ -10,7 +10,7 @@ import { createPortModel } from "../../common/factory";
 /**
  * Options for Code model
  */
-export interface CodeBlockModelOptions extends BaseModelOptions {
+export interface AiCodeBlockModelOptions extends BaseModelOptions {
     inputs?: string[];
     outputs?: string[];
     params?: string[];
@@ -34,11 +34,11 @@ export interface CodeBlockData {
 /**
  * Data model for Code block
  */
-export class AiCodeBlockModel extends BaseModel<CodeBlockData, NodeModelGenerics & CodeBlockModelOptions> {
+export class AiCodeBlockModel extends BaseModel<CodeBlockData, NodeModelGenerics & AiCodeBlockModelOptions> {
 
-    codeBlockOptions!: CodeBlockModelOptions;
+    codeBlockOptions!: AiCodeBlockModelOptions;
 
-    constructor(options: CodeBlockModelOptions) {
+    constructor(options: AiCodeBlockModelOptions) {
         super({
             ...options,
             type: 'basic.aicode'
@@ -51,7 +51,7 @@ export class AiCodeBlockModel extends BaseModel<CodeBlockData, NodeModelGenerics
         //         `def main(inputs, outputs, parameters, synchronise):
         // pass`);
 
-        const generateCode = (options: CodeBlockModelOptions) => {
+        const generateCode = (options: AiCodeBlockModelOptions) => {
             let codeLines = [
                 "from lib.utils import Synchronise",
                 "from lib.inputs import Inputs",

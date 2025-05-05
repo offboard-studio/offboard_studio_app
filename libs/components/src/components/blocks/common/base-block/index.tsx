@@ -1,5 +1,5 @@
 import useTheme from '@mui/material/styles/useTheme';
-import { ControlledMenu, MenuItem, useMenuState } from '@szhsin/react-menu';
+import { ControlledMenu, Menu, MenuButton, MenuItem, SubMenu, useMenuState } from '@szhsin/react-menu';
 import React, { MouseEvent, useState } from 'react';
 
 import './styles.scss';
@@ -47,9 +47,12 @@ const BaseBlock: React.FC<BaseBlockProps> = (props) => {
     return <div className={`block-container ${selectedClass}`} onContextMenu={openContextMenu}>
         {props.children}
         {options.length > 0 &&
-            <ControlledMenu {...menuProps} anchorPoint={anchorPoint} theming={isDark ? 'dark' : undefined}
-                onClose={() => toggleMenu('initial')}>
+            <ControlledMenu {...menuProps} anchorPoint={anchorPoint} theming={isDark ?  "white":"dark"} className="context-menu" onMouseLeave={() => toggleMenu('initial')} onKeyDown={(e) => e.stopPropagation()}>
+                {/* // onClose={() => toggleMenu('initial')}> */}
+                {/* <Menu menuButton={<MenuButton>Menu</MenuButton>}  > */}
                 {options.map((option, index) => <MenuItem key={index} onClick={() => { contextHandler(option.key) }}>{option.label}</MenuItem>)}
+                {/* </Menu > */}
+
             </ControlledMenu>
         }
     </div>;

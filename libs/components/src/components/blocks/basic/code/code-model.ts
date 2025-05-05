@@ -224,6 +224,8 @@ export class CodeBlockModel extends BaseModel<CodeBlockData, NodeModelGenerics &
 
 
 
+
+
     /**
      * Generate inputs from list of output port names.
      * @returns List of input ports
@@ -265,6 +267,22 @@ export class CodeBlockModel extends BaseModel<CodeBlockData, NodeModelGenerics &
      * @returns Data object
      */
     getData(): CodeBlockData {
+        return this.data;
+    }
+
+    update():CodeBlockData {
+        this.data.code = this.getPort('code')?.getOptions() || this.data.code;
+        this.data.params = this.getParameterNames()?.map((port) => {
+            return { name: port }
+        }) || [];
+
+        this.data.ports.in = this.getInputNames()?.map((port) => {
+            return { name: port }
+        }) || [];
+
+        this.data.ports.out = this.getOutputNames()?.map((port) => {
+            return { name: port }
+        }) || [];
         return this.data;
     }
 

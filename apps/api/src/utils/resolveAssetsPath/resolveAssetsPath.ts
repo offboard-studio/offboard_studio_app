@@ -6,7 +6,7 @@ const getFileProdAssetsPath = (filePath: string): string => {
   // TODO: UPDATE TO MATCH package.json build.publish.repo option
   const appDataAssetsDir = path.join(
     appDataDir,
-    'nx-electron-node-react-boilerplate/assets'
+    'offboard_studio_app/assets'
   );
   const fileProdAssetsPath = path.join(appDataAssetsDir, filePath);
 
