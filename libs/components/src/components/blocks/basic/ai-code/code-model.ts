@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable prefer-const */
 import { BaseModelOptions, DeserializeEvent } from '@projectstorm/react-canvas-core';
 import { NodeModelGenerics } from "@projectstorm/react-diagrams";
@@ -53,6 +54,8 @@ export class AiCodeBlockModel extends BaseModel<CodeBlockData, NodeModelGenerics
 
         const generateCode = (options: AiCodeBlockModelOptions) => {
             let codeLines = [
+                "import zenoh",
+                "import time",
                 "from lib.utils import Synchronise",
                 "from lib.inputs import Inputs",
                 "from lib.outputs import Outputs",
@@ -267,6 +270,20 @@ export class AiCodeBlockModel extends BaseModel<CodeBlockData, NodeModelGenerics
     getData(): CodeBlockData {
         return this.data;
     }
+
+
+    setData(_data: any): void {
+        // _data = _data as CodeBlockData;
+        console.log('setData', _data);
+        this.data = {
+            ...this.data,
+            ..._data
+        }
+        this.inputAddPorts(this.data.ports.in || []);
+        this.outputAddPorts(this.data.ports.out || []);
+        this.paramsAddPorts(this.data.params || []);
+    }
+
 
     /**
      * Set the width and height of block

@@ -12,20 +12,20 @@ import { AiCodeBlockModelOptions } from '../blocks/basic/ai-code/code-model';
  *          onReject: Will be called to indicate failure.
  *        }
  */
-const AiCodeBlockDialog = ({ isOpen, onResolve, onReject, inputs, outputs, params }: InstanceProps<AiCodeBlockModelOptions> & Partial<AiCodeBlockModelOptions>) => {
+const AiCodeBlockDialog = ({ isOpen, onResolve, onReject, inputs, outputs, params,aiDescription }: InstanceProps<AiCodeBlockModelOptions> & Partial<AiCodeBlockModelOptions>) => {
 
     // Comma separated list of inputs for the Code block
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    // const [inputPorts, setInputPorts] = useState((inputs || []).join(', ') || '');
+    const [inputPorts, setInputPorts] = useState((inputs || []).join(', ') || '');
     // Comma separated list of outputs for the Code block
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    // const [outputPorts, setOutputPorts] = useState((outputs || []).join(', ') || '');
+    const [outputPorts, setOutputPorts] = useState((outputs || []).join(', ') || '');
     // Comma separated list of parameters for the Code block
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    // const [parameters, setParameters] = useState((params || []).join(', ') || '');
+    const [parameters, setParameters] = useState((params || []).join(', ') || '');
     const [error, setError] = useState('');
 
-    const [aiDescription, setAiDescription] = useState('AI Description');
+    const [aiDescriptionOut, setAiDescriptionOut] = useState(aiDescription||'AI Description');
 
     /**
      * Callback for 'Ok' button of the dialog
@@ -40,9 +40,9 @@ const AiCodeBlockDialog = ({ isOpen, onResolve, onReject, inputs, outputs, param
             // const outputs = outputPorts.split(',').filter((port) => Boolean(port)).map((port) => port.trim());
             // const params = parameters.split(',').filter((port) => Boolean(port)).map((port) => port.trim());
             // Send data back indicating as success
-            onResolve({ inputs: inputs, outputs: outputs, params: params,aiDescription: aiDescription });
+            onResolve({ inputs: inputs, outputs: outputs, params: params,aiDescription: aiDescriptionOut });
         } else {
-            setError('Code block needs atleast one Input or one Output')
+            setError('Code block needs a description');
         }
     }
 
@@ -58,13 +58,13 @@ const AiCodeBlockDialog = ({ isOpen, onResolve, onReject, inputs, outputs, param
                     margin="dense"
                     type="text"
                     variant='outlined'
-                    value={aiDescription}
-                    onChange={(event) => setAiDescription(event.target.value)}
+                    value={aiDescriptionOut}
+                    onChange={(event) => setAiDescriptionOut(event.target.value)}
                     error={Boolean(error)}
                     helperText={error}
                     fullWidth
                 />
-                {/* <DialogContentText>
+                <DialogContentText>
                     Enter the input ports
                 </DialogContentText>
                 <TextField
@@ -105,7 +105,7 @@ const AiCodeBlockDialog = ({ isOpen, onResolve, onReject, inputs, outputs, param
                     value={parameters}
                     onChange={(event) => setParameters(event.target.value)}
                     fullWidth
-                /> */}
+                />
 
             </DialogContent>
             <DialogActions>

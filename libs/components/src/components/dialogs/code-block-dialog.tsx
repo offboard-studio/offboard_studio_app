@@ -36,6 +36,7 @@ const CodeBlockDialog = ({ isOpen, onResolve, onReject, inputs, outputs, params 
             const inputs = inputPorts.split(',').filter((port) => Boolean(port)).map((port) => port.trim());
             const outputs = outputPorts.split(',').filter((port) => Boolean(port)).map((port) => port.trim());
             const params = parameters.split(',').filter((port) => Boolean(port)).map((port) => port.trim());
+            console.log(inputs, outputs, params);
             // Send data back indicating as success
             onResolve({ inputs: inputs, outputs: outputs, params: params,aiDescription: aiDescription });
         } else {

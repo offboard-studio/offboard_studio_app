@@ -1,5 +1,5 @@
 import OpenAI from 'openai';
-import { AiCodeBlockModel, CodeBlockData, CodeBlockModelOptions } from "../components/blocks/basic/ai-code/code-model"
+import { AiCodeBlockModel, CodeBlockData, AiCodeBlockModelOptions } from "../components/blocks/basic/ai-code/code-model"
 
 
 export default class CodeBlockCreatorAI {
@@ -10,7 +10,7 @@ export default class CodeBlockCreatorAI {
         dangerouslyAllowBrowser: true,
     });
     codeBlockModel: AiCodeBlockModel | undefined;
-    constructor(parameters: CodeBlockModelOptions, codeBlockModel?: AiCodeBlockModel) {
+    constructor(parameters: AiCodeBlockModelOptions, codeBlockModel?: AiCodeBlockModel) {
         this.codeBlockModel = codeBlockModel;
 
     }
@@ -31,6 +31,14 @@ export default class CodeBlockCreatorAI {
     - **List Comprehensions**: Use list comprehensions where appropriate for cleaner and more efficient code.
     - **No Plotting or Displaying Windows**: Do not use \`cv2.imshow\` or similar functions.
     - **Always read from image from this inputs.read_image("Img")
+    - **Always write to image from this outputs.share_image("OutImage", img)**
+    - **Always write to array from this outputs.share_array("OutArray", data)**
+    - **Always read from array from this inputs.read_array("InArray")**
+    - **Always read from number from this inputs.read_number("InNumber")**
+    - **Always write to number from this outputs.share_number("OutNumber", data)**
+    - **Always read from string from this inputs.read_string("InString")**
+    - **Always write to string from this outputs.share_string("OutString", data)**
+    - **Always assign to a variable from enable and read it more than once, do not use it like this: try: enable = inputs.read_number("Enable") except Exception: auto_enable = True**
     
     ### Example 1: Blur Code
     
@@ -223,7 +231,9 @@ export default class CodeBlockCreatorAI {
                 { "role": "user", "content": this.codeBlockModel?.getData().aiDescription || "Generate code python for the following inputs and outputs: " + (this.codeBlockModel?.getData().ports.in || "") + " and " + (this.codeBlockModel?.getData()?.ports.out || "") }],
             model: "deepseek/deepseek-r1-zero:free",
         });
+        
         const code = response.choices[0]?.message?.content ?? "";
+        console.log(code);
         return code;
     }
 

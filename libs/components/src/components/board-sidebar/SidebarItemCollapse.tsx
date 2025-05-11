@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Collapse, List, ListItemButton, ListItemText, Typography } from "@mui/material";
 import { useState } from "react";
 import ExpandLessOutlinedIcon from "@mui/icons-material/ExpandLessOutlined";

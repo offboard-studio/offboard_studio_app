@@ -21,6 +21,7 @@ export interface AiCodeBlockWidgetProps {
     node: AiCodeBlockModel;
     engine: DiagramEngine;
     editor: Editor;
+    // selectingNode: boolean;
 }
 
 /**
@@ -31,7 +32,8 @@ export interface AiCodeBlockWidgetState {
     code: string,
     width: string,
     height: string,
-    frequency: string
+    frequency: string,
+    // selectingNode: boolean
 }
 
 /**
@@ -40,11 +42,12 @@ export interface AiCodeBlockWidgetState {
 export class AiCodeBlockWidget extends React.Component<AiCodeBlockWidgetProps, AiCodeBlockWidgetState> {
 
     static contextType = GlobalState as React.Context<unknown>;
-    readonly contextOptions: ContextOption[] = [{ key: 'delete', label: 'Delete' }, { key: 'rename', label: 'Rename' }];
+    readonly contextOptions: ContextOption[] = [{ key: 'delete', label: 'Delete' }, { key: 'rename', label: 'Rename' }, { key: 'rearrangement', label: 'Rearrangement' }];
 
     constructor(props: AiCodeBlockWidgetProps) {
         super(props);
         this.state = {
+            // selectingNode:this.props.selectingNode,
             code: this.props.node.data.code || '',
             width: this.props.node.data.size?.width || '300px',
             height: this.props.node.data.size?.height || '300px',
@@ -84,6 +87,9 @@ export class AiCodeBlockWidget extends React.Component<AiCodeBlockWidgetProps, A
                 break;
             case 'rename':
                 this.props.editor.editNode(this.props.node);
+                break;
+            case 'rearrangement':
+                // this.props.editor.rearrangementNode(this.props.node);
                 break;
             default:
                 break;

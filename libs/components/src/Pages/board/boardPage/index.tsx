@@ -164,11 +164,13 @@ export const BoardPage = (): JSX.Element => {
             style={{ display: 'flex', flexGrow: 1 }}
           >
             <BoardSidebar editor={editor} />
+            
             <div className="main-content">
               <ThemeProvider theme={darkTheme}>
                 <div className="App theme-dark">
                   <GlobalState.Provider value={{ state, setState }}>
                     <Board editor={editor} />
+                    {/*  sağ tarafta ai response kodlarını verdir. */}
                   </GlobalState.Provider>
                 </div>
                 <ModalContainer />
