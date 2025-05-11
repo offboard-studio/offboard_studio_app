@@ -15,6 +15,7 @@ export interface AiCodeBlockModelOptions extends BaseModelOptions {
     inputs?: string[];
     outputs?: string[];
     params?: string[];
+    code?: string;
     aiDescription?: string;
 }
 
@@ -271,17 +272,50 @@ export class AiCodeBlockModel extends BaseModel<CodeBlockData, NodeModelGenerics
         return this.data;
     }
 
+    updateData(_data: any): void {
+        // _data = _data as CodeBlockData;
+        console.log('updateData', _data);
+    }
+
+    cleanData(): void {
+        this.data = {
+            code: '',
+            aiDescription: '',
+            frequency: '30',
+            params: [],
+            ports: {
+                in: [],
+                out: []
+            },
+            size: {
+                width: '300px',
+                height: '300px'
+            }
+        }
+        Object.values(this.getPorts()).forEach((port) => {
+        this.removePort(port);
+        });
+    }
 
     setData(_data: any): void {
+        // this.cleanData();
         // _data = _data as CodeBlockData;
         console.log('setData', _data);
         this.data = {
             ...this.data,
-            ..._data
+            ..._data,
+            code: _data.code,
+            // aiDescription: _data.aiDescription,
+            // frequency: _data.frequency,
+            params: _data.params,
+            ports: {
+                in: _data.ports.in,
+                out: _data.ports.out
+            },
         }
-        this.inputAddPorts(this.data.ports.in || []);
-        this.outputAddPorts(this.data.ports.out || []);
-        this.paramsAddPorts(this.data.params || []);
+        // this.inputAddPorts(this.data.ports.in || []);
+        // this.outputAddPorts(this.data.ports.out || []);
+        // this.paramsAddPorts(this.data.params || []);
     }
 
 

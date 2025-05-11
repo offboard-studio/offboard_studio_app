@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-case-declarations */
 import { Card, CardContent, CardHeader, TextField, InputAdornment } from '@mui/material';
 import MonacoEditor from "@monaco-editor/react";
 import { DiagramEngine } from '@projectstorm/react-diagrams-core';
@@ -42,7 +45,7 @@ export interface AiCodeBlockWidgetState {
 export class AiCodeBlockWidget extends React.Component<AiCodeBlockWidgetProps, AiCodeBlockWidgetState> {
 
     static contextType = GlobalState as React.Context<unknown>;
-    readonly contextOptions: ContextOption[] = [{ key: 'delete', label: 'Delete' }, { key: 'rename', label: 'Rename' }, { key: 'rearrangement', label: 'Rearrangement' }];
+    readonly contextOptions: ContextOption[] = [{ key: 'delete', label: 'Delete' }, { key: 'editAI', label: 'Edit With AI from Prompt' }, { key: 'edit', label: 'Edit with Code' }];
 
     constructor(props: AiCodeBlockWidgetProps) {
         super(props);
@@ -80,15 +83,20 @@ export class AiCodeBlockWidget extends React.Component<AiCodeBlockWidgetProps, A
      * Handler for context menu
      * @param key Key cooresponding to the context menu clicked
      */
-    onContextMenu(key: string) {
+    async onContextMenu(key: string) {
         switch (key) {
             case 'delete':
                 this.props.editor.removeNode(this.props.node);
                 break;
-            case 'rename':
-                this.props.editor.editNode(this.props.node);
+            case 'editAI':
+                const data: any = await this.props.editor.editAINode(this.props.node);
+                console.log("Data from rename", data);
+                // this.props.node.setName(data.name);
+                // this.setState
+                this.setState({ code: data.code });
                 break;
-            case 'rearrangement':
+            case 'edit':
+                await this.props.editor.editNode(this.props.node);
                 // this.props.editor.rearrangementNode(this.props.node);
                 break;
             default:
@@ -103,10 +111,10 @@ export class AiCodeBlockWidget extends React.Component<AiCodeBlockWidgetProps, A
             width: this.state.width,
             height: this.state.height
         };
-        console.log("Code block widget render,",this.props.node.isSelected());
-        
+        console.log("Code block widget render,", this.props.node.isSelected());
+
         return (
-           
+
             <BaseBlock selected={this.props.node.isSelected()} contextOptions={this.contextOptions}
                 contextHandler={this.onContextMenu.bind(this)}>
                 <div>
@@ -169,6 +177,7 @@ export class AiCodeBlockWidget extends React.Component<AiCodeBlockWidgetProps, A
                                         width={state.width}
                                         language="python"
                                         defaultValue={this.state.code}
+                                        value={this.state.code}
                                         onChange={this.handleInput}
                                         theme="vs-dark"
                                         // options={{
@@ -180,9 +189,10 @@ export class AiCodeBlockWidget extends React.Component<AiCodeBlockWidgetProps, A
                                         options={this.options}
                                     />
                                 </div>
-                                
+
                                 <div className='block-basic-code-outputs'>
                                     {this.props.node.getOutputs().map((port) => {
+                                        console.log("port is ", port);
                                         return (
                                             <BasePort className='code-output-port'
                                                 port={port!}

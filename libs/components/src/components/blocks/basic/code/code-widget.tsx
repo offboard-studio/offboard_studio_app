@@ -40,7 +40,7 @@ export interface CodeBlockWidgetState {
 export class CodeBlockWidget extends React.Component<CodeBlockWidgetProps, CodeBlockWidgetState> {
 
     static contextType = GlobalState as React.Context<unknown>;
-    readonly contextOptions: ContextOption[] = [{ key: 'delete', label: 'Delete' }, { key: 'rename', label: 'Rename' }];
+    readonly contextOptions: ContextOption[] = [{ key: 'delete', label: 'Delete' }, { key: 'edit', label: 'Edit IO' }];
 
     constructor(props: CodeBlockWidgetProps) {
         super(props);
@@ -82,7 +82,7 @@ export class CodeBlockWidget extends React.Component<CodeBlockWidgetProps, CodeB
             case 'delete':
                 this.props.editor.removeNode(this.props.node);
                 break;
-            case 'rename':
+            case 'edit':
                 this.props.editor.editNode(this.props.node);
                 break;
             default:

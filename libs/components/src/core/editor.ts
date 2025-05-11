@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-labels */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable eqeqeq */
@@ -27,6 +29,7 @@ import {
   getInitialPosition,
   loadPackage,
   createComposedBlock,
+  editAIBlock,
 } from '../components/blocks/common/factory';
 import { PackageBlockFactory } from '../components/blocks/package/package-factory';
 import { PackageBlockModel } from '../components/blocks/package/package-model';
@@ -579,14 +582,29 @@ class Editor {
     }
   }
 
-  /**
+   /**
    * Edit a block node, if current model is not locked.
    * @param node
    */
   public async editNode<T extends NodeModel>(node: T) {
     if (!this.locked()) {
       await editBlock(node);
+      
       this.engine.repaintCanvas();
+      // return data;
+    }
+  }
+
+  /**
+   * Edit a AI block node, if current model is not locked.
+   * @param node
+   */
+  public async editAINode<T extends NodeModel>(node: T) {
+    if (!this.locked()) {
+      let data: any = await editAIBlock(node);
+      
+      this.engine.repaintCanvas();
+      return data;
     }
   }
 }

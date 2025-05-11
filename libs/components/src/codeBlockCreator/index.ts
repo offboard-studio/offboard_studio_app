@@ -6,7 +6,16 @@ export default class CodeBlockCreatorAI {
 
 
     openai = new OpenAI({
-        baseURL: 'https://openrouter.ai/api/v1', apiKey: "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",
+        baseURL: 'https://openrouter.ai/api/v1',
+        apiKey: "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",
+        defaultHeaders: {
+
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+
+        // baseURL: 'http://localhost:11434/v1',
+        // apiKey: 'ollama', // required but unused
         dangerouslyAllowBrowser: true,
     });
     codeBlockModel: AiCodeBlockModel | undefined;
@@ -224,15 +233,33 @@ export default class CodeBlockCreatorAI {
 
     public async generateCodeBlock(block: CodeBlockData): Promise<string> {
 
-
         const response = await this.openai.chat.completions.create({
             messages: [
-                { "role": "system", "content": this.SYSTEM_PROMPT_CODE_BLOCK },
-                { "role": "user", "content": this.codeBlockModel?.getData().aiDescription || "Generate code python for the following inputs and outputs: " + (this.codeBlockModel?.getData().ports.in || "") + " and " + (this.codeBlockModel?.getData()?.ports.out || "") }],
+                { role: "system", content: this.SYSTEM_PROMPT_CODE_BLOCK },
+                {
+                    role: "user",
+                    content:
+                        "Generate description for the following : " +
+                        this.codeBlockModel?.getData().aiDescription +
+                        " generate previous code from this can follow : " +
+                        this.codeBlockModel?.getData().code
+                    // ||
+                    // "Generate code python for the following inputs and outputs: " +
+                    // JSON.stringify(this.codeBlockModel?.getData()?.ports?.in || []) +
+                    // " and " +
+                    // JSON.stringify(this.codeBlockModel?.getData()?.ports?.out || []),
+                },
+            ],
             model: "deepseek/deepseek-r1-zero:free",
+            // model: "deepseek-r1:14b",
         });
-        
-        const code = response.choices[0]?.message?.content ?? "";
+
+        const code = response?.choices?.[0]?.message?.content;
+        if (!code) {
+            throw new Error("AI did not return any code content. Full response: " + JSON.stringify(response));
+        }
+
+
         console.log(code);
         return code;
     }

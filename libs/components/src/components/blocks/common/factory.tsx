@@ -73,56 +73,10 @@ export const editBlock = async (node: NodeModel) => {
             data = await createConstantDialog({ isOpen: true, name: node.getData().name, local: node.getData().local });
             node.setData(data);
         } else if (node instanceof AiCodeBlockModel) {
-            // console.log('AI Code Block', node.getData());
-            data = await aiCreateCodeDialog({
+            data = await createCodeDialog({
                 isOpen: true,
-                inputs: node.getInputNames(),
-                outputs: node.getOutputNames(),
-                params: node.getParameterNames(),
-                aiDescription: node.getData().aiDescription,
+                inputs: node.getInputNames(), outputs: node.getOutputNames(), params: node.getParameterNames()
             });
-
-            const block1 = new AiCodeBlockModel(data);
-            const codeBlockData = block1.getData();
-            const codeBlock = await new CodeBlockCreatorAI(data, block1).generateCodeBlock(codeBlockData);
-
-
-            const codeBlockString = await extractMainPythonFunctionBlock(codeBlock);
-
-            const { inputCalls, outputCalls, parameterCalls } = extractFunctionCalls(codeBlockString);
-
-            let dataX = {
-                ...data,
-                code: codeBlockString,
-                params: parameterCalls != null ? parameterCalls.map((port: string) => {
-                    return { name: port }
-                }) : data.params?.map((port: string) => {
-                    return { name: port }
-                }) || [],
-                ports: {
-                    in: inputCalls != null ? inputCalls.map((port: string) => {
-                        return { name: port }
-                    }) : data.inputs?.map((port: string) => {
-                        return { name: port }
-                    }) || [],
-                    out: outputCalls != null ? outputCalls.map((port: string) => {
-                        return { name: port }
-                    }) : data.outputs?.map((port: string) => {
-                        return { name: port }
-                    }) || []
-                },
-            }
-
-            // block = new AiCodeBlockModel(data);
-
-            // Now, update the block with the new data
-            node.setData({
-                ...dataX,
-                aiDescription: data.aiDescription,
-                frequency: node.getData().frequency,
-                code: codeBlockString || '',
-            });
-
 
             let _data = {
                 params: data.params?.map((port: string) => {
@@ -139,7 +93,7 @@ export const editBlock = async (node: NodeModel) => {
             }
 
             // CodeBlockModel.setData(data);
-            // node.setData(_data);
+            node.setData(_data);
 
 
         }
@@ -184,6 +138,89 @@ export const editBlock = async (node: NodeModel) => {
         } else if (node instanceof InputBlockModel || node instanceof OutputBlockModel) {
             data = await createIODialog({ isOpen: true, name: node.getData().name });
             node.setData(data);
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+export const editAIBlock = async (node: NodeModel) => {
+    let data;
+    console.log('Edit block', (node));
+    try {
+        if (node instanceof AiCodeBlockModel) {
+            // console.log('AI Code Block', node.getData());
+            data = await aiCreateCodeDialog({
+                isOpen: true,
+                inputs: node.getInputNames(),
+                outputs: node.getOutputNames(),
+                params: node.getParameterNames(),
+                aiDescription: node.getData().aiDescription,
+            });
+
+            const block1 = new AiCodeBlockModel(data);
+            const codeBlockData = block1.getData();
+            const codeBlock = await new CodeBlockCreatorAI(data, block1).generateCodeBlock(codeBlockData);
+
+
+            const codeBlockString = await extractMainPythonFunctionBlock(codeBlock);
+
+            const { inputCalls, outputCalls, parameterCalls } = extractFunctionCalls(codeBlockString);
+            
+            console.log('inputCalls', inputCalls);
+            console.log('outputCalls', outputCalls);
+            console.log('parameterCalls', parameterCalls);
+            const uniqueOutputCalls = [...new Set(outputCalls)];
+            const uniqueInputCalls = [...new Set(inputCalls)];
+            const uniqueParameterCalls = [...new Set(parameterCalls)];
+            let dataX = {
+                ...data,
+                code: codeBlockString,
+                params: uniqueParameterCalls.length > 0
+                    ? uniqueParameterCalls.map((port: string) => ({ name: port }))
+                    : data.params?.map((port: string) => ({ name: port })) || [],
+                ports: {
+                    in: uniqueInputCalls.length > 0
+                        ? uniqueInputCalls.map((port: string) => ({ name: port }))
+                        : data.inputs?.map((port: string) => ({ name: port })) || [],
+                    out: uniqueOutputCalls.length > 0
+                        ? uniqueOutputCalls.map((port: string) => ({ name: port }))
+                        : data.outputs?.map((port: string) => ({ name: port })) || [],
+                },
+            };
+
+            // block = new AiCodeBlockModel(data);
+
+            // Now, update the block with the new data
+            node.setData({
+                ...dataX,
+                aiDescription: data.aiDescription,
+                frequency: node.getData().frequency,
+                code: codeBlockString || '',
+            });
+
+            return dataX;
+
+
+            let _data = {
+                params: data.params?.map((port: string) => {
+                    return { name: port }
+                }) || [],
+                ports: {
+                    in: data.inputs?.map((port: string) => {
+                        return { name: port }
+                    }) || [],
+                    out: data.outputs?.map((port: string) => {
+                        return { name: port }
+                    }) || []
+                },
+            }
+
+            // CodeBlockModel.setData(data);
+            // node.setData(_data);
+
+
         }
     } catch (error) {
         console.log(error);
@@ -251,10 +288,24 @@ function extractFunctionCalls(code: string) {
             outputCalls.push(match[1]);
         }
     });
+    const outputPartsArray2 = code.split('outputs.share_array(');
+    outputPartsArray2.forEach(part => {
+        const match = part.match(/^'([^']+)'/);
+        if (match) {
+            outputCalls.push(match[1]);
+        }
+    });
     // Extract outputs.share_number calls
     const outputPartsImage = code.split('outputs.share_image(');
     outputPartsImage.forEach(part => {
         const match = part.match(/^"([^"]+)"/);
+        if (match) {
+            outputCalls.push(match[1]);
+        }
+    });
+    const outputPartsImage2 = code.split('outputs.share_image(');
+    outputPartsImage2.forEach(part => {
+        const match = part.match(/^'([^']+)'/);
         if (match) {
             outputCalls.push(match[1]);
         }
@@ -347,6 +398,7 @@ async function extractMainPythonFunctionBlock(markdown: string): Promise<string>
 
     for (const line of lines) {
         const trimmed = line.trim();
+        
 
         // Tek satırda açılan durum: \boxed{```python
         if (trimmed.startsWith("\\boxed{```python")) {
@@ -356,7 +408,7 @@ async function extractMainPythonFunctionBlock(markdown: string): Promise<string>
         }
 
         // Eğer ayrı ayrıysa: \boxed{ satırı
-        if (trimmed.startsWith("\\boxed{")) {
+        if (trimmed.startsWith("\\boxed{") || trimmed.startsWith("\\box{")) {
             insideBoxed = true;
             continue;
         }

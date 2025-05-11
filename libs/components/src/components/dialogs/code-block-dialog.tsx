@@ -12,7 +12,7 @@ import { CodeBlockModelOptions } from '../blocks/basic/code/code-model';
  *          onReject: Will be called to indicate failure.
  *        }
  */
-const CodeBlockDialog = ({ isOpen, onResolve, onReject, inputs, outputs, params }: InstanceProps<CodeBlockModelOptions> & Partial<CodeBlockModelOptions>) => {
+const CodeBlockDialog = ({ isOpen, onResolve, onReject, inputs, outputs, params,aiDescription }: InstanceProps<CodeBlockModelOptions> & Partial<CodeBlockModelOptions>) => {
 
     // Comma separated list of inputs for the Code block
     const [inputPorts, setInputPorts] = useState((inputs || []).join(', ') || '');
@@ -22,7 +22,7 @@ const CodeBlockDialog = ({ isOpen, onResolve, onReject, inputs, outputs, params 
     const [parameters, setParameters] = useState((params || []).join(', ') || '');
     const [error, setError] = useState('');
 
-    const [aiDescription, setAiDescription] = useState('AI Description');
+    const [descriptionVal, setDescriptionVal] = useState(aiDescription||'Code Block Description');
 
     /**
      * Callback for 'Ok' button of the dialog
@@ -49,15 +49,15 @@ const CodeBlockDialog = ({ isOpen, onResolve, onReject, inputs, outputs, params 
 
             <DialogContent>
                 <DialogContentText>
-                    Enter Description for AI Code Block
+                    Enter Description for Code Block
                 </DialogContentText>
                 <TextField
                     autoFocus
                     margin="dense"
                     type="text"
                     variant='outlined'
-                    value={aiDescription}
-                    onChange={(event) => setAiDescription(event.target.value)}
+                    value={descriptionVal}
+                    onChange={(event) => setDescriptionVal(event.target.value)}
                     error={Boolean(error)}
                     helperText={error}
                     fullWidth
