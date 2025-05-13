@@ -38,7 +38,7 @@ console.log('window', window);
 
 // createHashRouter solves basename issues in Electron
 const router = createHashRouter([
-  { path: window.location.protocol==='file'?'/index.html':'/' , element: <BoardPage />, errorElement: <ErrorPage /> },
+  { path: '/', element: <BoardPage />, errorElement: <ErrorPage /> },
   { path: '/signin', element: <SignIn /> },
   { path: '/signup', element: <SignUp /> },  
   { path: '/dashboard', element: <DashboardPage /> },
@@ -46,7 +46,7 @@ const router = createHashRouter([
 ],
   {
     // basename: window.location.pathname || '/',
-    basename:window.location.protocol === 'file:' ? '/index.html' : '/',
+    // basename:window.location.protocol === 'file:' ? '/index.html' : '/',
     // basename: '/app',
   } as DOMRouterOpts
 );
