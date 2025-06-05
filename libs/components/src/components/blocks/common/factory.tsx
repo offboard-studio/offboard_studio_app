@@ -22,7 +22,7 @@ import { getCollectionBlock } from '../collection/collection-factory';
 import { PackageBlockModel } from '../package/package-model';
 import { BaseInputPortModel, BaseOutputPortModel, BaseParameterPortModel, BasePortModelOptions } from './base-port/port-model';
 import cloneDeep from 'lodash.clonedeep';
-import CodeBlockCreatorAI from '../../../codeBlockCreator';
+import CodeBlockCreatorAI from '../../../code_block_creator';
 
 
 

@@ -34,7 +34,7 @@ import { DownloadRounded, FileDownload } from '@mui/icons-material';
 import { textFile2DataURL } from '../../../core/utils';
 import { PROJECT_FILE_EXTENSION } from '../../../core/constants';
 import { useLocation, useNavigate } from 'react-router-dom';
-import BoardSettings from '../boardSetting';
+import BoardSettings from '../board_setting';
 import Board from '..';
 
 const darkTheme = createTheme({

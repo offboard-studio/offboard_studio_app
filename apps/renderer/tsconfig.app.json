@@ -30,5 +30,5 @@
     "../../libs/components/src/components/blocks/collection/**/*.json",
     "../../libs/components/src/**/*.ts",
     "../../libs/components/src/**/*.tsx"
-  ]
+, "../../libs/components/src/pages/pricing_page"  ]
 }
