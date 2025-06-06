@@ -12,8 +12,16 @@ const webpackPaths = require('./webpack.paths');
 const checkNodeEnv = require('../scripts/checkNodeEnv');
 const deleteSourceMaps = require('../scripts/deleteSourceMaps');
 
+const TsconfigPathsPlugins = require('tsconfig-paths-webpack-plugin');
+
+
 checkNodeEnv('production');
 deleteSourceMaps();
+
+
+
+const rootNodeModules = path.resolve(__dirname, '../../node_modules');
+
 
 const configuration = {
   devtool: 'source-map',
@@ -21,6 +29,18 @@ const configuration = {
   mode: 'production',
 
   target: 'electron-main',
+
+  externals: {
+    '@nestjs/common': 'commonjs @nestjs/common',
+    '@nestjs/core': 'commonjs @nestjs/core',
+    '@nestjs/platform-express': 'commonjs @nestjs/platform-express',
+    '@nestjs/microservices': 'commonjs @nestjs/microservices',
+    '@nestjs/websockets': 'commonjs @nestjs/websockets',
+    '@nestjs/core/guards': 'commonjs @nestjs/core/guards',
+    '@nestjs/core/interceptors': 'commonjs @nestjs/core/interceptors',
+    '@nestjs/common/utils/select-exception-filter-metadata.util':
+      'commonjs @nestjs/common/utils/select-exception-filter-metadata.util',
+  },
 
   entry: {
     main: path.join(webpackPaths.rootElectronPath, 'src/main.ts'),
@@ -46,6 +66,42 @@ const configuration = {
     ],
   },
 
+  resolve: {
+    extensions: ['.js', '.jsx', '.json', '.ts', '.tsx', '.mjs'],
+    modules: [webpackPaths.rootElectronPath, 'node_modules'],
+    plugins: [
+      new TsconfigPathsPlugins({
+        configFile: './apps/electron/tsconfig.app.json',
+      }),
+    ],
+    alias: {
+      // NestJS modülleri için doğru path'ler
+      '@nestjs/common': path.resolve(rootNodeModules, '@nestjs/common'),
+      '@nestjs/core': path.resolve(rootNodeModules, '@nestjs/core'),
+      '@nestjs/platform-express': path.resolve(
+        rootNodeModules,
+        '@nestjs/platform-express'
+      ),
+      '@nestjs/microservices': path.resolve(
+        rootNodeModules,
+        '@nestjs/microservices'
+      ),
+      '@nestjs/websockets': path.resolve(rootNodeModules, '@nestjs/websockets'),
+      '@nestjs/core/guards': '@nestjs/common/guards',
+      '@nestjs/core/interceptors': '@nestjs/common/interceptors',
+      '@nestjs/core/pipes': '@nestjs/common/pipes',
+      '@nestjs/common/utils/select-exception-filter-metadata.util':
+        path.resolve(
+          rootNodeModules,
+          '@nestjs/common/utils/select-exception-filter-metadata.util.js'
+        ),
+    },
+    fallback: {
+      process: require.resolve('process/browser'),
+      path: require.resolve('path-browserify'),
+    },
+  },
+
   plugins: [
     new BundleAnalyzerPlugin({
       analyzerMode: process.env.ANALYZE === 'true' ? 'server' : 'disabled',
@@ -66,15 +122,23 @@ const configuration = {
       DEBUG_PROD: false,
       START_MINIMIZED: false,
     }),
-
-    new webpack.DefinePlugin({
-      'process.type': '"browser"',
-    }),
+    // new webpack.ProvidePlugin({
+    //   process: 'process/browser', // if you need to polyfill 'process'
+    // }),
   ],
 
   externals: {
     fsevents: "require('fsevents')",
     native: "require('native')",
+    '@nestjs/common': 'commonjs @nestjs/common',
+    '@nestjs/core': 'commonjs @nestjs/core',
+    '@nestjs/platform-express': 'commonjs @nestjs/platform-express',
+    '@nestjs/microservices': 'commonjs @nestjs/microservices',
+    '@nestjs/websockets': 'commonjs @nestjs/websockets',
+    '@nestjs/core/guards': 'commonjs @nestjs/core/guards',
+    '@nestjs/core/interceptors': 'commonjs @nestjs/core/interceptors',
+    '@nestjs/common/utils/select-exception-filter-metadata.util':
+      'commonjs @nestjs/common/utils/select-exception-filter-metadata.util',
   },
 
   /**
