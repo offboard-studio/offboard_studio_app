@@ -90,6 +90,21 @@ jobs:
           tag_name: v${{ needs.create_tag.outputs.package_version }}
           files: |
             ./release/out/Offboard Studio Setup ${{ needs.create_tag.outputs.package_version }}.exe
+            ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-x64.zip
+            ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-arm64.zip
+            ./docs/Help-guide.docx
+      - name: Upload Windows EXE to SourceForge
+        shell: bash
+        env:
+          SF_USERNAME: ${{ secrets.SF_USERNAME }}
+          SF_PASSWORD: ${{ secrets.SF_PASSWORD }}
+          SF_PROJECT: ${{ secrets.SF_PROJECT }}
+        run: |
+          sudo apt-get update && sudo apt-get install -y sshpass
+          FILE="./release/out/Offboard Studio Setup ${{ needs.create_tag.outputs.package_version }}.exe"
+          DEST="/home/frs/project/${SF_PROJECT}/release${{ needs.create_tag.outputs.package_version }}"
+          sshpass -p "$SF_PASSWORD" ssh -o StrictHostKeyChecking=no "$SF_USERNAME@frs.sourceforge.net" "mkdir -p \"$DEST\""
+          sshpass -p "$SF_PASSWORD" scp -o StrictHostKeyChecking=no "$FILE" "$SF_USERNAME@frs.sourceforge.net:\"$DEST\""
 
   release_macos:
     needs: [create_tag]
@@ -133,6 +148,25 @@ jobs:
             ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-mac.zip
             ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}.dmg
             ./docs/Help-guide.docx
+      - name: Install expect
+        run: brew install expect
+      - name: Create release directory on SourceForge
+        run: |
+          expect <<EOF
+          spawn ssh -o StrictHostKeyChecking=no ${{ secrets.SF_USERNAME }}@frs.sourceforge.net "mkdir -p /home/frs/project/${{ secrets.SF_PROJECT }}/release${{ needs.create_tag.outputs.package_version }}"
+          expect "Password:"
+          send "${{ secrets.SF_PASSWORD }}\r"
+          expect eof
+          EOF
+
+      - name: Upload macOS DMG to SourceForge
+        run: |
+          expect <<EOF
+          spawn scp -o StrictHostKeyChecking=no "./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-arm64.dmg" ${{ secrets.SF_USERNAME }}@frs.sourceforge.net:/home/frs/project/${{ secrets.SF_PROJECT }}/release${{ needs.create_tag.outputs.package_version }}
+          expect "Password:"
+          send "${{ secrets.SF_PASSWORD }}\r"
+          expect eof
+          EOF
 
   release_linux:
     needs: [create_tag]
@@ -163,4 +197,25 @@ jobs:
             ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-x64.AppImage
             ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-x64.deb
             ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-x64.rpm
-            ./docs/Help-guide.docx  
+            ./docs/Help-guide.docx
+      - name: Upload release files to SourceForge
+        if: ${{ success() }}
+        shell: bash
+        env:
+          SF_USERNAME: ${{ secrets.SF_USERNAME }}
+          SF_PASSWORD: ${{ secrets.SF_PASSWORD }}
+          SF_PROJECT: offboard-studio
+        run: |
+          apt-get update && apt-get install -y sshpass
+
+          REMOTE_PATH="/home/frs/project/$SF_PROJECT/release${{ needs.create_tag.outputs.package_version }}"
+
+          sshpass -p "$SF_PASSWORD" ssh -o StrictHostKeyChecking=no "$SF_USERNAME@frs.sourceforge.net" "mkdir -p \"$REMOTE_PATH\""
+
+          sshpass -p "$SF_PASSWORD" scp -o StrictHostKeyChecking=no \
+            "./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-arm64.AppImage" \
+            "./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-x64.AppImage" \
+            "./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-x64.deb" \
+            "./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-x64.rpm" \
+            "$SF_USERNAME@frs.sourceforge.net:\"$REMOTE_PATH/\""
+      
