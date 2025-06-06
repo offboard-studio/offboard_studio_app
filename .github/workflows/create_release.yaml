@@ -137,6 +137,39 @@ jobs:
         run: NODE_ENV=production npm run package:electron-app:mac
         env:
           NODE_ENV: production
+      
+      - name: Delete existing release assets
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const tag = 'v${{ needs.create_tag.outputs.package_version }}';
+            // Get the release by tag
+            const release = await github.rest.repos.getReleaseByTag({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag
+            });
+
+            // For each asset in the release, delete if name matches any in your upload list
+            const assetNamesToDelete = [
+              'Offboard Studio-${{ needs.create_tag.outputs.package_version }}-arm64-mac.zip',
+              'Offboard Studio-${{ needs.create_tag.outputs.package_version }}-arm64.dmg',
+              'Offboard Studio-${{ needs.create_tag.outputs.package_version }}-mac.zip',
+              'Offboard Studio-${{ needs.create_tag.outputs.package_version }}.dmg',
+              './docs/Help-guide.docx' // if you really upload this file too
+            ];
+
+            for (const asset of release.data.assets) {
+              if (assetNamesToDelete.includes(asset.name)) {
+                console.log(`Deleting existing asset: ${asset.name}`);
+                await github.rest.repos.deleteReleaseAsset({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  asset_id: asset.id
+                });
+              }
+            }
+
 
       - name: Release macOS build
         uses: softprops/action-gh-release@v1
@@ -198,23 +231,24 @@ jobs:
             ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-x64.deb
             ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-x64.rpm
             ./docs/Help-guide.docx
-      
-      - name: Upload to SourceForge via scp
+      - name: Upload to SourceForge via scp with password (sshpass)
         if: ${{ success() }}
         shell: bash
         env:
           SF_USERNAME: ${{ secrets.SF_USERNAME }}
+          SF_PASSWORD: ${{ secrets.SF_PASSWORD }}
+          SF_PROJECT: ${{ secrets.SF_PROJECT }}
         run: |
-          echo "${{ secrets.SF_PRIVATE_KEY }}" > key.pem
-          chmod 600 key.pem
+          sudo apt-get update && sudo apt-get install -y sshpass
 
-          REMOTE_PATH="/home/frs/project/offboard-studio/release${{ needs.create_tag.outputs.package_version }}"
+          REMOTE_PATH="/home/frs/project/${SF_PROJECT}/release${{ needs.create_tag.outputs.package_version }}"
 
-          ssh -i key.pem -o StrictHostKeyChecking=no "$SF_USERNAME@frs.sourceforge.net" "mkdir -p \"$REMOTE_PATH\""
+          sshpass -p "$SF_PASSWORD" ssh -o StrictHostKeyChecking=no "$SF_USERNAME@frs.sourceforge.net" "mkdir -p \"$REMOTE_PATH\""
 
-          scp -i key.pem -o StrictHostKeyChecking=no \
+          sshpass -p "$SF_PASSWORD" scp -o StrictHostKeyChecking=no \
             "./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-arm64.AppImage" \
             "./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-x64.AppImage" \
             "./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-x64.deb" \
             "./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-x64.rpm" \
             "$SF_USERNAME@frs.sourceforge.net:\"$REMOTE_PATH/\""
+
