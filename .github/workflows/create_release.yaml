@@ -131,18 +131,19 @@ jobs:
           files: |
             ./release/out/Offboard Studio Setup ${{ needs.create_tag.outputs.package_version }}.exe
             ./docs/Help-guide.docx
-      - name: Upload Windows EXE to SourceForge
-        shell: bash
-        env:
-          SF_USERNAME: ${{ secrets.SF_USERNAME }}
-          SF_PASSWORD: ${{ secrets.SF_PASSWORD }}
-          SF_PROJECT: ${{ secrets.SF_PROJECT }}
-        run: |
-          sudo apt-get update && sudo apt-get install -y sshpass
-          FILE="./release/out/Offboard Studio Setup ${{ needs.create_tag.outputs.package_version }}.exe"
-          DEST="/home/frs/project/${SF_PROJECT}/release${{ needs.create_tag.outputs.package_version }}"
-          sshpass -p "$SF_PASSWORD" ssh -o StrictHostKeyChecking=no "$SF_USERNAME@frs.sourceforge.net" "mkdir -p \"$DEST\""
-          sshpass -p "$SF_PASSWORD" scp -o StrictHostKeyChecking=no "$FILE" "$SF_USERNAME@frs.sourceforge.net:\"$DEST\""
+
+      # - name: Upload Windows EXE to SourceForge
+      #   shell: bash
+      #   env:
+      #     SF_USERNAME: ${{ secrets.SF_USERNAME }}
+      #     SF_PASSWORD: ${{ secrets.SF_PASSWORD }}
+      #     SF_PROJECT: ${{ secrets.SF_PROJECT }}
+      #   run: |
+      #     sudo apt-get update && sudo apt-get install -y sshpass
+      #     FILE="./release/out/Offboard Studio Setup ${{ needs.create_tag.outputs.package_version }}.exe"
+      #     DEST="/home/frs/project/${SF_PROJECT}/release${{ needs.create_tag.outputs.package_version }}"
+      #     sshpass -p "$SF_PASSWORD" ssh -o StrictHostKeyChecking=no "$SF_USERNAME@frs.sourceforge.net" "mkdir -p \"$DEST\""
+      #     sshpass -p "$SF_PASSWORD" scp -o StrictHostKeyChecking=no "$FILE" "$SF_USERNAME@frs.sourceforge.net:\"$DEST\""
 
   upload_windows_to_sourceforge:
     needs: [release_windows]
@@ -301,8 +302,7 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const tag = 'v${{ needs.create_tag.outputs.package_version }}';
-            // Get the release by tag
+            const tag = `v${{ needs.create_tag.outputs.package_version }}`;
 
             let release;
             try {
@@ -314,17 +314,18 @@ jobs:
             } catch (error) {
               if (error.status === 404) {
                 console.log(`No release found for tag ${tag}. Skipping asset deletion.`);
-                return; // çık, çünkü silinecek bir şey yok
+                return;
               } else {
-                throw error; // başka bir hata ise hatayı fırlat
+                throw error;
               }
             }
 
-            // For each asset in the release, delete if name matches any in your upload list
+            const version = "${{ needs.create_tag.outputs.package_version }}";
+
             const assetNamesToDelete = [
-              'Offboard Studio-${{ needs.create_tag.outputs.package_version }}-arm64.AppImage',
-              'Offboard Studio-${{ needs.create_tag.outputs.package_version }}.AppImage',
-              './docs/Help-guide.docx' // if you really upload this file too
+              `Offboard Studio-${version}-arm64.AppImage`,
+              `Offboard Studio-${version}.AppImage`,
+              `Help-guide.docx`
             ];
 
             for (const asset of release.data.assets) {
@@ -337,7 +338,6 @@ jobs:
                 });
               }
             }
-
       - name: Release linux build
         uses: softprops/action-gh-release@v1
         with:
