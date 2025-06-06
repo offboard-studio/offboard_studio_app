@@ -90,11 +90,22 @@ jobs:
           script: |
             const tag = 'v${{ needs.create_tag.outputs.package_version }}';
             // Get the release by tag
-            const release = await github.rest.repos.getReleaseByTag({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              tag
-            });
+            let release;
+            try {
+              release = await github.rest.repos.getReleaseByTag({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                tag
+              });
+            } catch (error) {
+              if (error.status === 404) {
+                console.log(`No release found for tag ${tag}. Skipping asset deletion.`);
+                return; // çık, çünkü silinecek bir şey yok
+              } else {
+                throw error; // başka bir hata ise hatayı fırlat
+              }
+            }
+
 
             // For each asset in the release, delete if name matches any in your upload list
             const assetNamesToDelete = [
@@ -171,11 +182,21 @@ jobs:
           script: |
             const tag = 'v${{ needs.create_tag.outputs.package_version }}';
             // Get the release by tag
-            const release = await github.rest.repos.getReleaseByTag({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              tag
-            });
+            let release;
+            try {
+              release = await github.rest.repos.getReleaseByTag({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                tag
+              });
+            } catch (error) {
+              if (error.status === 404) {
+                console.log(`No release found for tag ${tag}. Skipping asset deletion.`);
+                return; // çık, çünkü silinecek bir şey yok
+              } else {
+                throw error; // başka bir hata ise hatayı fırlat
+              }
+            }
 
             // For each asset in the release, delete if name matches any in your upload list
             const assetNamesToDelete = [
@@ -257,11 +278,22 @@ jobs:
           script: |
             const tag = 'v${{ needs.create_tag.outputs.package_version }}';
             // Get the release by tag
-            const release = await github.rest.repos.getReleaseByTag({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              tag
-            });
+
+            let release;
+            try {
+              release = await github.rest.repos.getReleaseByTag({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                tag
+              });
+            } catch (error) {
+              if (error.status === 404) {
+                console.log(`No release found for tag ${tag}. Skipping asset deletion.`);
+                return; // çık, çünkü silinecek bir şey yok
+              } else {
+                throw error; // başka bir hata ise hatayı fırlat
+              }
+            }
 
             // For each asset in the release, delete if name matches any in your upload list
             const assetNamesToDelete = [

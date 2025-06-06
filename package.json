@@ -2,7 +2,11 @@
   "name": "offboard.studio.app",
   "productName": "Offboard Studio App",
   "version": "0.0.0",
-  "description": "A foundation for scalable desktop apps",
+  "description": "AI based Drag and Drop Offboard Studio for Robotics",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/offboardstudio/offboard_studio_app.git"
+  },
   "author": "renderer",
   "license": "MIT",
   "main": "./release/build/electron/main.js",
@@ -191,11 +195,11 @@
     "extends": null,
     "publish": {
       "provider": "github",
-      "owner": "offboard-studio",
-      "repo": "renderer"
+      "owner": "offboardstudio",
+      "repo": "offboard_studio_app"
     },
     "productName": "Offboard Studio",
-    "appId": "renderer.app",
+    "appId": "offboard_studio_app.app",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
     "afterSign": ".config/scripts/notarize.js",
