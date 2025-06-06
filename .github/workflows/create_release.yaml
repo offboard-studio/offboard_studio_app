@@ -22,18 +22,35 @@ jobs:
         id: package-info
         uses: codex-team/action-nodejs-package-info@v1.1
 
-      - name: Create Tag
+      - name: Create Tag if not exists
         uses: actions/github-script@v6
         env:
           TAG: v${{ steps.package-info.outputs.version }}
         with:
           script: |
-            github.rest.git.createRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: "refs/tags/v${{ steps.package-info.outputs.version }}",
-              sha: context.sha
-            })
+            const tagName = process.env.TAG;
+
+            try {
+              // Check if the tag already exists
+              await github.rest.git.getRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: `tags/${tagName}`
+              });
+              console.log(`Tag "${tagName}" already exists. Skipping creation.`);
+            } catch (error) {
+              if (error.status === 404) {
+                console.log(`Tag "${tagName}" does not exist. Creating...`);
+                await github.rest.git.createRef({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  ref: `refs/tags/${tagName}`,
+                  sha: context.sha
+                });
+              } else {
+                throw error;
+              }
+            }
 
   release_windows:
     needs: [create_tag]
@@ -57,12 +74,10 @@ jobs:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
 
       - name: Run build app
-        run: |
-          npm run build:app
+        run: npm run build:app
 
       - name: Run package electron app for windows
-        run: |
-          npm run package:electron-app:win
+        run: npm run package:electron-app:win
 
       - name: Release windows build
         uses: softprops/action-gh-release@v1
@@ -73,7 +88,7 @@ jobs:
 
   release_macos:
     needs: [create_tag]
-    runs-on: macOS-latest
+    runs-on: macos-latest
 
     steps:
       - name: Check out Git repository
@@ -93,12 +108,10 @@ jobs:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
 
       - name: Run build app
-        run: |
-          npm run build:app
+        run: npm run build:app
 
       - name: Run package electron app for macOS
-        run: |
-          npm run package:electron-app:mac
+        run: npm run package:electron-app:mac
 
       - name: Release macOS build
         uses: softprops/action-gh-release@v1
