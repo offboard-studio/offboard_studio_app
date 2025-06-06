@@ -184,7 +184,7 @@ export const BoardPage = (): JSX.Element => {
         <BoardSettings
           editor={editor}
           onClose={() => {
-            navigate(isElectron ? '/index.html' : '/');
+            navigate(isElectron ? '/#/' : '/');
             setTabIndexBoard(false);
           }}
         />

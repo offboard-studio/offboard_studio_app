@@ -19,6 +19,7 @@
     "build:electron": "npx nx build:prod electron --verbose",
     "build:renderer": "npx nx build renderer --prod",
     "build:app": "npm run clean-release-build && npm run build:renderer && npm run build:electron ",
+    "build": "npm run build:app && npm run package:electron-app:mac",
     "package:electron-app:mac": "electron-builder build --mac --publish never",
     "package:electron-app:linux": "npx electron-builder@22.14.13 --linux --publish never",
     "package:electron-app:win": "npx electron-builder@22.14.13 --win --publish never",

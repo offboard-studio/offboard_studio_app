@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 const WelcomePage = () => {
   const navigate = useNavigate(); // Sayfa yönlendirme için
 
+  const isElectron = window.location.protocol === 'file:';
+
   return (
     <Box
       sx={{
@@ -32,7 +34,11 @@ const WelcomePage = () => {
                 variant="contained"
                 color="primary"
                 sx={{ mr: 2 }}
-                onClick={() => navigate('/dashboard')}
+                onClick={() => {
+                  // navigate('/dashboard'); // Yönlendirme işlemi
+                  // const isElectron = window.location.protocol === 'file:';
+                  navigate(isElectron ? '/#/dashboard' : '/dashboard');
+                }}
               >
                 Get Started →
               </Button>
@@ -67,7 +73,9 @@ const WelcomePage = () => {
             variant="contained"
             color="secondary"
             sx={{ mx: 1 }}
-            onClick={() => navigate('/signIn')}
+            onClick={() => {
+              navigate(isElectron ? '/#/signIn' : '/signIn');
+            }}
           >
             Login
           </Button>
@@ -75,7 +83,9 @@ const WelcomePage = () => {
             variant="outlined"
             color="primary"
             sx={{ mx: 1 }}
-            onClick={() => navigate('/signUp')}
+            onClick={() => {
+              navigate(isElectron ? '/#/signUp' : '/signUp');
+            }}
           >
             Register
           </Button>

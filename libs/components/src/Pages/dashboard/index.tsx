@@ -64,8 +64,12 @@ export const DashboardPage = (): JSX.Element => {
 
   const navigate = useNavigate();
 
+  const isElectron = window.location.protocol === 'file:';
+
   const handleNewProject = () => {
-    navigate('/board', { state: {} });
+    // navigate('/board', { state: {} });
+
+     navigate(isElectron ? '/#/board' : '/board', { state: {} });
     // toast.info('Created a new Project', {
     //   position: 'bottom-right',
     // });

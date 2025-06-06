@@ -38,10 +38,11 @@ console.log('window', window);
 
 // createHashRouter solves basename issues in Electron
 const router = createHashRouter([
-  { path: '/', element: <BoardPage />, errorElement: <ErrorPage /> },
+  { path:  '/', element: <BoardPage />, errorElement: <ErrorPage /> },
   { path: '/signin', element: <SignIn /> },
   { path: '/signup', element: <SignUp /> },  
   { path: '/dashboard', element: <DashboardPage /> },
+  { path: '/user', element: <SignUp /> },
   { path: '*', element: <NotFound /> },
 ],
   {

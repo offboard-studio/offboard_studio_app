@@ -437,6 +437,8 @@ class Editor {
     }
   }
 
+
+
   public async editSaveInfoProject(
     saveProjectInfo: ProjectInfo
   ): Promise<void> {
@@ -570,6 +572,7 @@ class Editor {
       this.setLock(false);
     }
   }
+
 
   /**
    * Delete a block node, if current model is not locked.
