@@ -65,7 +65,7 @@ jobs:
       - name: Install Node.js and NPM
         uses: actions/setup-node@v3
         with:
-          node-version: 20
+          node-version: 18
           cache: 'npm'
 
       - name: Install dependencies
@@ -99,7 +99,7 @@ jobs:
       - name: Install Node.js and NPM
         uses: actions/setup-node@v3
         with:
-          node-version: 20
+          node-version: 18
           cache: 'npm'
 
       - name: Install dependencies
@@ -123,33 +123,3 @@ jobs:
             ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-mac.zip
             ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}.dmg
             ./docs/Help-guide.docx
-
-  release_linux:
-    needs: [create_tag]
-    runs-on: ubuntu-latest
-    container:
-      image: node:20
-      options: --user node
-    env:
-      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
-    steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v4
-        with:
-          lfs: true
-      - name: Install dependencies
-        run: npm install --legacy-peer-deps --no-audit --prefer-offline
-      - name: Run build app
-        run: npm run build:app
-      - name: Run package electron app for linux
-        run: npm run package:electron-app:linux
-      - name: Release linux build
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: v${{ needs.create_tag.outputs.package_version }}
-          files: |
-            ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-arm64.AppImage
-            ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-x64.AppImage
-            ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-x64.deb
-            ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-x64.rpm
-            ./docs/Help-guide.docx  
