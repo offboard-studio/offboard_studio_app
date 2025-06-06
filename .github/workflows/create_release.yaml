@@ -196,7 +196,7 @@ jobs:
       - name: Upload macOS DMG to SourceForge
         run: |
           expect <<EOF
-          spawn scp -o StrictHostKeyChecking=no "./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-arm64.dmg" ${{ secrets.SF_USERNAME }}@frs.sourceforge.net:/home/frs/project/${{ secrets.SF_PROJECT }}/release${{ needs.create_tag.outputs.package_version }}
+          spawn scp -o StrictHostKeyChecking=no "./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-*.dmg" ${{ secrets.SF_USERNAME }}@frs.sourceforge.net:/home/frs/project/${{ secrets.SF_PROJECT }}/release${{ needs.create_tag.outputs.package_version }}/
           expect "Password:"
           send "${{ secrets.SF_PASSWORD }}\r"
           expect eof
@@ -231,9 +231,7 @@ jobs:
           tag_name: v${{ needs.create_tag.outputs.package_version }}
           files: |
             ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-arm64.AppImage
-            ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-x64.AppImage
-            ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-x64.deb
-            ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-x64.rpm
+            ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}.AppImage
             ./docs/Help-guide.docx
       - name: Upload to SourceForge via scp with password (sshpass)
         if: ${{ success() }}
@@ -251,8 +249,6 @@ jobs:
 
           sshpass -p "$SF_PASSWORD" scp -o StrictHostKeyChecking=no \
             "./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-arm64.AppImage" \
-            "./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-x64.AppImage" \
-            "./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-x64.deb" \
-            "./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-x64.rpm" \
+            "./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}.AppImage" \
             "$SF_USERNAME@frs.sourceforge.net:\"$REMOTE_PATH/\""
 
