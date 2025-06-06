@@ -4,10 +4,7 @@ import { app } from 'electron';
 const getFileProdAssetsPath = (filePath: string): string => {
   const appDataDir = app.getPath('appData');
   // TODO: UPDATE TO MATCH package.json build.publish.repo option
-  const appDataAssetsDir = path.join(
-    appDataDir,
-    'offboard_studio_app/assets'
-  );
+  const appDataAssetsDir = path.join(appDataDir, 'offboard_studio_app/assets');
   const fileProdAssetsPath = path.join(appDataAssetsDir, filePath);
 
   return fileProdAssetsPath;
