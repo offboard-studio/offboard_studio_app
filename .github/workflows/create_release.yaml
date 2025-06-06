@@ -76,7 +76,7 @@ jobs:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
 
       - name: Run build app
-        run: npm run build:app
+        run: NODE_ENV=production npm run build:app
 
       - name: Run package electron app for windows
         run: NODE_ENV=production npm run package:electron-app:win
@@ -115,7 +115,7 @@ jobs:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
 
       - name: Run build app
-        run: npm run build:app
+        run: NODE_ENV=production npm run build:app
 
       - name: Run package electron app for macOS
         run: NODE_ENV=production npm run package:electron-app:mac
@@ -148,10 +148,9 @@ jobs:
       - name: Install dependencies
         run: npm install --legacy-peer-deps --no-audit --prefer-offline
       - name: Run build app
-        run: npm run build:app
+        run: NODE_ENV=production npm run build:app
       - name: Run package electron app for linux
         run: NODE_ENV=production npm run package:electron-app:linux
-
         env:
           NODE_ENV: production
       - name: Release linux build
