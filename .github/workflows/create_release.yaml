@@ -198,24 +198,23 @@ jobs:
             ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-x64.deb
             ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-x64.rpm
             ./docs/Help-guide.docx
-      - name: Upload release files to SourceForge
+      
+      - name: Upload to SourceForge via scp
         if: ${{ success() }}
         shell: bash
         env:
           SF_USERNAME: ${{ secrets.SF_USERNAME }}
-          SF_PASSWORD: ${{ secrets.SF_PASSWORD }}
-          SF_PROJECT: offboard-studio
         run: |
-          apt-get update && apt-get install -y sshpass
+          echo "${{ secrets.SF_PRIVATE_KEY }}" > key.pem
+          chmod 600 key.pem
 
-          REMOTE_PATH="/home/frs/project/$SF_PROJECT/release${{ needs.create_tag.outputs.package_version }}"
+          REMOTE_PATH="/home/frs/project/offboard-studio/release${{ needs.create_tag.outputs.package_version }}"
 
-          sshpass -p "$SF_PASSWORD" ssh -o StrictHostKeyChecking=no "$SF_USERNAME@frs.sourceforge.net" "mkdir -p \"$REMOTE_PATH\""
+          ssh -i key.pem -o StrictHostKeyChecking=no "$SF_USERNAME@frs.sourceforge.net" "mkdir -p \"$REMOTE_PATH\""
 
-          sshpass -p "$SF_PASSWORD" scp -o StrictHostKeyChecking=no \
+          scp -i key.pem -o StrictHostKeyChecking=no \
             "./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-arm64.AppImage" \
             "./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-x64.AppImage" \
             "./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-x64.deb" \
             "./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-x64.rpm" \
             "$SF_USERNAME@frs.sourceforge.net:\"$REMOTE_PATH/\""
-      
