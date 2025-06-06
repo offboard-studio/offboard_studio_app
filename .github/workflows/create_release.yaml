@@ -79,7 +79,7 @@ jobs:
         run: npm run build:app
 
       - name: Run package electron app for windows
-        run: npm run package:electron-app:win
+        run: NODE_ENV=production npm run package:electron-app:win
         env:
           NODE_ENV: production
 
@@ -118,8 +118,7 @@ jobs:
         run: npm run build:app
 
       - name: Run package electron app for macOS
-        run: npm run package:electron-app:mac
-
+        run: NODE_ENV=production npm run package:electron-app:mac
         env:
           NODE_ENV: production
 
@@ -151,7 +150,7 @@ jobs:
       - name: Run build app
         run: npm run build:app
       - name: Run package electron app for linux
-        run: npm run package:electron-app:linux
+        run: NODE_ENV=production npm run package:electron-app:linux
 
         env:
           NODE_ENV: production
