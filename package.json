@@ -203,7 +203,8 @@
         "target": "default",
         "arch": [
           "arm64",
-          "x64"
+          "x64",
+          "arm64v8"
         ]
       },
       "type": "distribution",
@@ -227,6 +228,13 @@
       ]
     },
     "win": {
+      "arch": [
+        "x64",
+        "ia32",
+        "arm64",
+        "arm64v8"
+        
+      ],
       "target": [
         "nsis"
       ]
@@ -234,6 +242,14 @@
     "linux": {
       "target": [
         "AppImage"
+      ],
+      "arch": [
+        "x64",
+        "arm64",
+        "arm64v8",
+        "ia32",
+        "armv7l",
+        "riscv64"
       ],
       "category": "Development"
     }
