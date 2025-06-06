@@ -10,7 +10,6 @@ import { setAppHeaders } from './middlewares';
 
 export type ApiServer = Server;
 
-
 /**
  * Creating a new instance of this Api class will create
  * an express app, set up its associated routes and start the app server
