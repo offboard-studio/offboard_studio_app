@@ -221,6 +221,9 @@ jobs:
         run: NODE_ENV=production npm run package:electron-app:linux
         env:
           NODE_ENV: production
+      - name: List output files
+        run: ls -R ./release/out || echo "No files found"
+
       - name: Release linux build
         uses: softprops/action-gh-release@v1
         with:
