@@ -1,11 +1,11 @@
-export * from './home/Home.page';
-export * from './guide/Guide.page';
-export * from './sign/sign_in/signIn';
+export * from './home';
+export * from './guide';
+export * from './sign/sign_in';
 export * from './sign/sign_up';
 
-export * from './utils_pages/AccessDenied';
-export * from './utils_pages/NotFound';
-export * from './utils_pages/ErrorPage';
+export * from './utils_pages/access_denied';
+export * from './utils_pages/not_found';
+export * from './utils_pages/error_page';
 
 export * from './dashboard';
 export * from './inital_page';

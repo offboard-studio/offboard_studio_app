@@ -1,4 +1,4 @@
-import styles from './Guide.page.module.scss';
+import styles from './home.page.module.scss';
 
 export const GuidePage = (): JSX.Element => {
   return (

@@ -1,4 +1,4 @@
-import styles from './Home.page.module.scss';
+import styles from './home.page.module.scss';
 import { openNewWindow, PageRoutePaths } from '../../features';
 
 export const HomePage = (): JSX.Element => {
