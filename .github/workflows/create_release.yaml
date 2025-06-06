@@ -49,20 +49,20 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: 'yarn'
+          cache: 'npm'
 
       - name: Install dependencies
-        run: yarn install --immutable-cache
+        run: npm install --legacy-peer-deps --no-audit --prefer-offline
         env:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
 
       - name: Run build app
         run: |
-          yarn build:app
+          npm run build:app
 
       - name: Run package electron app for windows
         run: |
-          yarn package:electron-app:win
+          npm run package:electron-app:win
 
       - name: Release windows build
         uses: softprops/action-gh-release@v1
@@ -85,20 +85,20 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: 'yarn'
+          cache: 'npm'
 
       - name: Install dependencies
-        run: yarn install --immutable-cache
+        run: npm install --legacy-peer-deps --no-audit --prefer-offline
         env:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
 
       - name: Run build app
         run: |
-          yarn build:app
+          npm run build:app
 
       - name: Run package electron app for macOS
         run: |
-          yarn package:electron-app:mac
+          npm run package:electron-app:mac
 
       - name: Release macOS build
         uses: softprops/action-gh-release@v1
