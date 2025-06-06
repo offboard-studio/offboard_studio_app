@@ -181,6 +181,7 @@ jobs:
             ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-mac.zip
             ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}.dmg
             ./docs/Help-guide.docx
+      
       - name: Install expect
         run: brew install expect
       - name: Create release directory on SourceForge
