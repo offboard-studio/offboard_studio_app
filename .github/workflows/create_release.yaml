@@ -71,7 +71,7 @@ jobs:
       - name: Install dependencies
         run: npm install --legacy-peer-deps --no-audit --prefer-offline
         env:
-          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
 
       - name: Run build app
         run: npm run build:app
@@ -105,7 +105,7 @@ jobs:
       - name: Install dependencies
         run: npm install --legacy-peer-deps --no-audit --prefer-offline
         env:
-          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
 
       - name: Run build app
         run: npm run build:app
@@ -127,9 +127,6 @@ jobs:
   release_linux:
     needs: [create_tag]
     runs-on: ubuntu-latest
-    container:
-      image: node:20
-      options: --user node
     env:
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
     steps:
