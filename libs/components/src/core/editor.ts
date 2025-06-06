@@ -358,6 +358,7 @@ class Editor {
   public async addBlock(name: string): Promise<void> {
     this.blockCount += 1;
     const block = await createBlock(name, this.blockCount);
+    
     if (block) {
       // Get a default position and set it as blocks position
       // TODO: Better way would be to get an empty position dynamically or track mouse's current position.
