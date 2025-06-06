@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-labels */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable eqeqeq */
@@ -12,6 +14,7 @@ import createEngine, {
   RightAngleLinkFactory,
 } from '@projectstorm/react-diagrams';
 import { CodeBlockFactory } from '../components/blocks/basic/code/code-factory';
+import { AiCodeBlockFactory } from '../components/blocks/basic/ai-code/code-factory';
 import { ConstantBlockFactory } from '../components/blocks/basic/constant/constant-factory';
 import { InputBlockFactory } from '../components/blocks/basic/input/input-factory';
 import { OutputBlockFactory } from '../components/blocks/basic/output/output-factory';
@@ -26,6 +29,7 @@ import {
   getInitialPosition,
   loadPackage,
   createComposedBlock,
+  editAIBlock,
 } from '../components/blocks/common/factory';
 import { PackageBlockFactory } from '../components/blocks/package/package-factory';
 import { PackageBlockModel } from '../components/blocks/package/package-model';
@@ -103,6 +107,7 @@ class Editor {
       .getNodeFactories()
       .registerFactory(new ConstantBlockFactory(this));
     this.engine.getNodeFactories().registerFactory(new CodeBlockFactory(this));
+    this.engine.getNodeFactories().registerFactory(new AiCodeBlockFactory(this));
     this.engine.getNodeFactories().registerFactory(new InputBlockFactory(this));
     this.engine
       .getNodeFactories()
@@ -239,6 +244,8 @@ class Editor {
       return 'Parameter';
     } else if (nodeType === 'basic.code') {
       return 'Code';
+    } else if (nodeType === 'basic.aicode') {
+      return 'AI Code';
     }
 
     return nodeType;
@@ -269,9 +276,8 @@ class Editor {
               if (node.getType() == 'block.package') {
                 label = `${options.info.name} -> : ${portOptions.label}`;
               } else {
-                label = `${this.getNodeName(node.getType())} -> : ${
-                  portOptions.label
-                }`;
+                label = `${this.getNodeName(node.getType())} -> : ${portOptions.label
+                  }`;
               }
               valueOne.push({ indexOne, label, id });
             }
@@ -282,9 +288,8 @@ class Editor {
             if (node.getType() == 'block.package') {
               label = `${options.info.name} -> : ${portOptions.label}`;
             } else {
-              label = `${this.getNodeName(node.getType())} -> : ${
-                portOptions.label
-              }`;
+              label = `${this.getNodeName(node.getType())} -> : ${portOptions.label
+                }`;
             }
             valueTwo.push({ indexTwo, label, id });
           }
@@ -353,6 +358,7 @@ class Editor {
   public async addBlock(name: string): Promise<void> {
     this.blockCount += 1;
     const block = await createBlock(name, this.blockCount);
+    
     if (block) {
       // Get a default position and set it as blocks position
       // TODO: Better way would be to get an empty position dynamically or track mouse's current position.
@@ -431,6 +437,8 @@ class Editor {
       this.engine.repaintCanvas();
     }
   }
+
+
 
   public async editSaveInfoProject(
     saveProjectInfo: ProjectInfo
@@ -566,6 +574,7 @@ class Editor {
     }
   }
 
+
   /**
    * Delete a block node, if current model is not locked.
    * @param node
@@ -577,14 +586,29 @@ class Editor {
     }
   }
 
-  /**
+   /**
    * Edit a block node, if current model is not locked.
    * @param node
    */
   public async editNode<T extends NodeModel>(node: T) {
     if (!this.locked()) {
       await editBlock(node);
+      
       this.engine.repaintCanvas();
+      // return data;
+    }
+  }
+
+  /**
+   * Edit a AI block node, if current model is not locked.
+   * @param node
+   */
+  public async editAINode<T extends NodeModel>(node: T) {
+    if (!this.locked()) {
+      let data: any = await editAIBlock(node);
+      
+      this.engine.repaintCanvas();
+      return data;
     }
   }
 }

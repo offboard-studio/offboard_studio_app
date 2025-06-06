@@ -40,7 +40,7 @@ export interface CodeBlockWidgetState {
 export class CodeBlockWidget extends React.Component<CodeBlockWidgetProps, CodeBlockWidgetState> {
 
     static contextType = GlobalState as React.Context<unknown>;
-    readonly contextOptions: ContextOption[] = [{ key: 'delete', label: 'Delete' }];
+    readonly contextOptions: ContextOption[] = [{ key: 'delete', label: 'Delete' }, { key: 'edit', label: 'Edit IO' }];
 
     constructor(props: CodeBlockWidgetProps) {
         super(props);
@@ -82,6 +82,9 @@ export class CodeBlockWidget extends React.Component<CodeBlockWidgetProps, CodeB
             case 'delete':
                 this.props.editor.removeNode(this.props.node);
                 break;
+            case 'edit':
+                this.props.editor.editNode(this.props.node);
+                break;
             default:
                 break;
         }
@@ -94,10 +97,10 @@ export class CodeBlockWidget extends React.Component<CodeBlockWidgetProps, CodeB
             width: this.state.width,
             height: this.state.height
         };
-        console.log("Code block widget render,",this.props.node.isSelected());
-        
+        console.log("Code block widget render,", this.props.node.isSelected());
+
         return (
-           
+
             <BaseBlock selected={this.props.node.isSelected()} contextOptions={this.contextOptions}
                 contextHandler={this.onContextMenu.bind(this)}>
                 <div>
@@ -171,7 +174,7 @@ export class CodeBlockWidget extends React.Component<CodeBlockWidgetProps, CodeB
                                         options={this.options}
                                     />
                                 </div>
-                                
+
                                 <div className='block-basic-code-outputs'>
                                     {this.props.node.getOutputs().map((port) => {
                                         return (

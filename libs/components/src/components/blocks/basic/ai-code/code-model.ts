@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable prefer-const */
 import { BaseModelOptions, DeserializeEvent } from '@projectstorm/react-canvas-core';
 import { NodeModelGenerics } from "@projectstorm/react-diagrams";
@@ -10,10 +11,11 @@ import { createPortModel } from "../../common/factory";
 /**
  * Options for Code model
  */
-export interface CodeBlockModelOptions extends BaseModelOptions {
+export interface AiCodeBlockModelOptions extends BaseModelOptions {
     inputs?: string[];
     outputs?: string[];
     params?: string[];
+    code?: string;
     aiDescription?: string;
 }
 
@@ -34,14 +36,14 @@ export interface CodeBlockData {
 /**
  * Data model for Code block
  */
-export class CodeBlockModel extends BaseModel<CodeBlockData, NodeModelGenerics & CodeBlockModelOptions> {
+export class AiCodeBlockModel extends BaseModel<CodeBlockData, NodeModelGenerics & AiCodeBlockModelOptions> {
 
-    codeBlockOptions!: CodeBlockModelOptions;
+    codeBlockOptions!: AiCodeBlockModelOptions;
 
-    constructor(options: CodeBlockModelOptions) {
+    constructor(options: AiCodeBlockModelOptions) {
         super({
             ...options,
-            type: 'basic.code'
+            type: 'basic.aicode'
         });
 
         this.codeBlockOptions = options;
@@ -51,8 +53,16 @@ export class CodeBlockModel extends BaseModel<CodeBlockData, NodeModelGenerics &
         //         `def main(inputs, outputs, parameters, synchronise):
         // pass`);
 
-        const generateCode = (options: CodeBlockModelOptions) => {
-            let codeLines = ['def main(inputs, outputs, parameters, synchronise):'];
+        const generateCode = (options: AiCodeBlockModelOptions) => {
+            let codeLines = [
+                "import zenoh",
+                "import time",
+                "from lib.utils import Synchronise",
+                "from lib.inputs import Inputs",
+                "from lib.outputs import Outputs",
+                "from lib.parameters import Parameters",
+                "def main(inputs:Inputs, outputs:Outputs, parameters:Parameters, synchronise:Synchronise):"
+            ];
 
             // Add parameter retrieval
             if (options.params?.length) {
@@ -261,6 +271,53 @@ export class CodeBlockModel extends BaseModel<CodeBlockData, NodeModelGenerics &
     getData(): CodeBlockData {
         return this.data;
     }
+
+    updateData(_data: any): void {
+        // _data = _data as CodeBlockData;
+        console.log('updateData', _data);
+    }
+
+    cleanData(): void {
+        this.data = {
+            code: '',
+            aiDescription: '',
+            frequency: '30',
+            params: [],
+            ports: {
+                in: [],
+                out: []
+            },
+            size: {
+                width: '300px',
+                height: '300px'
+            }
+        }
+        Object.values(this.getPorts()).forEach((port) => {
+        this.removePort(port);
+        });
+    }
+
+    setData(_data: any): void {
+        // this.cleanData();
+        // _data = _data as CodeBlockData;
+        console.log('setData', _data);
+        this.data = {
+            ...this.data,
+            ..._data,
+            code: _data.code,
+            // aiDescription: _data.aiDescription,
+            // frequency: _data.frequency,
+            params: _data.params,
+            ports: {
+                in: _data.ports.in,
+                out: _data.ports.out
+            },
+        }
+        // this.inputAddPorts(this.data.ports.in || []);
+        // this.outputAddPorts(this.data.ports.out || []);
+        // this.paramsAddPorts(this.data.params || []);
+    }
+
 
     /**
      * Set the width and height of block

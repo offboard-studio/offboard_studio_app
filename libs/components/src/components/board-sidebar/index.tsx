@@ -91,11 +91,14 @@ const BoardSidebar: React.FC<BoardSideBarProps> = (props: BoardSideBarProps) => 
             <div
                 className={`sidebar ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}
                 style={{
-                    width: '30px',
+                    width: '7vw',
+                    maxWidth: '90px',
+                    minWidth: '45px',
                     background: '#333',
                     color: 'white',
-                    paddingLeft: '16px',
-                    paddingRight: '16px',
+                    paddingLeft: '1vw',
+                    paddingRight: '1vw',
+                    content: 'center',
                     height: '100vh',
                     position: 'absolute',
                     zIndex: 1000,
@@ -133,14 +136,18 @@ const BoardSidebar: React.FC<BoardSideBarProps> = (props: BoardSideBarProps) => 
                     <div
                         className={`sidebar ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}
                         style={{
-                            left: '60px',
-                            width: isSidebarCollapsed ? '60px' : '175px',
+
+                            width:  isSidebarCollapsed ? '10vw' : '20vw',
+                            maxWidth: '90px',
+                            minWidth: '45px',
                             background: '#333',
                             color: 'white',
-                            paddingLeft: '16px',
-                            paddingRight: '16px',
+                            paddingLeft: '1vw',
+                            paddingRight: '1vw',
+                            content: 'center',
                             height: '100vh',
                             position: 'absolute',
+                            left: '7vw',
                             zIndex: 1000,
                             display: 'flex',
                             flexDirection: 'column',
@@ -199,13 +206,24 @@ const BoardSidebar: React.FC<BoardSideBarProps> = (props: BoardSideBarProps) => 
 
                         className={`sidebar ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}
                         style={{
-                            left: '265px',
-                            display: selectedItem ? 'block' : 'none',
+                            // left: '265px',
+
+                             width:  isSidebarCollapsed ? '10vw' : '20vw',
+                            maxWidth: '200px',
+                            minWidth: '100px',
                             background: '#333',
                             color: 'white',
+                            paddingLeft: '1vw',
+                            paddingRight: '1vw',
+                            content: 'center',
                             height: '100vh',
                             position: 'absolute',
+                            // left: '7vw',
                             zIndex: 1000,
+                            display: 'flex',
+                            flexDirection: 'column',
+
+                            left: isSidebarCollapsed ? '8vw' : '16vw',
                         }}
                         onMouseEnter={handleMouseEnter}
                         onMouseLeave={handleMouseLeave}
@@ -231,6 +249,11 @@ const BoardSidebar: React.FC<BoardSideBarProps> = (props: BoardSideBarProps) => 
                                             <div onClick={() => setBlock('basic.code')}>
                                                 <Typography variant="body1" style={{ color: 'white', fontSize: '1.2em' }}>
                                                     Code
+                                                </Typography>
+                                            </div>
+                                            <div onClick={() => setBlock('basic.aicode')}>
+                                                <Typography variant="body1" style={{ color: 'white', fontSize: '1.2em' }}>
+                                                    AI Code
                                                 </Typography>
                                             </div>
                                             <div onClick={() => setBlock('basic.input')}>

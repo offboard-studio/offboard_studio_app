@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 
 export const NotFound = (): JSX.Element => {
   const isElectron = window.location.protocol === 'file:';
+  // window
   
   return (
     <div

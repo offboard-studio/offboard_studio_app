@@ -34,7 +34,7 @@ import { DownloadRounded, FileDownload } from '@mui/icons-material';
 import { textFile2DataURL } from '../../../core/utils';
 import { PROJECT_FILE_EXTENSION } from '../../../core/constants';
 import { useLocation, useNavigate } from 'react-router-dom';
-import BoardSettings from '../boardSetting';
+import BoardSettings from '../board_setting';
 import Board from '..';
 
 const darkTheme = createTheme({
@@ -164,11 +164,13 @@ export const BoardPage = (): JSX.Element => {
             style={{ display: 'flex', flexGrow: 1 }}
           >
             <BoardSidebar editor={editor} />
+            
             <div className="main-content">
               <ThemeProvider theme={darkTheme}>
                 <div className="App theme-dark">
                   <GlobalState.Provider value={{ state, setState }}>
                     <Board editor={editor} />
+                    {/*  sağ tarafta ai response kodlarını verdir. */}
                   </GlobalState.Provider>
                 </div>
                 <ModalContainer />
@@ -182,7 +184,7 @@ export const BoardPage = (): JSX.Element => {
         <BoardSettings
           editor={editor}
           onClose={() => {
-            navigate(isElectron ? '/index.html' : '/');
+            navigate(isElectron ? '/#/' : '/');
             setTabIndexBoard(false);
           }}
         />

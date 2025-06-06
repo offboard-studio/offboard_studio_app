@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import { create, InstanceProps } from 'react-modal-promise';
-import { CodeBlockModelOptions } from '../blocks/basic/code/code-model';
+import { AiCodeBlockModelOptions } from '../blocks/basic/ai-code/code-model';
 
 
 /**
@@ -12,35 +12,37 @@ import { CodeBlockModelOptions } from '../blocks/basic/code/code-model';
  *          onReject: Will be called to indicate failure.
  *        }
  */
-const CodeBlockDialog = ({ isOpen, onResolve, onReject, inputs, outputs, params,aiDescription }: InstanceProps<CodeBlockModelOptions> & Partial<CodeBlockModelOptions>) => {
+const AiCodeBlockDialog = ({ isOpen, onResolve, onReject, inputs, outputs, params,aiDescription }: InstanceProps<AiCodeBlockModelOptions> & Partial<AiCodeBlockModelOptions>) => {
 
     // Comma separated list of inputs for the Code block
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [inputPorts, setInputPorts] = useState((inputs || []).join(', ') || '');
     // Comma separated list of outputs for the Code block
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [outputPorts, setOutputPorts] = useState((outputs || []).join(', ') || '');
     // Comma separated list of parameters for the Code block
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [parameters, setParameters] = useState((params || []).join(', ') || '');
     const [error, setError] = useState('');
 
-    const [descriptionVal, setDescriptionVal] = useState(aiDescription||'Code Block Description');
+    const [aiDescriptionOut, setAiDescriptionOut] = useState(aiDescription||'AI Description');
 
     /**
      * Callback for 'Ok' button of the dialog
      */
     const handleSubmit = () => {
         // If neither input or output field is filled, show an error message.
-        if (inputPorts.length > 0 || outputPorts.length > 0) {
+        if (aiDescription!=='AI Description') {
             // Clear the previous error if any.
             setError('')
             // Split the inputs, outputs and parameters by comma 
-            const inputs = inputPorts.split(',').filter((port) => Boolean(port)).map((port) => port.trim());
-            const outputs = outputPorts.split(',').filter((port) => Boolean(port)).map((port) => port.trim());
-            const params = parameters.split(',').filter((port) => Boolean(port)).map((port) => port.trim());
-            console.log(inputs, outputs, params);
+            // const inputs = inputPorts.split(',').filter((port) => Boolean(port)).map((port) => port.trim());
+            // const outputs = outputPorts.split(',').filter((port) => Boolean(port)).map((port) => port.trim());
+            // const params = parameters.split(',').filter((port) => Boolean(port)).map((port) => port.trim());
             // Send data back indicating as success
-            onResolve({ inputs: inputs, outputs: outputs, params: params,aiDescription: aiDescription });
+            onResolve({ inputs: inputs, outputs: outputs, params: params,aiDescription: aiDescriptionOut });
         } else {
-            setError('Code block needs atleast one Input or one Output')
+            setError('Code block needs a description');
         }
     }
 
@@ -49,15 +51,15 @@ const CodeBlockDialog = ({ isOpen, onResolve, onReject, inputs, outputs, params,
 
             <DialogContent>
                 <DialogContentText>
-                    Enter Description for Code Block
+                    Enter Description for AI Code Block
                 </DialogContentText>
                 <TextField
                     autoFocus
                     margin="dense"
                     type="text"
                     variant='outlined'
-                    value={descriptionVal}
-                    onChange={(event) => setDescriptionVal(event.target.value)}
+                    value={aiDescriptionOut}
+                    onChange={(event) => setAiDescriptionOut(event.target.value)}
                     error={Boolean(error)}
                     helperText={error}
                     fullWidth
@@ -118,6 +120,6 @@ const CodeBlockDialog = ({ isOpen, onResolve, onReject, inputs, outputs, params,
     )
 }
 
-const createCodeDialog = create(CodeBlockDialog);
+const aiCreateCodeDialog = create(AiCodeBlockDialog);
 
-export default createCodeDialog;
+export default aiCreateCodeDialog;

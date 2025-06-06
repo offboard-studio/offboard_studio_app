@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable prefer-const */
 import { BaseModelOptions, DeserializeEvent } from '@projectstorm/react-canvas-core';
 import { NodeModelGenerics } from "@projectstorm/react-diagrams";
@@ -52,7 +53,16 @@ export class CodeBlockModel extends BaseModel<CodeBlockData, NodeModelGenerics &
         // pass`);
 
         const generateCode = (options: CodeBlockModelOptions) => {
-            let codeLines = ['def main(inputs, outputs, parameters, synchronise):'];
+            let codeLines = [
+                "import zenoh",
+                "import time",
+
+                "from lib.utils import Synchronise",
+                "from lib.inputs import Inputs",
+                "from lib.outputs import Outputs",
+                "from lib.parameters import Parameters",
+                "def main(inputs:Inputs, outputs:Outputs, parameters:Parameters, synchronise:Synchronise):"
+            ];
 
             // Add parameter retrieval
             if (options.params?.length) {
@@ -218,6 +228,8 @@ export class CodeBlockModel extends BaseModel<CodeBlockData, NodeModelGenerics &
 
 
 
+
+
     /**
      * Generate inputs from list of output port names.
      * @returns List of input ports
@@ -262,6 +274,22 @@ export class CodeBlockModel extends BaseModel<CodeBlockData, NodeModelGenerics &
         return this.data;
     }
 
+    update():CodeBlockData {
+        this.data.code = this.getPort('code')?.getOptions() || this.data.code;
+        this.data.params = this.getParameterNames()?.map((port) => {
+            return { name: port }
+        }) || [];
+
+        this.data.ports.in = this.getInputNames()?.map((port) => {
+            return { name: port }
+        }) || [];
+
+        this.data.ports.out = this.getOutputNames()?.map((port) => {
+            return { name: port }
+        }) || [];
+        return this.data;
+    }
+
     /**
      * Set the width and height of block
      * @param width Width of block
@@ -274,6 +302,18 @@ export class CodeBlockModel extends BaseModel<CodeBlockData, NodeModelGenerics &
         }
         this.data.size = size;
 
+    }
+
+    setData(_data:any): void {
+        // _data = _data as CodeBlockData;
+        console.log('setData', _data );
+        this.data = {
+            ...this.data,
+            ..._data
+        }
+        this.inputAddPorts(this.data.ports.in || []);
+        this.outputAddPorts(this.data.ports.out || []);
+        this.paramsAddPorts(this.data.params || []);
     }
 
     /**

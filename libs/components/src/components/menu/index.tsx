@@ -255,9 +255,10 @@ function MenuBar(props: MenuBarProps) {
                 <div style={{ flex: 1 }} />
                 <Menu
                     menuButton={<Button className='menu-button'>Basic</Button>}
-                    theming={isDark ? 'dark' : undefined}>
+                    theming={isDark ? 'dark' : "white"}>
                     <MenuItem onClick={() => setBlock('basic.constant')}>Constant</MenuItem>
                     <MenuItem onClick={() => setBlock('basic.code')}>Code</MenuItem>
+                    <MenuItem onClick={() => setBlock('basic.aicode')}>AI Code</MenuItem>
                     <MenuItem onClick={() => setBlock('basic.input')}>Input</MenuItem>
                     <MenuItem onClick={() => setBlock('basic.output')}>Output</MenuItem>
                     <MenuItem onClick={() => setBlock('basic.information')}>Information</MenuItem>

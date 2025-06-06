@@ -1,16 +1,25 @@
 import OpenAI from 'openai';
-import { CodeBlockModel, CodeBlockData, CodeBlockModelOptions } from "../components/blocks/basic/code/code-model"
+import { AiCodeBlockModel, CodeBlockData, AiCodeBlockModelOptions } from "../components/blocks/basic/ai-code/code-model"
 
 
 export default class CodeBlockCreatorAI {
 
 
     openai = new OpenAI({
-        baseURL: 'https://openrouter.ai/api/v1', apiKey: "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",
+        baseURL: 'https://openrouter.ai/api/v1',
+        apiKey: "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",
+        defaultHeaders: {
+
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+
+        // baseURL: 'http://localhost:11434/v1',
+        // apiKey: 'ollama', // required but unused
         dangerouslyAllowBrowser: true,
     });
-    codeBlockModel: CodeBlockModel | undefined;
-    constructor(parameters: CodeBlockModelOptions, codeBlockModel?: CodeBlockModel) {
+    codeBlockModel: AiCodeBlockModel | undefined;
+    constructor(parameters: AiCodeBlockModelOptions, codeBlockModel?: AiCodeBlockModel) {
         this.codeBlockModel = codeBlockModel;
 
     }
@@ -31,14 +40,26 @@ export default class CodeBlockCreatorAI {
     - **List Comprehensions**: Use list comprehensions where appropriate for cleaner and more efficient code.
     - **No Plotting or Displaying Windows**: Do not use \`cv2.imshow\` or similar functions.
     - **Always read from image from this inputs.read_image("Img")
+    - **Always write to image from this outputs.share_image("OutImage", img)**
+    - **Always write to array from this outputs.share_array("OutArray", data)**
+    - **Always read from array from this inputs.read_array("InArray")**
+    - **Always read from number from this inputs.read_number("InNumber")**
+    - **Always write to number from this outputs.share_number("OutNumber", data)**
+    - **Always read from string from this inputs.read_string("InString")**
+    - **Always write to string from this outputs.share_string("OutString", data)**
+    - **Always assign to a variable from enable and read it more than once, do not use it like this: try: enable = inputs.read_number("Enable") except Exception: auto_enable = True**
     
     ### Example 1: Blur Code
     
     \`\`\`python
     import cv2
     import numpy as np
-    
-    def main(inputs, outputs, parameters, synchronise):
+    from lib.utils import Synchronise
+    from lib.inputs import Inputs
+    from lib.outputs import Outputs
+    from lib.parameters import Parameters
+
+    def main(inputs:Inputs, outputs:Outputs, parameters:Parameters, synchronise:Synchronise):
         blur_type = parameters.read_string("BlurType")
         kernel = tuple([int(x.strip()) for x in parameters.read_string("Kernel").split(',')])
         auto_enable = False
@@ -105,7 +126,14 @@ export default class CodeBlockCreatorAI {
             cv2.putText(img,f'{className[classIds[i]].upper()} {int(confs[i]*100)}%',
                         (x,y-10),cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255,0,255),2)
     
-    def main(inputs, outputs, parameters, synchronise):
+                "from lib.utils import Synchronise",
+    
+    from lib.utils import Synchronise
+    from lib.inputs import Inputs
+    from lib.outputs import Outputs
+    from lib.parameters import Parameters
+
+    def main(inputs:Inputs, outputs:Outputs, parameters:Parameters, synchronise:Synchronise):
         auto_enable = true
         try:
             enable = inputs.read_number("Enable")
@@ -151,7 +179,12 @@ export default class CodeBlockCreatorAI {
     import math
     from time import sleep
     
-    def main(inputs, outputs, parameters, synchronise):
+    from lib.utils import Synchronise
+    from lib.inputs import Inputs
+    from lib.outputs import Outputs
+    from lib.parameters import Parameters
+
+    def main(inputs:Inputs, outputs:Outputs, parameters:Parameters, synchronise:Synchronise):
         auto_enable = true
         try:
             enable = inputs.read_number("Enable")
@@ -200,14 +233,34 @@ export default class CodeBlockCreatorAI {
 
     public async generateCodeBlock(block: CodeBlockData): Promise<string> {
 
-
         const response = await this.openai.chat.completions.create({
             messages: [
-                { "role": "system", "content": this.SYSTEM_PROMPT_CODE_BLOCK },
-                { "role": "user", "content": this.codeBlockModel?.getData().aiDescription || "Generate code python for the following inputs and outputs: " + (this.codeBlockModel?.getData().ports.in || "") + " and " + (this.codeBlockModel?.getData()?.ports.out || "") }],
+                { role: "system", content: this.SYSTEM_PROMPT_CODE_BLOCK },
+                {
+                    role: "user",
+                    content:
+                        "Generate description for the following : " +
+                        this.codeBlockModel?.getData().aiDescription +
+                        " generate previous code from this can follow : " +
+                        this.codeBlockModel?.getData().code
+                    // ||
+                    // "Generate code python for the following inputs and outputs: " +
+                    // JSON.stringify(this.codeBlockModel?.getData()?.ports?.in || []) +
+                    // " and " +
+                    // JSON.stringify(this.codeBlockModel?.getData()?.ports?.out || []),
+                },
+            ],
             model: "deepseek/deepseek-r1-zero:free",
+            // model: "deepseek-r1:14b",
         });
-        const code = response.choices[0]?.message?.content ?? "";
+
+        const code = response?.choices?.[0]?.message?.content;
+        if (!code) {
+            throw new Error("AI did not return any code content. Full response: " + JSON.stringify(response));
+        }
+
+
+        console.log(code);
         return code;
     }
 

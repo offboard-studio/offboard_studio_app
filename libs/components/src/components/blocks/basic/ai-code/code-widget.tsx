@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-case-declarations */
 import { Card, CardContent, CardHeader, TextField, InputAdornment } from '@mui/material';
 import MonacoEditor from "@monaco-editor/react";
 import { DiagramEngine } from '@projectstorm/react-diagrams-core';
@@ -7,7 +10,7 @@ import Editor from '../../../../core/editor';
 import { GlobalState } from '../../../../core/store';
 import BaseBlock, { ContextOption } from '../../common/base-block';
 import BasePort from '../../common/base-port';
-import { CodeBlockModel } from './code-model';
+import { AiCodeBlockModel } from './code-model';
 import { unitConversion } from '../../../utils/tooltip/index'
 import './styles.scss';
 
@@ -17,34 +20,37 @@ import './styles.scss';
 /**
  * Interface for code block widget props
  */
-export interface CodeBlockWidgetProps {
-    node: CodeBlockModel;
+export interface AiCodeBlockWidgetProps {
+    node: AiCodeBlockModel;
     engine: DiagramEngine;
     editor: Editor;
+    // selectingNode: boolean;
 }
 
 /**
  * Interface for code block widget state
  */
-export interface CodeBlockWidgetState {
+export interface AiCodeBlockWidgetState {
     // For code text
     code: string,
     width: string,
     height: string,
-    frequency: string
+    frequency: string,
+    // selectingNode: boolean
 }
 
 /**
  * Widget for the code block
  */
-export class AiCodeBlockWidget extends React.Component<CodeBlockWidgetProps, CodeBlockWidgetState> {
+export class AiCodeBlockWidget extends React.Component<AiCodeBlockWidgetProps, AiCodeBlockWidgetState> {
 
     static contextType = GlobalState as React.Context<unknown>;
-    readonly contextOptions: ContextOption[] = [{ key: 'delete', label: 'Delete' }];
+    readonly contextOptions: ContextOption[] = [{ key: 'delete', label: 'Delete' }, { key: 'editAI', label: 'Edit With AI from Prompt' }, { key: 'edit', label: 'Edit with Code' }];
 
-    constructor(props: CodeBlockWidgetProps) {
+    constructor(props: AiCodeBlockWidgetProps) {
         super(props);
         this.state = {
+            // selectingNode:this.props.selectingNode,
             code: this.props.node.data.code || '',
             width: this.props.node.data.size?.width || '300px',
             height: this.props.node.data.size?.height || '300px',
@@ -77,10 +83,21 @@ export class AiCodeBlockWidget extends React.Component<CodeBlockWidgetProps, Cod
      * Handler for context menu
      * @param key Key cooresponding to the context menu clicked
      */
-    onContextMenu(key: string) {
+    async onContextMenu(key: string) {
         switch (key) {
             case 'delete':
                 this.props.editor.removeNode(this.props.node);
+                break;
+            case 'editAI':
+                const data: any = await this.props.editor.editAINode(this.props.node);
+                console.log("Data from rename", data);
+                // this.props.node.setName(data.name);
+                // this.setState
+                this.setState({ code: data.code });
+                break;
+            case 'edit':
+                await this.props.editor.editNode(this.props.node);
+                // this.props.editor.rearrangementNode(this.props.node);
                 break;
             default:
                 break;
@@ -94,10 +111,10 @@ export class AiCodeBlockWidget extends React.Component<CodeBlockWidgetProps, Cod
             width: this.state.width,
             height: this.state.height
         };
-        console.log("Code block widget render,",this.props.node.isSelected());
-        
+        console.log("Code block widget render,", this.props.node.isSelected());
+
         return (
-           
+
             <BaseBlock selected={this.props.node.isSelected()} contextOptions={this.contextOptions}
                 contextHandler={this.onContextMenu.bind(this)}>
                 <div>
@@ -160,6 +177,7 @@ export class AiCodeBlockWidget extends React.Component<CodeBlockWidgetProps, Cod
                                         width={state.width}
                                         language="python"
                                         defaultValue={this.state.code}
+                                        value={this.state.code}
                                         onChange={this.handleInput}
                                         theme="vs-dark"
                                         // options={{
@@ -171,9 +189,10 @@ export class AiCodeBlockWidget extends React.Component<CodeBlockWidgetProps, Cod
                                         options={this.options}
                                     />
                                 </div>
-                                
+
                                 <div className='block-basic-code-outputs'>
                                     {this.props.node.getOutputs().map((port) => {
+                                        console.log("port is ", port);
                                         return (
                                             <BasePort className='code-output-port'
                                                 port={port!}

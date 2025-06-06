@@ -54,9 +54,11 @@ export const generateRandomString = (length: number, lowercase = false) => {
     return lowercase ? result?.toLowerCase() : result;
 };
 
-const CodeBlock: FC<Props> = memo(({ language, value }) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const AiCodeBlock: FC<Props> = memo(({ language, value }) => {
     // const { isCopied, copyToClipboard } = useCopyToClipboard({ timeout: 2000 });
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const downloadAsFile = () => {
         if (typeof window === "undefined") {
             return;
@@ -132,9 +134,9 @@ const CodeBlock: FC<Props> = memo(({ language, value }) => {
         </div>
     );
 });
-CodeBlock.displayName = "CodeBlock";
+AiCodeBlock.displayName = "AiCodeBlock";
 
-export { CodeBlock };
+export { AiCodeBlock };
 
 
 {/* <ReactMarkdown
