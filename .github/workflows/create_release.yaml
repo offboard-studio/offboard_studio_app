@@ -198,12 +198,29 @@ jobs:
         env:
           NODE_ENV: production
 
+      - name: Print current assets for tag
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const tag = `v${{ needs.create_tag.outputs.package_version }}`;
+            try {
+              const release = await github.rest.repos.getReleaseByTag({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                tag
+              });
+              console.log("Assets under this tag:");
+              release.data.assets.forEach(asset => console.log(`- ${asset.name}`));
+            } catch (error) {
+              console.log("No release or error:", error.message);
+            }
       - name: Delete existing release assets
         uses: actions/github-script@v6
         with:
           script: |
-            const tag = 'v${{ needs.create_tag.outputs.package_version }}';
-            // Get the release by tag
+            const version = `${{ needs.create_tag.outputs.package_version }}`;
+            const tag = `v${version}`;
+
             let release;
             try {
               release = await github.rest.repos.getReleaseByTag({
@@ -214,19 +231,16 @@ jobs:
             } catch (error) {
               if (error.status === 404) {
                 console.log(`No release found for tag ${tag}. Skipping asset deletion.`);
-                return; // çık, çünkü silinecek bir şey yok
+                return;
               } else {
-                throw error; // başka bir hata ise hatayı fırlat
+                throw error;
               }
             }
 
-            // For each asset in the release, delete if name matches any in your upload list
             const assetNamesToDelete = [
-              'Offboard Studio-${{ needs.create_tag.outputs.package_version }}-arm64-mac.zip',
-              'Offboard Studio-${{ needs.create_tag.outputs.package_version }}-arm64.dmg',
-              'Offboard Studio-${{ needs.create_tag.outputs.package_version }}-mac.zip',
-              'Offboard Studio-${{ needs.create_tag.outputs.package_version }}.dmg',
-              './docs/Help-guide.docx' // if you really upload this file too
+              `Offboard Studio-${version}-arm64.dmg`,
+              `Offboard Studio-${version}.AppImage`,
+              `Help-guide.docx` // dosya adı relative path olmadan olmalı
             ];
 
             for (const asset of release.data.assets) {
@@ -237,8 +251,11 @@ jobs:
                   repo: context.repo.repo,
                   asset_id: asset.id
                 });
+              } else {
+                console.log(`Skipping asset: ${asset.name}`);
               }
             }
+
 
       - name: Release macOS build
         uses: softprops/action-gh-release@v1
@@ -298,11 +315,30 @@ jobs:
       - name: List output files
         run: ls -R ./release/out || echo "No files found"
 
-      - name: Delete existing release assets
+      
+      - name: Print current assets for tag
         uses: actions/github-script@v6
         with:
           script: |
             const tag = `v${{ needs.create_tag.outputs.package_version }}`;
+            try {
+              const release = await github.rest.repos.getReleaseByTag({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                tag
+              });
+              console.log("Assets under this tag:");
+              release.data.assets.forEach(asset => console.log(`- ${asset.name}`));
+            } catch (error) {
+              console.log("No release or error:", error.message);
+            }
+
+      - name: Delete existing release assets
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const version = `${{ needs.create_tag.outputs.package_version }}`;
+            const tag = `v${version}`;
 
             let release;
             try {
@@ -320,12 +356,10 @@ jobs:
               }
             }
 
-            const version = "${{ needs.create_tag.outputs.package_version }}";
-
             const assetNamesToDelete = [
-              `Offboard Studio-${version}-arm64.AppImage`,
+              `Offboard Studio-${version}-arm64.dmg`,
               `Offboard Studio-${version}.AppImage`,
-              `Help-guide.docx`
+              `Help-guide.docx` // dosya adı relative path olmadan olmalı
             ];
 
             for (const asset of release.data.assets) {
@@ -336,6 +370,8 @@ jobs:
                   repo: context.repo.repo,
                   asset_id: asset.id
                 });
+              } else {
+                console.log(`Skipping asset: ${asset.name}`);
               }
             }
       - name: Release linux build
