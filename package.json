@@ -204,7 +204,9 @@
         "arch": [
           "arm64",
           "x64",
-          "arm64v8"
+          "armv7l",
+          "ia32",
+          "universal"
         ]
       },
       "type": "distribution",
@@ -230,10 +232,10 @@
     "win": {
       "arch": [
         "x64",
-        "ia32",
         "arm64",
-        "arm64v8"
-        
+        "ia32",
+        "armv7l",
+        "universal"
       ],
       "target": [
         "nsis"
@@ -246,10 +248,9 @@
       "arch": [
         "x64",
         "arm64",
-        "arm64v8",
         "ia32",
         "armv7l",
-        "riscv64"
+        "universal"
       ],
       "category": "Development"
     }
@@ -259,5 +260,5 @@
       "path": "@commitlint/cz-commitlint"
     }
   },
-  "packageManager": "yarn@4.0.2"
+  "packageManager": "npm@8.19.2"
 }
