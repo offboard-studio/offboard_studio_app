@@ -73,7 +73,7 @@ jobs:
       - name: Install dependencies
         run: npm install --legacy-peer-deps --no-audit --prefer-offline
         env:
-          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
 
       - name: Run build app
         run: npm run build:app
@@ -84,14 +84,41 @@ jobs:
         env:
           NODE_ENV: production
 
+      - name: Delete existing release assets
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const tag = 'v${{ needs.create_tag.outputs.package_version }}';
+            // Get the release by tag
+            const release = await github.rest.repos.getReleaseByTag({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag
+            });
+
+            // For each asset in the release, delete if name matches any in your upload list
+            const assetNamesToDelete = [
+              'Offboard Studio Setup ${{ needs.create_tag.outputs.package_version }}.exe',
+              './docs/Help-guide.docx' // if you really upload this file too
+            ];
+
+            for (const asset of release.data.assets) {
+              if (assetNamesToDelete.includes(asset.name)) {
+                console.log(`Deleting existing asset: ${asset.name}`);
+                await github.rest.repos.deleteReleaseAsset({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  asset_id: asset.id
+                });
+              }
+            }
+
       - name: Release windows build
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ needs.create_tag.outputs.package_version }}
           files: |
             ./release/out/Offboard Studio Setup ${{ needs.create_tag.outputs.package_version }}.exe
-            ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-x64.zip
-            ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-arm64.zip
             ./docs/Help-guide.docx
       - name: Upload Windows EXE to SourceForge
         shell: bash
@@ -128,7 +155,7 @@ jobs:
       - name: Install dependencies
         run: npm install --legacy-peer-deps --no-audit --prefer-offline
         env:
-          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
 
       - name: Run build app
         run: NODE_ENV=production npm run build:app
@@ -137,7 +164,7 @@ jobs:
         run: NODE_ENV=production npm run package:electron-app:mac
         env:
           NODE_ENV: production
-      
+
       - name: Delete existing release assets
         uses: actions/github-script@v6
         with:
@@ -170,7 +197,6 @@ jobs:
               }
             }
 
-
       - name: Release macOS build
         uses: softprops/action-gh-release@v1
         with:
@@ -181,7 +207,7 @@ jobs:
             ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-mac.zip
             ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}.dmg
             ./docs/Help-guide.docx
-      
+
       - name: Install expect
         run: brew install expect
       - name: Create release directory on SourceForge
@@ -225,6 +251,36 @@ jobs:
       - name: List output files
         run: ls -R ./release/out || echo "No files found"
 
+      - name: Delete existing release assets
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const tag = 'v${{ needs.create_tag.outputs.package_version }}';
+            // Get the release by tag
+            const release = await github.rest.repos.getReleaseByTag({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag
+            });
+
+            // For each asset in the release, delete if name matches any in your upload list
+            const assetNamesToDelete = [
+              'Offboard Studio-${{ needs.create_tag.outputs.package_version }}-arm64.AppImage',
+              'Offboard Studio-${{ needs.create_tag.outputs.package_version }}.AppImage',
+              './docs/Help-guide.docx' // if you really upload this file too
+            ];
+
+            for (const asset of release.data.assets) {
+              if (assetNamesToDelete.includes(asset.name)) {
+                console.log(`Deleting existing asset: ${asset.name}`);
+                await github.rest.repos.deleteReleaseAsset({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  asset_id: asset.id
+                });
+              }
+            }
+
       - name: Release linux build
         uses: softprops/action-gh-release@v1
         with:
@@ -251,4 +307,3 @@ jobs:
             "./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-arm64.AppImage" \
             "./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}.AppImage" \
             "$SF_USERNAME@frs.sourceforge.net:\"$REMOTE_PATH/\""
-
