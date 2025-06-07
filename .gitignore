@@ -71,3 +71,4 @@ testem.log
 Thumbs.db
 
 .nx/cache
+.vercel
