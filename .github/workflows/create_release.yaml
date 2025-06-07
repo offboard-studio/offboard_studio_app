@@ -375,7 +375,7 @@ jobs:
             ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}.AppImage
             ./docs/Help-guide.docx
       - name: Upload linux build artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: linux-build
           path: ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}.AppImage
@@ -386,7 +386,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download linux build artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: linux-build
           path: ./release/out
