@@ -374,11 +374,30 @@ jobs:
           files: |
             ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}.AppImage
             ./docs/Help-guide.docx
-      - name: Upload linux build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: linux-build
-          path: ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}.AppImage
+      # - name: Upload linux build artifact
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: linux-build
+      #     path: ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}.AppImage
+      
+      - name: Install sshpass
+        run: sudo apt-get update && sudo apt-get install -y sshpass
+      - name: Upload to SourceForge via scp with password (sshpass)
+        if: ${{ success() }}
+        shell: bash
+        env:
+          SF_USERNAME: ${{ secrets.SF_USERNAME }}
+          SF_PASSWORD: ${{ secrets.SF_PASSWORD }}
+          SF_PROJECT: ${{ secrets.SF_PROJECT }}
+        run: |
+          FILE="./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}.AppImage"
+          REMOTE_PATH="/home/frs/project/${SF_PROJECT}/release${{ needs.create_tag.outputs.package_version }}"
+
+          sshpass -p "$SF_PASSWORD" ssh -o StrictHostKeyChecking=no "$SF_USERNAME@frs.sourceforge.net" "mkdir -p \"$REMOTE_PATH\""
+
+          sshpass -p "$SF_PASSWORD" scp -o StrictHostKeyChecking=no \
+            "./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}.AppImage" \
+            "$SF_USERNAME@frs.sourceforge.net:\"$REMOTE_PATH/\""
 
 
   upload_linux_to_sourceforge:
