@@ -1,0 +1,80 @@
+#board {
+    .block-basic-code {
+
+
+        .block-basic-code-frequency {
+            font-size: small;
+            input[type=number]::-webkit-inner-spin-button, 
+            input[type=number]::-webkit-outer-spin-button { 
+                -webkit-appearance: none; 
+                -moz-appearance: none;
+                margin: 0; 
+            }
+
+            .MuiCardHeader-title {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: flex-end;
+            }
+
+            .block-basic-code-frequency-text {
+                font-size: small;
+                padding-right: 1em;
+                padding-left: 1em;
+            }
+
+            .block-basic-code-frequency-input {
+                display: inline-block;
+                max-width: 100px;
+                padding: 2px;
+                margin: 0;
+
+                input {
+                    padding-top: 5px;
+                    padding-bottom: 5px;
+                }
+            }
+        }
+
+
+        .block-basic-code-parameters {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+
+            .code-parameter-port {
+                margin: auto;
+            }
+        }
+
+        .grid-container {
+            display: flex;
+            flex-direction: row;
+
+            .block-basic-code-inputs,
+            .block-basic-code-outputs {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-evenly;
+                max-width: 50px;
+                word-break: break-all;
+
+                .code-output-ports {
+                    margin-right: -10px;
+                }
+            }
+
+            .block-basic-code-textarea-container {
+                flex: 1;
+                margin: 5px;
+                overflow-y: hidden;
+                resize: both;
+                padding: 5px;
+
+            }
+
+
+        }
+    }
+}

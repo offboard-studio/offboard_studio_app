@@ -109,7 +109,7 @@ jobs:
 
             // For each asset in the release, delete if name matches any in your upload list
             const assetNamesToDelete = [
-              `Offboard Studio Setup ${{ needs.create_tag.outputs.package_version }}.exe`,
+              `Offboard.Studio.Setup.${{ needs.create_tag.outputs.package_version }}.exe`,
               './docs/Help-guide.docx' // if you really upload this file too
             ];
 
@@ -238,8 +238,8 @@ jobs:
             }
 
             const assetNamesToDelete = [
-              `Offboard Studio-${version}-arm64.dmg`,
-              `Offboard Studio-${version}.dmg`,
+              `Offboard.Studio-${version}-arm64.dmg`,
+              `Offboard.Studio-${version}.dmg`,
             ];
 
             for (const asset of release.data.assets) {
@@ -351,7 +351,7 @@ jobs:
             }
 
             const assetNamesToDelete = [
-              `Offboard Studio-${version}.AppImage`,
+              `Offboard.Studio-${version}.AppImage`,
               `Help-guide.docx` // dosya adı relative path olmadan olmalı
             ];
 

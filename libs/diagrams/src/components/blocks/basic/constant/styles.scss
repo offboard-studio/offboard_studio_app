@@ -1,0 +1,56 @@
+.theme-dark {
+    #board {
+        .block-basic-constant {
+            // background-color: #f6a706;
+
+            background-color: #44475a;
+        
+            .block-basic-constant-input {
+                background-color: wheat;
+
+                // background-color: #282a36;
+
+                input {
+                    color: black;
+                }
+            }
+        }
+    }
+}
+
+.theme-dracula {
+    #board {
+        .block-basic-constant {
+            background-color: #44475a;
+        
+            .block-basic-constant-input {
+                background-color: #282a36;
+
+                input {
+                    color: white;
+                }
+            }
+        }
+    }
+}
+
+
+#board {
+    .block-basic-constant {
+        width: 120px;
+        min-height: 80px;
+    
+        .block-basic-constant-input {
+            margin-left: 1em;
+            margin-right: 1em;
+            margin-bottom: 1em;
+            border-radius: 5px;
+        }
+    
+        .constant-output-port {
+            display: inline-block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
+}
