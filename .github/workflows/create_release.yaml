@@ -239,7 +239,7 @@ jobs:
 
             const assetNamesToDelete = [
               `Offboard.Studio-${version}-arm64.dmg`,
-              `Offboard.Studio-${version}.AppImage`,
+              `Offboard.Studio-${version}.dmg`,
             ];
 
             for (const asset of release.data.assets) {
@@ -354,7 +354,6 @@ jobs:
             }
 
             const assetNamesToDelete = [
-              `Offboard.Studio-${version}-arm64.dmg`,
               `Offboard.Studio-${version}.AppImage`,
               `Help-guide.docx` // dosya adı relative path olmadan olmalı
             ];
@@ -379,6 +378,16 @@ jobs:
             ./release/out/Offboard.Studio-${{ needs.create_tag.outputs.package_version }}-arm64.AppImage
             ./release/out/Offboard.Studio-${{ needs.create_tag.outputs.package_version }}.AppImage
             ./docs/Help-guide.docx
+
+  upload_linux_to_sourceforge:
+    needs: [release_linux]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+
+      - name: Install sshpass
+        run: sudo apt-get update && sudo apt-get install -y sshpass
       - name: Upload to SourceForge via scp with password (sshpass)
         if: ${{ success() }}
         shell: bash
@@ -387,13 +396,12 @@ jobs:
           SF_PASSWORD: ${{ secrets.SF_PASSWORD }}
           SF_PROJECT: ${{ secrets.SF_PROJECT }}
         run: |
-          sudo apt-get update && sudo apt-get install -y sshpass
-
+          FILE="./release/out/Offboard.Studio-${{ needs.create_tag.outputs.package_version }}.AppImage"
           REMOTE_PATH="/home/frs/project/${SF_PROJECT}/release${{ needs.create_tag.outputs.package_version }}"
 
           sshpass -p "$SF_PASSWORD" ssh -o StrictHostKeyChecking=no "$SF_USERNAME@frs.sourceforge.net" "mkdir -p \"$REMOTE_PATH\""
 
           sshpass -p "$SF_PASSWORD" scp -o StrictHostKeyChecking=no \
-            "./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-arm64.AppImage" \
-            "./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}.AppImage" \
+            "./release/out/Offboard.Studio-${{ needs.create_tag.outputs.package_version }}-arm64.AppImage" \
+            "./release/out/Offboard.Studio-${{ needs.create_tag.outputs.package_version }}.AppImage" \
             "$SF_USERNAME@frs.sourceforge.net:\"$REMOTE_PATH/\""
