@@ -6,7 +6,7 @@ import SidebarItemCollapse from './SidebarItemCollapse';
 import Editor from '../../core/editor';
 
 
-// import logo from '../../assets/images/logo.png';
+import logo from '@assets/logo.png'; // Adjust the path as necessary
 
 import { collectionBlocks, CollectionBlockType } from '../blocks/collection/collection-factory';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
@@ -106,7 +106,7 @@ const BoardSidebar: React.FC<BoardSideBarProps> = (props: BoardSideBarProps) => 
             >
                 <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
                     <img
-                        src={"logo"}
+                        src={logo}
                         alt="Logo"
                         style={{ width: '40px', height: '40px', marginRight: '10px' }}
                     />

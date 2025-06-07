@@ -134,7 +134,7 @@ const ProjectInfoDialog = ({ isOpen, onResolve, onReject,
                             variant="outlined"
                             component="label"
                         >
-                            Upload File
+                            Upload File Image
                             <input
                                 type="file"
                                 accept='.svg'
