@@ -109,7 +109,7 @@ jobs:
 
             // For each asset in the release, delete if name matches any in your upload list
             const assetNamesToDelete = [
-              'Offboard Studio Setup ${{ needs.create_tag.outputs.package_version }}.exe',
+              `Offboard.Studio.Setup.${{ needs.create_tag.outputs.package_version }}.exe`,
               './docs/Help-guide.docx' // if you really upload this file too
             ];
 
@@ -129,7 +129,7 @@ jobs:
         with:
           tag_name: v${{ needs.create_tag.outputs.package_version }}
           files: |
-            ./release/out/Offboard Studio Setup ${{ needs.create_tag.outputs.package_version }}.exe
+            ./release/out/Offboard.Studio.Setup.${{ needs.create_tag.outputs.package_version }}.exe
             ./docs/Help-guide.docx
 
       # - name: Upload Windows EXE to SourceForge
@@ -161,7 +161,7 @@ jobs:
           SF_PASSWORD: ${{ secrets.SF_PASSWORD }}
           SF_PROJECT: ${{ secrets.SF_PROJECT }}
         run: |
-          FILE="./release/out/Offboard Studio Setup ${{ needs.create_tag.outputs.package_version }}.exe"
+          FILE="./release/out/Offboard.Studio.Setup.${{ needs.create_tag.outputs.package_version }}.exe"
           DEST="/home/frs/project/${SF_PROJECT}/release${{ needs.create_tag.outputs.package_version }}"
           sshpass -p "$SF_PASSWORD" ssh -o StrictHostKeyChecking=no "$SF_USERNAME@frs.sourceforge.net" "mkdir -p \"$DEST\""
           sshpass -p "$SF_PASSWORD" scp -o StrictHostKeyChecking=no "$FILE" "$SF_USERNAME@frs.sourceforge.net:\"$DEST\""
@@ -238,9 +238,8 @@ jobs:
             }
 
             const assetNamesToDelete = [
-              `Offboard Studio-${version}-arm64.dmg`,
-              `Offboard Studio-${version}.AppImage`,
-              `Help-guide.docx` // dosya adı relative path olmadan olmalı
+              `Offboard.Studio-${version}-arm64.dmg`,
+              `Offboard.Studio-${version}.AppImage`,
             ];
 
             for (const asset of release.data.assets) {
@@ -262,10 +261,8 @@ jobs:
         with:
           tag_name: v${{ needs.create_tag.outputs.package_version }}
           files: |
-            ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-arm64-mac.zip
-            ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-arm64.dmg
-            ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-mac.zip
-            ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}.dmg
+            ./release/out/Offboard.Studio-${{ needs.create_tag.outputs.package_version }}-arm64.dmg
+            ./release/out/Offboard.Studio-${{ needs.create_tag.outputs.package_version }}.dmg
             ./docs/Help-guide.docx
 
       - name: Install expect
@@ -357,8 +354,8 @@ jobs:
             }
 
             const assetNamesToDelete = [
-              `Offboard Studio-${version}-arm64.dmg`,
-              `Offboard Studio-${version}.AppImage`,
+              `Offboard.Studio-${version}-arm64.dmg`,
+              `Offboard.Studio-${version}.AppImage`,
               `Help-guide.docx` // dosya adı relative path olmadan olmalı
             ];
 
@@ -379,8 +376,8 @@ jobs:
         with:
           tag_name: v${{ needs.create_tag.outputs.package_version }}
           files: |
-            ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-arm64.AppImage
-            ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}.AppImage
+            ./release/out/Offboard.Studio-${{ needs.create_tag.outputs.package_version }}-arm64.AppImage
+            ./release/out/Offboard.Studio-${{ needs.create_tag.outputs.package_version }}.AppImage
             ./docs/Help-guide.docx
       - name: Upload to SourceForge via scp with password (sshpass)
         if: ${{ success() }}
