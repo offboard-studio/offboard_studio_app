@@ -21,22 +21,22 @@ jobs:
       - name: Install Node.js and NPM
         uses: actions/setup-node@v3
         with:
-          node-version: 18
-          cache: 'yarn'
+          node-version: 20
+          cache: 'npm'
 
-      - name: Yarn install
-        run: yarn install --immutable-cache
+      - name: NPM install
+        run: npm install
         env:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
 
-      - name: Yarn lint
+      - name: NPM lint
         run: |
-          yarn lint:all
+          npm run lint:all
 
       - name: Run renderer unit tests
         run: |
-          yarn test:unit:renderer --runInBand --reporters=default
+          npm run test:unit:renderer --runInBand --reporters=default
 
       - name: Run API unit tests
         run: |
-          yarn test:unit:api --runInBand --reporters=default
+          npm run test:unit:api --runInBand --reporters=default

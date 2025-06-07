@@ -62,6 +62,8 @@ jobs:
         with:
           lfs: true
 
+      - name: Set git to be case-sensitive
+        run: git config core.ignorecase false
       - name: Install Node.js and NPM
         uses: actions/setup-node@v3
         with:
@@ -71,13 +73,56 @@ jobs:
       - name: Install dependencies
         run: npm install --legacy-peer-deps --no-audit --prefer-offline
         env:
-          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
 
       - name: Run build app
         run: npm run build:app
-
+        env:
+          NODE_ENV: production
       - name: Run package electron app for windows
         run: npm run package:electron-app:win
+        env:
+          NODE_ENV: production
+
+      - name: Delete existing release assets
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const tag = 'v${{ needs.create_tag.outputs.package_version }}';
+            // Get the release by tag
+            let release;
+            try {
+              release = await github.rest.repos.getReleaseByTag({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                tag
+              });
+            } catch (error) {
+              if (error.status === 404) {
+                console.log(`No release found for tag ${tag}. Skipping asset deletion.`);
+                return; // çık, çünkü silinecek bir şey yok
+              } else {
+                throw error; // başka bir hata ise hatayı fırlat
+              }
+            }
+
+
+            // For each asset in the release, delete if name matches any in your upload list
+            const assetNamesToDelete = [
+              `Offboard.Studio.Setup.${{ needs.create_tag.outputs.package_version }}.exe`,
+              './docs/Help-guide.docx' // if you really upload this file too
+            ];
+
+            for (const asset of release.data.assets) {
+              if (assetNamesToDelete.includes(asset.name)) {
+                console.log(`Deleting existing asset: ${asset.name}`);
+                await github.rest.repos.deleteReleaseAsset({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  asset_id: asset.id
+                });
+              }
+            }
 
       - name: Release windows build
         uses: softprops/action-gh-release@v1
@@ -85,6 +130,41 @@ jobs:
           tag_name: v${{ needs.create_tag.outputs.package_version }}
           files: |
             ./release/out/Offboard Studio Setup ${{ needs.create_tag.outputs.package_version }}.exe
+            ./docs/Help-guide.docx
+
+      # - name: Upload Windows EXE to SourceForge
+      #   shell: bash
+      #   env:
+      #     SF_USERNAME: ${{ secrets.SF_USERNAME }}
+      #     SF_PASSWORD: ${{ secrets.SF_PASSWORD }}
+      #     SF_PROJECT: ${{ secrets.SF_PROJECT }}
+      #   run: |
+      #     sudo apt-get update && sudo apt-get install -y sshpass
+      #     FILE="./release/out/Offboard Studio Setup ${{ needs.create_tag.outputs.package_version }}.exe"
+      #     DEST="/home/frs/project/${SF_PROJECT}/release${{ needs.create_tag.outputs.package_version }}"
+      #     sshpass -p "$SF_PASSWORD" ssh -o StrictHostKeyChecking=no "$SF_USERNAME@frs.sourceforge.net" "mkdir -p \"$DEST\""
+      #     sshpass -p "$SF_PASSWORD" scp -o StrictHostKeyChecking=no "$FILE" "$SF_USERNAME@frs.sourceforge.net:\"$DEST\""
+
+  upload_windows_to_sourceforge:
+    needs: [release_windows]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+
+      - name: Install sshpass
+        run: sudo apt-get update && sudo apt-get install -y sshpass
+
+      - name: Upload Windows EXE to SourceForge
+        env:
+          SF_USERNAME: ${{ secrets.SF_USERNAME }}
+          SF_PASSWORD: ${{ secrets.SF_PASSWORD }}
+          SF_PROJECT: ${{ secrets.SF_PROJECT }}
+        run: |
+          FILE="./release/out/Offboard.Studio.Setup.${{ needs.create_tag.outputs.package_version }}.exe"
+          DEST="/home/frs/project/${SF_PROJECT}/release${{ needs.create_tag.outputs.package_version }}"
+          sshpass -p "$SF_PASSWORD" ssh -o StrictHostKeyChecking=no "$SF_USERNAME@frs.sourceforge.net" "mkdir -p \"$DEST\""
+          sshpass -p "$SF_PASSWORD" scp -o StrictHostKeyChecking=no "$FILE" "$SF_USERNAME@frs.sourceforge.net:\"$DEST\""
 
   release_macos:
     needs: [create_tag]
@@ -96,6 +176,9 @@ jobs:
         with:
           lfs: true
 
+      - name: Set git to be case-sensitive
+        run: git config core.ignorecase false
+
       - name: Install Node.js and NPM
         uses: actions/setup-node@v3
         with:
@@ -105,31 +188,108 @@ jobs:
       - name: Install dependencies
         run: npm install --legacy-peer-deps --no-audit --prefer-offline
         env:
-          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
 
       - name: Run build app
-        run: npm run build:app
+        run: NODE_ENV=production npm run build:app
 
       - name: Run package electron app for macOS
-        run: npm run package:electron-app:mac
+        run: NODE_ENV=production npm run package:electron-app:mac
+        env:
+          NODE_ENV: production
+
+      - name: Print current assets for tag
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const tag = `v${{ needs.create_tag.outputs.package_version }}`;
+            try {
+              const release = await github.rest.repos.getReleaseByTag({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                tag
+              });
+              console.log("Assets under this tag:");
+              release.data.assets.forEach(asset => console.log(`- ${asset.name}`));
+            } catch (error) {
+              console.log("No release or error:", error.message);
+            }
+      - name: Delete existing release assets
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const version = `${{ needs.create_tag.outputs.package_version }}`;
+            const tag = `v${version}`;
+
+            let release;
+            try {
+              release = await github.rest.repos.getReleaseByTag({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                tag
+              });
+            } catch (error) {
+              if (error.status === 404) {
+                console.log(`No release found for tag ${tag}. Skipping asset deletion.`);
+                return;
+              } else {
+                throw error;
+              }
+            }
+
+            const assetNamesToDelete = [
+              `Offboard.Studio-${version}-arm64.dmg`,
+              `Offboard.Studio-${version}.dmg`,
+            ];
+
+            for (const asset of release.data.assets) {
+              if (assetNamesToDelete.includes(asset.name)) {
+                console.log(`Deleting existing asset: ${asset.name}`);
+                await github.rest.repos.deleteReleaseAsset({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  asset_id: asset.id
+                });
+              } else {
+                console.log(`Skipping asset: ${asset.name}`);
+              }
+            }
 
       - name: Release macOS build
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ needs.create_tag.outputs.package_version }}
           files: |
-            ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-arm64-mac.zip
             ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-arm64.dmg
-            ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-mac.zip
             ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}.dmg
             ./docs/Help-guide.docx
+
+      - name: Install expect
+        run: brew install expect
+      - name: Create release directory on SourceForge
+        run: |
+          expect <<EOF
+          spawn ssh -o StrictHostKeyChecking=no ${{ secrets.SF_USERNAME }}@frs.sourceforge.net "mkdir -p /home/frs/project/${{ secrets.SF_PROJECT }}/release${{ needs.create_tag.outputs.package_version }}"
+          expect "Password:"
+          send "${{ secrets.SF_PASSWORD }}\r"
+          expect eof
+          EOF
+
+      - name: Upload all DMG files to SourceForge
+        run: |
+          for file in ./release/out/*.dmg; do
+            echo "Uploading $file"
+            expect <<EOF
+            spawn scp -o StrictHostKeyChecking=no "$file" ${{ secrets.SF_USERNAME }}@frs.sourceforge.net:/home/frs/project/${{ secrets.SF_PROJECT }}/release/${{ needs.create_tag.outputs.package_version }}/
+            expect "Password:"
+            send "${{ secrets.SF_PASSWORD }}\r"
+            expect eof
+          EOF
+              done
 
   release_linux:
     needs: [create_tag]
     runs-on: ubuntu-latest
-    container:
-      image: node:20
-      options: --user node
     env:
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
     steps:
@@ -137,19 +297,137 @@ jobs:
         uses: actions/checkout@v4
         with:
           lfs: true
+      - name: Set git to be case-sensitive
+        run: git config core.ignorecase false
       - name: Install dependencies
         run: npm install --legacy-peer-deps --no-audit --prefer-offline
       - name: Run build app
-        run: npm run build:app
+        run: NODE_ENV=production npm run build:app
       - name: Run package electron app for linux
-        run: npm run package:electron-app:linux
+        run: NODE_ENV=production npm run package:electron-app:linux
+        env:
+          NODE_ENV: production
+      - name: List output files
+        run: ls -R ./release/out || echo "No files found"
+
+      - name: Print current assets for tag
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const tag = `v${{ needs.create_tag.outputs.package_version }}`;
+            try {
+              const release = await github.rest.repos.getReleaseByTag({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                tag
+              });
+              console.log("Assets under this tag:");
+              release.data.assets.forEach(asset => console.log(`- ${asset.name}`));
+            } catch (error) {
+              console.log("No release or error:", error.message);
+            }
+
+      - name: Delete existing release assets
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const version = `${{ needs.create_tag.outputs.package_version }}`;
+            const tag = `v${version}`;
+
+            let release;
+            try {
+              release = await github.rest.repos.getReleaseByTag({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                tag
+              });
+            } catch (error) {
+              if (error.status === 404) {
+                console.log(`No release found for tag ${tag}. Skipping asset deletion.`);
+                return;
+              } else {
+                throw error;
+              }
+            }
+
+            const assetNamesToDelete = [
+              `Offboard.Studio-${version}.AppImage`,
+              `Help-guide.docx` // dosya adı relative path olmadan olmalı
+            ];
+
+            for (const asset of release.data.assets) {
+              if (assetNamesToDelete.includes(asset.name)) {
+                console.log(`Deleting existing asset: ${asset.name}`);
+                await github.rest.repos.deleteReleaseAsset({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  asset_id: asset.id
+                });
+              } else {
+                console.log(`Skipping asset: ${asset.name}`);
+              }
+            }
       - name: Release linux build
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ needs.create_tag.outputs.package_version }}
           files: |
-            ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-arm64.AppImage
-            ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-x64.AppImage
-            ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-x64.deb
-            ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-x64.rpm
-            ./docs/Help-guide.docx  
+            ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}.AppImage
+            ./docs/Help-guide.docx
+      # - name: Upload linux build artifact
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: linux-build
+      #     path: ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}.AppImage
+      
+      - name: Install sshpass
+        run: sudo apt-get update && sudo apt-get install -y sshpass
+      - name: Upload to SourceForge via scp with password (sshpass)
+        if: ${{ success() }}
+        shell: bash
+        env:
+          SF_USERNAME: ${{ secrets.SF_USERNAME }}
+          SF_PASSWORD: ${{ secrets.SF_PASSWORD }}
+          SF_PROJECT: ${{ secrets.SF_PROJECT }}
+        run: |
+          FILE="./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}.AppImage"
+          REMOTE_PATH="/home/frs/project/${SF_PROJECT}/release${{ needs.create_tag.outputs.package_version }}"
+
+          sshpass -p "$SF_PASSWORD" ssh -o StrictHostKeyChecking=no "$SF_USERNAME@frs.sourceforge.net" "mkdir -p \"$REMOTE_PATH\""
+
+          sshpass -p "$SF_PASSWORD" scp -o StrictHostKeyChecking=no \
+            "./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}.AppImage" \
+            "$SF_USERNAME@frs.sourceforge.net:\"$REMOTE_PATH/\""
+
+
+  upload_linux_to_sourceforge:
+    needs: [release_linux]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download linux build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-build
+          path: ./release/out
+      
+      - name: List output files
+        run: ls -R ./release/out || echo "No files found"
+
+      - name: Install sshpass
+        run: sudo apt-get update && sudo apt-get install -y sshpass
+      - name: Upload to SourceForge via scp with password (sshpass)
+        if: ${{ success() }}
+        shell: bash
+        env:
+          SF_USERNAME: ${{ secrets.SF_USERNAME }}
+          SF_PASSWORD: ${{ secrets.SF_PASSWORD }}
+          SF_PROJECT: ${{ secrets.SF_PROJECT }}
+        run: |
+          FILE="./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}.AppImage"
+          REMOTE_PATH="/home/frs/project/${SF_PROJECT}/release${{ needs.create_tag.outputs.package_version }}"
+
+          sshpass -p "$SF_PASSWORD" ssh -o StrictHostKeyChecking=no "$SF_USERNAME@frs.sourceforge.net" "mkdir -p \"$REMOTE_PATH\""
+
+          sshpass -p "$SF_PASSWORD" scp -o StrictHostKeyChecking=no \
+            "./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}.AppImage" \
+            "$SF_USERNAME@frs.sourceforge.net:\"$REMOTE_PATH/\""

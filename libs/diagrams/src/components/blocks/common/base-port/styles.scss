@@ -1,0 +1,75 @@
+// @import 'variables.scss';
+
+$dark-appbar-background: #413f3f;
+$dark-canvas-background: rgb(107, 107, 107);
+$dark-canvas-grid: rgba(255,255,255, 0.05);
+
+
+
+$dark-constant-background: #f6a706;
+$dark-param-port: #f6a706;
+$dark-input-port: red;
+$dark-output-port: green;
+
+#board {
+    .port-container {
+        display: inline-block;
+        font-size: 10px;
+
+        .custom-port {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            position: relative;
+        
+            &:hover {
+                cursor: pointer;
+            }
+
+        }
+        &.right-aligned-port {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        &.bottom-aligned-port {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        &.left-aligned-port {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        &.top-aligned-port {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+    }
+}
+
+.theme-dark {
+    #board {
+        .port-container {
+            .custom-port {
+                
+                &.custom-input-port {
+                    background-color: $dark-input-port;
+                }
+            
+                &.custom-output-port {
+                    background-color: $dark-output-port;
+                }
+
+                &.custom-param-port {
+                    background-color: $dark-param-port;
+                }
+            }
+        }
+    }
+}

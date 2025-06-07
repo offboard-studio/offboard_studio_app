@@ -1,0 +1,109 @@
+name: Vercel Deployment
+env:
+  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+on:
+  push:
+    branches:
+      - 'release/*'
+
+permissions:
+  contents: write
+
+jobs:
+  create_tag:
+    runs-on: ubuntu-latest
+    outputs:
+      package_version: ${{ steps.package-info.outputs.version }}
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+
+      - name: Get package info
+        id: package-info
+        uses: codex-team/action-nodejs-package-info@v1.1
+
+      - name: Create Tag if not exists
+        uses: actions/github-script@v6
+        env:
+          TAG: v${{ steps.package-info.outputs.version }}
+        with:
+          script: |
+            const tagName = process.env.TAG;
+
+            try {
+              // Check if the tag already exists
+              await github.rest.git.getRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: `tags/${tagName}`
+              });
+              console.log(`Tag "${tagName}" already exists. Skipping creation.`);
+            } catch (error) {
+              if (error.status === 404) {
+                console.log(`Tag "${tagName}" does not exist. Creating...`);
+                await github.rest.git.createRef({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  ref: `refs/tags/${tagName}`,
+                  sha: context.sha
+                });
+              } else {
+                throw error;
+              }
+            }
+
+  release_vercel:
+    needs: [create_tag]
+    runs-on: macos-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Set git to be case-sensitive
+        run: git config core.ignorecase false
+
+      - name: Install Node.js and NPM
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps --no-audit --prefer-offline
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+
+      - name: Run build app
+        run: NODE_ENV=production npm run build:app
+
+      - name: Run package electron app for macOS
+        run: NODE_ENV=production npm run package:electron-app:mac
+        env:
+          NODE_ENV: production
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest --no-audit --legacy-peer-deps --prefer-offline
+
+      - name: Pull Vercel Environment Information
+        run: |
+          vercel pull \
+            --yes \
+            --environment=production \
+            --token="$VERCEL_TOKEN" \
+            --project="$VERCEL_PROJECT_ID" \
+            --org="$VERCEL_ORG_ID"
+
+      - name: Deploy Project Artifacts to Vercel
+        run: |
+          vercel deploy ./release/build/renderer \
+            --prebuilt \
+            --prod \
+            --token="$VERCEL_TOKEN" \
+            --project="$VERCEL_PROJECT_ID" \
+            --org="$VERCEL_ORG_ID"
