@@ -109,7 +109,7 @@ jobs:
 
             // For each asset in the release, delete if name matches any in your upload list
             const assetNamesToDelete = [
-              `Offboard.Studio.Setup.${{ needs.create_tag.outputs.package_version }}.exe`,
+              `Offboard Studio Setup ${{ needs.create_tag.outputs.package_version }}.exe`,
               './docs/Help-guide.docx' // if you really upload this file too
             ];
 
@@ -129,7 +129,7 @@ jobs:
         with:
           tag_name: v${{ needs.create_tag.outputs.package_version }}
           files: |
-            ./release/out/Offboard.Studio.Setup.${{ needs.create_tag.outputs.package_version }}.exe
+            ./release/out/Offboard Studio Setup ${{ needs.create_tag.outputs.package_version }}.exe
             ./docs/Help-guide.docx
 
       # - name: Upload Windows EXE to SourceForge
@@ -238,8 +238,8 @@ jobs:
             }
 
             const assetNamesToDelete = [
-              `Offboard.Studio-${version}-arm64.dmg`,
-              `Offboard.Studio-${version}.dmg`,
+              `Offboard Studio-${version}-arm64.dmg`,
+              `Offboard Studio-${version}.dmg`,
             ];
 
             for (const asset of release.data.assets) {
@@ -255,14 +255,13 @@ jobs:
               }
             }
 
-
       - name: Release macOS build
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ needs.create_tag.outputs.package_version }}
           files: |
-            ./release/out/Offboard.Studio-${{ needs.create_tag.outputs.package_version }}-arm64.dmg
-            ./release/out/Offboard.Studio-${{ needs.create_tag.outputs.package_version }}.dmg
+            ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}-arm64.dmg
+            ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}.dmg
             ./docs/Help-guide.docx
 
       - name: Install expect
@@ -288,7 +287,6 @@ jobs:
           EOF
               done
 
-
   release_linux:
     needs: [create_tag]
     runs-on: ubuntu-latest
@@ -312,7 +310,6 @@ jobs:
       - name: List output files
         run: ls -R ./release/out || echo "No files found"
 
-      
       - name: Print current assets for tag
         uses: actions/github-script@v6
         with:
@@ -354,7 +351,7 @@ jobs:
             }
 
             const assetNamesToDelete = [
-              `Offboard.Studio-${version}.AppImage`,
+              `Offboard Studio-${version}.AppImage`,
               `Help-guide.docx` // dosya adı relative path olmadan olmalı
             ];
 
@@ -375,8 +372,7 @@ jobs:
         with:
           tag_name: v${{ needs.create_tag.outputs.package_version }}
           files: |
-            ./release/out/Offboard.Studio-${{ needs.create_tag.outputs.package_version }}-arm64.AppImage
-            ./release/out/Offboard.Studio-${{ needs.create_tag.outputs.package_version }}.AppImage
+            ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}.AppImage
             ./docs/Help-guide.docx
 
   upload_linux_to_sourceforge:
@@ -385,6 +381,10 @@ jobs:
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v4
+      
+      
+      - name: List output files
+        run: ls -R ./release/out || echo "No files found"
 
       - name: Install sshpass
         run: sudo apt-get update && sudo apt-get install -y sshpass
@@ -402,6 +402,5 @@ jobs:
           sshpass -p "$SF_PASSWORD" ssh -o StrictHostKeyChecking=no "$SF_USERNAME@frs.sourceforge.net" "mkdir -p \"$REMOTE_PATH\""
 
           sshpass -p "$SF_PASSWORD" scp -o StrictHostKeyChecking=no \
-            "./release/out/Offboard.Studio-${{ needs.create_tag.outputs.package_version }}-arm64.AppImage" \
             "./release/out/Offboard.Studio-${{ needs.create_tag.outputs.package_version }}.AppImage" \
             "$SF_USERNAME@frs.sourceforge.net:\"$REMOTE_PATH/\""
