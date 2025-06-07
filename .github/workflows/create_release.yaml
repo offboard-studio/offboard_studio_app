@@ -374,14 +374,22 @@ jobs:
           files: |
             ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}.AppImage
             ./docs/Help-guide.docx
+      - name: Upload linux build artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: linux-build
+          path: ./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}.AppImage
+
 
   upload_linux_to_sourceforge:
     needs: [release_linux]
     runs-on: ubuntu-latest
     steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v4
-      
+      - name: Download linux build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: linux-build
+          path: ./release/out
       
       - name: List output files
         run: ls -R ./release/out || echo "No files found"
@@ -396,11 +404,11 @@ jobs:
           SF_PASSWORD: ${{ secrets.SF_PASSWORD }}
           SF_PROJECT: ${{ secrets.SF_PROJECT }}
         run: |
-          FILE="./release/out/Offboard.Studio-${{ needs.create_tag.outputs.package_version }}.AppImage"
+          FILE="./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}.AppImage"
           REMOTE_PATH="/home/frs/project/${SF_PROJECT}/release${{ needs.create_tag.outputs.package_version }}"
 
           sshpass -p "$SF_PASSWORD" ssh -o StrictHostKeyChecking=no "$SF_USERNAME@frs.sourceforge.net" "mkdir -p \"$REMOTE_PATH\""
 
           sshpass -p "$SF_PASSWORD" scp -o StrictHostKeyChecking=no \
-            "./release/out/Offboard.Studio-${{ needs.create_tag.outputs.package_version }}.AppImage" \
+            "./release/out/Offboard Studio-${{ needs.create_tag.outputs.package_version }}.AppImage" \
             "$SF_USERNAME@frs.sourceforge.net:\"$REMOTE_PATH/\""
