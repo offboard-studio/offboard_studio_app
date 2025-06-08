@@ -34,7 +34,24 @@
         "tsConfig": "apps/electron/tsconfig.app.json",
         "target": "node",
         "outputPath": "release/build/electron",
-        "webpackConfig": ".config/webpack/webpack.config.main.prod.js"
+        "webpackConfig": ".config/webpack/webpack.config.main.prod.js",
+        "external": [
+          "@grpc/grpc-js",
+          "@grpc/proto-loader",
+          "kafkajs",
+          "mqtt",
+          "nats",
+          "ioredis",
+          "amqplib",
+          "class-transformer/storage",
+          "amqp-connection-manager",
+          "@nestjs/websockets",
+          "@nestjs/platform-socket.io",
+          "@nestjs/microservices",
+          "@nestjs/mongoose",
+          "@nestjs/swagger",
+          "@nestjs/mapped-types"
+        ]
       }
     },
     "serve": {
@@ -59,7 +76,5 @@
     }
   },
   "tags": [],
-  "assets": [
-    "apps/electron/src/assets"
-  ]
+  "assets": ["apps/electron/src/assets"]
 }

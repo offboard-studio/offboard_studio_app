@@ -19,7 +19,7 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@api/api": ["apps/api/src/Api.ts","apps/api/src/*",],
+      "@api": ["apps/api/src/index.ts","apps/api/src/*",],
       "@components": ["libs/components/src/index.ts","libs/components/src/*",],
       "@diagrams": ["libs/diagrams/src/index.ts","libs/diagrams/src/*",],
       // "@assets": ["libs/assets/src/index.ts","libs/assets/src/*",]
