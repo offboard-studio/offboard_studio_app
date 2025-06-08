@@ -12,6 +12,8 @@ const webpackPaths = require('./webpack.paths');
 const checkNodeEnv = require('../scripts/checkNodeEnv');
 const deleteSourceMaps = require('../scripts/deleteSourceMaps');
 
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+
 checkNodeEnv('production');
 deleteSourceMaps();
 
@@ -51,6 +53,32 @@ const configuration = {
       analyzerMode: process.env.ANALYZE === 'true' ? 'server' : 'disabled',
       analyzerPort: 8888,
     }),
+    new CopyWebpackPlugin({
+      patterns: [
+        // { from: 'src/index.html', to: 'index.html' }, // Adjust the source path as needed
+        // { from: 'src/swagger.json', to: 'swagger.json' }, // Adjust the source path as needed
+        {
+          from: 'node_modules/swagger-ui-dist/swagger-ui.css',
+          to: 'swagger-ui.css',
+        },
+        {
+          from: 'node_modules/swagger-ui-dist/swagger-ui-bundle.js',
+          to: 'swagger-ui-bundle.js',
+        },
+        {
+          from: 'node_modules/swagger-ui-dist/swagger-ui-standalone-preset.js',
+          to: 'swagger-ui-standalone-preset.js',
+        },
+        {
+          from: 'node_modules/swagger-ui-dist/favicon-16x16.png',
+          to: 'favicon-16x16.png',
+        },
+        {
+          from: 'node_modules/swagger-ui-dist/favicon-32x32.png',
+          to: 'favicon-32x32.png',
+        },
+      ],
+    }),
 
     /**
      * Create global constants which can be configured at compile time.
@@ -72,9 +100,21 @@ const configuration = {
     }),
   ],
 
+  resolve: {
+    alias: {
+      'class-transformer/storage': path.resolve(
+        __dirname,
+        '../../node_modules/class-transformer/cjs/storage.js'
+      ),
+    },
+    fallback: {
+      'class-transformer/storage': false,
+    },
+  },
   externals: {
     fsevents: "require('fsevents')",
     native: "require('native')",
+    'class-transformer/storage': 'commonjs class-transformer/storage',
   },
 
   /**
