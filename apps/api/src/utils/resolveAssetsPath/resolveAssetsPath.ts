@@ -1,4 +1,4 @@
-import path from 'path';
+import * as path from 'path';
 import { app } from 'electron';
 
 const getFileProdAssetsPath = (filePath: string): string => {

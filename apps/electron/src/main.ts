@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @nx/enforce-module-boundaries */
 /**
  * This module executes inside of electron's main process. You can start
  * electron renderer process from here and communicate with the other processes
@@ -6,11 +8,18 @@
  * When running `yarn build:app`, this file is compiled to
  * `./release/build/main.js` using webpack. This gives us some performance wins.
  */
-import { app, BrowserWindow, shell, ipcMain, IpcMainEvent } from 'electron';
+import {
+  app,
+  BrowserWindow,
+  shell,
+  ipcMain,
+  IpcMainEvent,
+  screen,
+} from 'electron';
 import path from 'path';
 import os from 'os';
 
-import { ApiServer } from '@api/api';
+import { ServerController } from '@api';
 import { resolveHtmlPath } from './util';
 import packageJson from '../../../package.json';
 import MenuBuilder from './app/menu';
@@ -18,7 +27,7 @@ import MenuBuilder from './app/menu';
 import treeKill from 'tree-kill';
 import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
 import axios from 'axios';
-// import { migrateDatabase } from './migrate';
+import { Server } from 'http';
 
 class AppUpdater {
   constructor() {
@@ -32,13 +41,15 @@ class AppUpdater {
 }
 
 export default class ElectronApp {
-  server: ApiServer | null = null;
+  server: ServerController | null = null;
   windows: Record<string, BrowserWindow | null> = {};
   PRELOAD_SCRIPT = '';
   RESOURCES_PATH = '';
   MAIN_WINDOW_KEY = 'main';
   INDEX_HTML_PATH = '';
   djangoServer: ChildProcessWithoutNullStreams | null = null;
+  isQuitting = false; // Kapanma durumunu takip et
+
   constructor() {
     this.PRELOAD_SCRIPT = this.getPreloadScript();
     this.RESOURCES_PATH = this.getResourcesPath();
@@ -68,14 +79,106 @@ export default class ElectronApp {
   }
 
   createServer() {
-    const { Api } = require('@api/api');
+    const { ServerController } = require('@api');
 
-    const api = new Api();
-    this.server = api.server;
+    const api = new ServerController();
+    this.server = api;
+    this.server?.createServer();
   }
 
-  closeServer() {
-    this.server?.close();
+  // Server kapatma işlemini async hale getir ve promise döndür
+  async closeServer(): Promise<void> {
+    return new Promise((resolve) => {
+      if (this.server) {
+        console.log('NestJS Server kapatılıyor...');
+        try {
+          // ServerController'da close method'u varsa kullan
+          if (typeof this.server.close === 'function') {
+            this.server.close(() => {
+              console.log('NestJS Server başarıyla kapatıldı');
+              this.server = null;
+              resolve();
+            });
+          } else {
+            // Eğer ServerController'da proper close method'u yoksa
+            this.server = null;
+            console.log('NestJS Server referansı temizlendi');
+            resolve();
+          }
+        } catch (error) {
+          console.error('NestJS Server kapatılırken hata:', error);
+          this.server = null;
+          resolve();
+        }
+      } else {
+        resolve();
+      }
+    });
+  }
+
+  // Django server'ını güvenli şekilde kapat
+  async closeDjangoServer(): Promise<void> {
+    return new Promise((resolve) => {
+      if (this.djangoServer) {
+        console.log('Django Server kapatılıyor...');
+
+        // Timeout ekle - 5 saniye içinde kapanmazsa force kill
+        const timeout = setTimeout(() => {
+          if (this.djangoServer && this.djangoServer.pid) {
+            console.log('Django Server zorla kapatılıyor...');
+            treeKill(this.djangoServer.pid, 'SIGKILL', (err) => {
+              if (err) {
+                console.error('Django Server force kill hatası:', err);
+              } else {
+                console.log('Django Server zorla kapatıldı');
+              }
+              this.djangoServer = null;
+              resolve();
+            });
+          } else {
+            resolve();
+          }
+        }, 5000);
+
+        // Önce graceful shutdown dene
+        this.djangoServer.on('close', (code) => {
+          console.log(`Django Server kapandı, kod: ${code}`);
+          clearTimeout(timeout);
+          this.djangoServer = null;
+          resolve();
+        });
+
+        this.djangoServer.on('error', (error) => {
+          console.error('Django Server kapatılırken hata:', error);
+          clearTimeout(timeout);
+          this.djangoServer = null;
+          resolve();
+        });
+
+        // Graceful shutdown dene
+        if (this.djangoServer.pid) {
+          try {
+            process.kill(this.djangoServer.pid, 'SIGTERM');
+          } catch (error) {
+            console.error('Django Server SIGTERM gönderilirken hata:', error);
+            // Force kill dene
+            if (this.djangoServer.pid) {
+              treeKill(this.djangoServer.pid, 'SIGKILL', () => {
+                clearTimeout(timeout);
+                this.djangoServer = null;
+                resolve();
+              });
+            }
+          }
+        } else {
+          clearTimeout(timeout);
+          this.djangoServer = null;
+          resolve();
+        }
+      } else {
+        resolve();
+      }
+    });
   }
 
   setWindowTitle(window: BrowserWindow) {
@@ -91,39 +194,131 @@ export default class ElectronApp {
     this.windows[key] = null;
   }
 
+  // NSRangeException hatası için güvenli ekran kontrolü
+  getSafeDisplayBounds() {
+    try {
+      const displays = screen.getAllDisplays();
+      const primaryDisplay = screen.getPrimaryDisplay();
+
+      if (!displays || displays.length === 0) {
+        // Fallback varsayılan değerler
+        return {
+          x: 0,
+          y: 0,
+          width: 1424,
+          height: 1028,
+          workAreaSize: { width: 1424, height: 1028 },
+        };
+      }
+
+      const display = displays.length > 0 ? displays[0] : primaryDisplay;
+      return {
+        x: display.bounds.x || 0,
+        y: display.bounds.y || 0,
+        width: Math.min(display.workAreaSize.width || 1424, 1424),
+        height: Math.min(display.workAreaSize.height || 1028, 1028),
+        workAreaSize: display.workAreaSize,
+      };
+    } catch (error) {
+      console.error('Display bounds alınırken hata:', error);
+      // Güvenli fallback değerler
+      return {
+        x: 0,
+        y: 0,
+        width: 1424,
+        height: 1028,
+        workAreaSize: { width: 1424, height: 1028 },
+      };
+    }
+  }
+
+  // Pencere boyutlarını güvenli şekilde hesapla
+  getSafeWindowBounds(
+    requestedWidth: number = 1424,
+    requestedHeight: number = 1028
+  ) {
+    const safeBounds = this.getSafeDisplayBounds();
+
+    return {
+      x: safeBounds.x,
+      y: safeBounds.y,
+      width: Math.min(requestedWidth, safeBounds.workAreaSize.width),
+      height: Math.min(requestedHeight, safeBounds.workAreaSize.height),
+    };
+  }
+
   async createMainWindow() {
     const getAssetPath = (...paths: string[]): string => {
       return path.join(this.RESOURCES_PATH, ...paths);
     };
 
+    // Güvenli pencere boyutları al
+    const windowBounds = this.getSafeWindowBounds(1424, 1028);
+
     const mainWindow = new BrowserWindow({
       show: false,
-      width: 1424,
-      height: 1028,
+      width: windowBounds.width,
+      height: windowBounds.height,
+      x: windowBounds.x,
+      y: windowBounds.y,
       icon: getAssetPath('icon.png'),
       webPreferences: {
         preload: this.PRELOAD_SCRIPT,
         contextIsolation: true,
-        // enableRemoteModule: false,
         nodeIntegration: true,
-        // contentSecurityPolicy: "default-src 'self'; script-src 'self'",
+        // Swagger uyumluluğu için ek ayarlar
+        webSecurity: false, // Swagger için gerekli
+        allowRunningInsecureContent: true,
+        experimentalFeatures: true,
+        // DevTools için güvenli ayarlar
+        devTools: process.env.NODE_ENV === 'development',
       },
+      // NSRangeException hatası için ek güvenlik önlemleri
+      minWidth: 800,
+      minHeight: 600,
+      resizable: true,
+      maximizable: true,
+      minimizable: true,
+      closable: true,
     });
 
     this.addWindowToWindowsMap(this.MAIN_WINDOW_KEY, mainWindow);
     this.setWindowTitle(mainWindow);
 
-    mainWindow.on('ready-to-show', () => {
-      const localMainWindow = this.windows[this.MAIN_WINDOW_KEY];
+    // Pencere kapatma eventini dinle
+    mainWindow.on('close', async (event) => {
+      if (!this.isQuitting) {
+        event.preventDefault();
+        this.isQuitting = true;
 
-      if (!localMainWindow) {
-        throw new Error('"mainWindow" is not defined');
+        console.log('Uygulama kapatılıyor, serverlar durduruluyor...');
+
+        // Tüm server'ları kapat
+        await Promise.all([this.closeServer(), this.closeDjangoServer()]);
+
+        console.log("Tüm server'lar kapatıldı, uygulama kapatılıyor...");
+        app.quit();
       }
+    });
 
-      if (process.env.START_MINIMIZED) {
-        localMainWindow.minimize();
-      } else {
-        localMainWindow.show();
+    // Pencere olayları için hata yakalama
+    mainWindow.on('ready-to-show', () => {
+      try {
+        const localMainWindow = this.windows[this.MAIN_WINDOW_KEY];
+
+        if (!localMainWindow) {
+          throw new Error('"mainWindow" is not defined');
+        }
+
+        if (process.env.START_MINIMIZED) {
+          localMainWindow.minimize();
+        } else {
+          localMainWindow.show();
+          // Güvenli fokus
+          localMainWindow.focus();
+        }
+      } catch (error) {
+        console.error('Pencere gösterilirken hata:', error);
       }
     });
 
@@ -131,10 +326,128 @@ export default class ElectronApp {
       this.removeWindowFromWindowsMap(this.MAIN_WINDOW_KEY);
     });
 
+    // Swagger için güvenli pencere boyutlandırma
+    mainWindow.on('will-resize', (event, newBounds) => {
+      try {
+        const safeBounds = this.getSafeDisplayBounds();
+
+        // Boyutları kontrol et ve gerekirse düzelt
+        if (
+          newBounds.width > safeBounds.workAreaSize.width ||
+          newBounds.height > safeBounds.workAreaSize.height
+        ) {
+          event.preventDefault();
+
+          mainWindow.setBounds({
+            x: newBounds.x,
+            y: newBounds.y,
+            width: Math.min(newBounds.width, safeBounds.workAreaSize.width),
+            height: Math.min(newBounds.height, safeBounds.workAreaSize.height),
+          });
+        }
+      } catch (error) {
+        console.error('Will-resize event hatası:', error);
+      }
+    });
+
+    // Pencere boyutlandırma hatalarını yakala
+    mainWindow.on('resize', () => {
+      try {
+        const bounds = mainWindow.getBounds();
+        const safeBounds = this.getSafeDisplayBounds();
+
+        // Güvenli sınırlar içinde mi kontrol et
+        if (
+          bounds.width > safeBounds.workAreaSize.width ||
+          bounds.height > safeBounds.workAreaSize.height
+        ) {
+          mainWindow.setBounds({
+            width: Math.min(bounds.width, safeBounds.workAreaSize.width),
+            height: Math.min(bounds.height, safeBounds.workAreaSize.height),
+          });
+        }
+      } catch (error) {
+        console.error('Pencere yeniden boyutlandırılırken hata:', error);
+      }
+    });
+
+    // Ekran değişikliklerini dinle
+    screen.on('display-added', () => {
+      console.log('Yeni ekran eklendi');
+    });
+
+    screen.on('display-removed', () => {
+      console.log('Ekran çıkarıldı - pencere pozisyonu kontrol ediliyor');
+      try {
+        const safeBounds = this.getSafeDisplayBounds();
+        mainWindow.setBounds({
+          x: safeBounds.x,
+          y: safeBounds.y,
+          width: Math.min(mainWindow.getBounds().width, safeBounds.width),
+          height: Math.min(mainWindow.getBounds().height, safeBounds.height),
+        });
+      } catch (error) {
+        console.error(
+          'Ekran çıkarıldıktan sonra pencere pozisyonu ayarlanırken hata:',
+          error
+        );
+      }
+    });
+
+    // Swagger ile uyumluluk için webSecurity'yi devre dışı bırak
+    mainWindow.webContents.session.webRequest.onHeadersReceived(
+      (details, callback) => {
+        callback({
+          responseHeaders: {
+            ...details.responseHeaders,
+            'Content-Security-Policy': [
+              "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:",
+            ],
+          },
+        });
+      }
+    );
+
+    // URL yükleme işlemini güvenli hale getir
+    mainWindow.webContents.on(
+      'did-fail-load',
+      (event, errorCode, errorDescription, validatedURL) => {
+        console.error(
+          `URL yükleme hatası: ${errorCode} - ${errorDescription} - ${validatedURL}`
+        );
+      }
+    );
+
+    // Swagger için güvenli yükleme
+    mainWindow.webContents.on('dom-ready', () => {
+      try {
+        // DOM hazır olduğunda developer tools'u aç
+        if (process.env.NODE_ENV === 'development') {
+          setTimeout(() => {
+            try {
+              mainWindow.webContents.openDevTools({ mode: 'detach' });
+            } catch (devToolsError) {
+              console.error('DevTools açılırken hata:', devToolsError);
+            }
+          }, 1000);
+        }
+      } catch (error) {
+        console.error('DOM ready event hatası:', error);
+      }
+    });
+
+    // Swagger ile ilgili console mesajlarını yakala
+    mainWindow.webContents.on(
+      'console-message',
+      (event, level, message, line, sourceId) => {
+        if (message.includes('swagger') || message.includes('OpenAPI')) {
+          console.log(`Swagger Console [${level}]: ${message}`);
+        }
+      }
+    );
+
     mainWindow.loadURL(this.INDEX_HTML_PATH);
 
-    // Open urls in the user's browser
-    mainWindow.webContents.openDevTools();
     mainWindow.webContents.setWindowOpenHandler(({ url }) => {
       shell.openExternal(url);
       return { action: 'deny' };
@@ -187,7 +500,6 @@ export default class ElectronApp {
           }: Django Server is not available yet. Retrying... (${error})`,
           this.djangoServerPort.toString()
         );
-        // this.djangoServerPort = 1 + Number(this.djangoServerPort);
         await new Promise((resolve) => setTimeout(resolve, delay));
       }
     }
@@ -204,11 +516,6 @@ export default class ElectronApp {
       os.platform() === 'win32'
         ? path.join(this.getBoardAPI(), 'venv', 'Scripts', 'python')
         : path.join(this.getBoardAPI(), 'venv', 'bin', 'python');
-
-    // const venvPath =
-    //   os.platform() === 'win32'
-    //     ? 'venv\\Scripts\\python.exe'
-    //     : 'venv/bin/python3';
 
     console.log('venvPath', venvPath);
     console.log('getBoardAPI', this.getBoardAPI());
@@ -245,29 +552,56 @@ export default class ElectronApp {
   };
 
   addAppEventListeners() {
-    app.on('quit', () => {
-      this.closeServer();
+    // Before-quit event'ini dinle - bu daha erken tetiklenir
+    app.on('before-quit', async (event) => {
+      if (!this.isQuitting) {
+        event.preventDefault();
+        this.isQuitting = true;
 
-      const handleAppExit = () => {
-        if (this.djangoServer) {
-          console.log('Stopping Django Server...');
-          this.djangoServer.stdin.end();
-          if (this.djangoServer.pid !== undefined) {
-            treeKill(this.djangoServer.pid, 'SIGKILL');
-          }
+        console.log("Uygulama kapatılıyor, server'lar durduruluyor...");
+
+        try {
+          // Tüm server'ları paralel olarak kapat
+          await Promise.all([this.closeServer(), this.closeDjangoServer()]);
+
+          console.log("Tüm server'lar başarıyla kapatıldı");
+        } catch (error) {
+          console.error("Server'lar kapatılırken hata:", error);
         }
-        process.exit();
-      };
 
-      process.on('exit', handleAppExit);
+        // Server'lar kapandıktan sonra uygulamayı kapat
+        app.quit();
+      }
     });
 
-    app.on('window-all-closed', () => {
+    // Quit event'i için backup
+    app.on('quit', async () => {
+      if (!this.isQuitting) {
+        this.isQuitting = true;
+
+        // Son çare olarak server'ları kapat
+        await Promise.all([this.closeServer(), this.closeDjangoServer()]);
+      }
+    });
+
+    app.on('window-all-closed', async () => {
       // Respect the OSX convention of having the application in memory even
       // after all windows have been closed
       if (process.platform !== 'darwin') {
-        this.closeServer();
-        app.quit();
+        if (!this.isQuitting) {
+          this.isQuitting = true;
+
+          console.log("Tüm pencereler kapatıldı, server'lar durduruluyor...");
+
+          try {
+            await Promise.all([this.closeServer(), this.closeDjangoServer()]);
+            console.log("Server'lar kapatıldı, uygulama sonlandırılıyor");
+          } catch (error) {
+            console.error("Server'lar kapatılırken hata:", error);
+          }
+
+          app.quit();
+        }
       }
     });
 
@@ -278,15 +612,46 @@ export default class ElectronApp {
         this.createMainWindow();
       }
     });
+
+    // Process signal'larını dinle
+    process.on('SIGTERM', async () => {
+      console.log('SIGTERM alındı, graceful shutdown yapılıyor...');
+      if (!this.isQuitting) {
+        this.isQuitting = true;
+        await Promise.all([this.closeServer(), this.closeDjangoServer()]);
+        process.exit(0);
+      }
+    });
+
+    process.on('SIGINT', async () => {
+      console.log('SIGINT alındı, graceful shutdown yapılıyor...');
+      if (!this.isQuitting) {
+        this.isQuitting = true;
+        await Promise.all([this.closeServer(), this.closeDjangoServer()]);
+        process.exit(0);
+      }
+    });
   }
 
   openNewWindow(url: string, windowKey: string) {
+    // Güvenli pencere boyutları al
+    const windowBounds = this.getSafeWindowBounds(1024, 728);
+
     const newWindow = new BrowserWindow({
-      width: 1024,
-      height: 728,
+      width: windowBounds.width,
+      height: windowBounds.height,
+      x: windowBounds.x,
+      y: windowBounds.y,
       webPreferences: {
         preload: this.PRELOAD_SCRIPT,
+        contextIsolation: true,
+        nodeIntegration: true,
+        // Swagger uyumluluğu için ek ayarlar
+        webSecurity: false,
+        allowRunningInsecureContent: true,
       },
+      minWidth: 600,
+      minHeight: 400,
     });
 
     this.setWindowTitle(newWindow);
@@ -315,25 +680,38 @@ export default class ElectronApp {
       process.env.DEBUG_PROD === 'true'
     ) {
       const debugElectron = require('electron-debug');
-
       debugElectron();
     }
 
     try {
       await app.whenReady();
+
+      // Ekran bilgilerini kontrol et
+      try {
+        const displays = screen.getAllDisplays();
+        console.log(`Mevcut ekran sayısı: ${displays.length}`);
+        displays.forEach((display, index) => {
+          console.log(
+            `Ekran ${index}: ${display.bounds.width}x${display.bounds.height}`
+          );
+        });
+      } catch (error) {
+        console.error('Ekran bilgileri alınırken hata:', error);
+      }
+
       this.addIPCRenderEventListeners();
-      this.createMainWindow();
+      await this.createMainWindow();
       this.createServer();
 
       if (app.isPackaged && process.env.NODE_ENV !== 'development') {
         // Migrate if we are on the production server
         // await migrateDatabase();
       }
-      
+
       // Start the Django server
       await this.runDjangoServer();
     } catch (err) {
-      console.log('Error: setting up app - ', err);
+      console.error('Error: setting up app - ', err);
     }
   }
 }
