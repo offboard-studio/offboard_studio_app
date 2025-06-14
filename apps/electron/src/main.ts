@@ -15,6 +15,7 @@ import {
   ipcMain,
   IpcMainEvent,
   screen,
+  session,
 } from 'electron';
 import path from 'path';
 import os from 'os';
@@ -254,6 +255,79 @@ export default class ElectronApp {
 
     // Güvenli pencere boyutları al
     const windowBounds = this.getSafeWindowBounds(1424, 1028);
+    //   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    //   callback({
+    //     responseHeaders: {
+    //       ...details.responseHeaders,
+    //       'Content-Security-Policy': [
+    //         "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:; script-src-elem 'self' 'unsafe-inline' https://cdn.jsdelivr.net; connect-src 'self' https://cdn.jsdelivr.net;"
+    //       ]
+    //     }
+    //   });
+    // });
+
+    // session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    //   callback({
+    //     responseHeaders: {
+    //       ...details.responseHeaders,
+    //       'Content-Security-Policy': [
+    //         "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; " +
+    //           "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; " +
+    //           "script-src-elem 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; " +
+    //           "connect-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; " +
+    //           "img-src 'self' data: blob: https:; " +
+    //           "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; " +
+    //           "font-src 'self' data: https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; " +
+    //           "worker-src 'self' blob: data:;",
+    //       ],
+    //     },
+    //   });
+    // });
+
+    session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+      callback({
+        responseHeaders: {
+          ...details.responseHeaders,
+          'Content-Security-Policy': [
+            // Allow self, inline scripts/styles, eval, and data/blob URLs
+            "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: " +
+              // CDN domains for scripts/libraries
+              'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
+              // Script sources - allows Monaco Editor and other external scripts
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' " +
+              'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
+              // Script element sources - specifically for <script> tags
+              "script-src-elem 'self' 'unsafe-inline' 'unsafe-eval' " +
+              'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
+              // Connection sources - allows API calls
+              "connect-src 'self' " +
+              'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com ' +
+              'https://openrouter.ai https://api.openai.com ' +
+              'http://127.0.0.1:* http://localhost:* ' +
+              'ws://127.0.0.1:* ws://localhost:* ' +
+              'wss://127.0.0.1:* wss://localhost:*; ' +
+              // Image sources - allows all HTTPS images
+              "img-src 'self' data: blob: https: http://127.0.0.1:* http://localhost:*; " +
+              // Style sources - allows external stylesheets
+              "style-src 'self' 'unsafe-inline' " +
+              'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
+              // Font sources - allows external fonts
+              "font-src 'self' data: " +
+              'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
+              // Worker sources - for web workers
+              "worker-src 'self' blob: data:; " +
+              // Media sources - for audio/video
+              "media-src 'self' blob: data:; " +
+              // Object sources - for plugins
+              "object-src 'none'; " +
+              // Frame sources - for iframes
+              "frame-src 'self'; " +
+              // Child sources - for workers and frames
+              "child-src 'self' blob:;",
+          ],
+        },
+      });
+    });
 
     const mainWindow = new BrowserWindow({
       show: false,
@@ -395,13 +469,60 @@ export default class ElectronApp {
     });
 
     // Swagger ile uyumluluk için webSecurity'yi devre dışı bırak
+    // mainWindow.webContents.session.webRequest.onHeadersReceived(
+    //   (details, callback) => {
+    //     callback({
+    //       responseHeaders: {
+    //         ...details.responseHeaders,
+    //         'Content-Security-Policy': [
+    //           "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:",
+    //         ],
+    //       },
+    //     });
+    //   }
+    // );
+
     mainWindow.webContents.session.webRequest.onHeadersReceived(
       (details, callback) => {
         callback({
           responseHeaders: {
             ...details.responseHeaders,
             'Content-Security-Policy': [
-              "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:",
+              // Allow self, inline scripts/styles, eval, and data/blob URLs
+              "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: " +
+                // CDN domains for scripts/libraries
+                'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
+                // Script sources - allows Monaco Editor and other external scripts
+                "script-src 'self' 'unsafe-inline' 'unsafe-eval' " +
+                'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
+                // Script element sources - specifically for <script> tags
+                "script-src-elem 'self' 'unsafe-inline' 'unsafe-eval' " +
+                'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
+                // Connection sources - allows API calls
+                "connect-src 'self' " +
+                'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com ' +
+                'https://openrouter.ai https://api.openai.com ' +
+                'http://127.0.0.1:* http://localhost:* ' +
+                'ws://127.0.0.1:* ws://localhost:* ' +
+                'wss://127.0.0.1:* wss://localhost:*; ' +
+                // Image sources - allows all HTTPS images
+                "img-src 'self' data: blob: https: http://127.0.0.1:* http://localhost:*; " +
+                // Style sources - allows external stylesheets
+                "style-src 'self' 'unsafe-inline' " +
+                'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
+                // Font sources - allows external fonts
+                "font-src 'self' data: " +
+                'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
+                // Worker sources - for web workers
+                "worker-src 'self' blob: data:; " +
+                // Media sources - for audio/video
+                "media-src 'self' blob: data:; " +
+                // Object sources - for plugins
+                "object-src 'none'; " +
+                // Frame sources - for iframes
+                "frame-src 'self'; " +
+                // Child sources - for workers and frames
+                "child-src 'self' blob:;",
             ],
           },
         });

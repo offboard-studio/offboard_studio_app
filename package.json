@@ -67,6 +67,7 @@
     "electron-updater": "^5.3.0",
     "lodash": "^4.17.21",
     "lodash.clonedeep": "^4.5.0",
+    "monaco-editor-webpack-plugin": "^7.1.0",
     "msw": "^0.35.0",
     "openai": "^4.91.1",
     "pathfinding": "^0.4.18",

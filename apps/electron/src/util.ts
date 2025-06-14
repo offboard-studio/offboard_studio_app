@@ -14,6 +14,7 @@ export const resolveHtmlPath = (htmlFileName: string): string => {
     const port = process.env.PORT || 3001;
     const url = new URL(`http://localhost:${port}`);
 
+
     url.pathname = htmlFileName;
 
     return url.href;
