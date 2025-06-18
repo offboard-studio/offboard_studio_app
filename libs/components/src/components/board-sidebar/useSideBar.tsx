@@ -31,7 +31,7 @@ export const useSidebar = (
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Main sidebar state
-  const [state, setState] = useState<SidebarState>({
+  const [stateSidebar, setStateSidebar] = useState<SidebarState>({
     isCollapsed: false,
     activeLayers: [],
     selectedCategory: null,
@@ -46,9 +46,9 @@ export const useSidebar = (
         mergedConfig.autoCollapse &&
         window.innerWidth <= mergedConfig.collapseBreakpoint
       ) {
-        setState((prev) => ({ ...prev, isCollapsed: true }));
+        setStateSidebar((prev) => ({ ...prev, isCollapsed: true }));
       } else {
-        setState((prev) => ({ ...prev, isCollapsed: false }));
+        setStateSidebar((prev) => ({ ...prev, isCollapsed: false }));
       }
     };
 
@@ -66,13 +66,13 @@ export const useSidebar = (
 
   // Auto-close functionality
   useEffect(() => {
-    if (autoClose && state.activeLayers.length > 0) {
+    if (autoClose && stateSidebar.activeLayers.length > 0) {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
 
       timeoutRef.current = setTimeout(() => {
-        setState((prev) => ({
+        setStateSidebar((prev) => ({
           ...prev,
           activeLayers: [],
           selectedCategory: null,
@@ -86,21 +86,21 @@ export const useSidebar = (
         clearTimeout(timeoutRef.current);
       }
     };
-  }, [autoClose, autoCloseDelay, state.activeLayers.length]);
+  }, [autoClose, autoCloseDelay, stateSidebar.activeLayers.length]);
 
   // Notify parent components of layer changes
   useEffect(() => {
     if (onLayerChange) {
-      onLayerChange(state.activeLayers);
+      onLayerChange(stateSidebar.activeLayers);
     }
-  }, [state.activeLayers, onLayerChange]);
+  }, [stateSidebar.activeLayers, onLayerChange]);
 
   // Notify parent components of category changes
   useEffect(() => {
     if (onCategoryChange) {
-      onCategoryChange(state.selectedCategory);
+      onCategoryChange(stateSidebar.selectedCategory);
     }
-  }, [state.selectedCategory, onCategoryChange]);
+  }, [stateSidebar.selectedCategory, onCategoryChange]);
 
   // Clear auto-close timeout when user interacts
   const clearAutoCloseTimeout = useCallback(() => {
@@ -112,7 +112,7 @@ export const useSidebar = (
 
   // Toggle sidebar collapse state
   const toggleCollapse = useCallback(() => {
-    setState((prev) => ({
+    setStateSidebar((prev) => ({
       ...prev,
       isCollapsed: !prev.isCollapsed,
     }));
@@ -123,7 +123,7 @@ export const useSidebar = (
     (categoryId: string) => {
       clearAutoCloseTimeout();
 
-      setState((prev) => ({
+      setStateSidebar((prev) => ({
         ...prev,
         selectedCategory: categoryId,
         selectedSubItem: null,
@@ -134,7 +134,7 @@ export const useSidebar = (
 
   // Close category and remove its layers
   const closeCategory = useCallback(() => {
-    setState((prev) => ({
+    setStateSidebar((prev) => ({
       ...prev,
       selectedCategory: null,
       selectedSubItem: null,
@@ -147,7 +147,7 @@ export const useSidebar = (
     (layer: SidebarLayer) => {
       clearAutoCloseTimeout();
 
-      setState((prev) => {
+      setStateSidebar((prev) => {
         const existingLayerIndex = prev.activeLayers.findIndex(
           (l) => l.id === layer.id
         );
@@ -178,7 +178,7 @@ export const useSidebar = (
 
   // Remove a specific layer and all layers after it
   const removeLayer = useCallback((layerId: string) => {
-    setState((prev) => {
+    setStateSidebar((prev) => {
       const layerIndex = prev.activeLayers.findIndex(
         (layer) => layer.id === layerId
       );
@@ -198,7 +198,7 @@ export const useSidebar = (
 
   // Close all layers
   const closeAllLayers = useCallback(() => {
-    setState((prev) => ({
+    setStateSidebar((prev) => ({
       ...prev,
       activeLayers: [],
       selectedCategory: null,
@@ -208,7 +208,7 @@ export const useSidebar = (
 
   // Set hovered item (for potential future features)
   const setHoveredItem = useCallback((itemId: string | null) => {
-    setState((prev) => ({
+    setStateSidebar((prev) => ({
       ...prev,
       hoveredItem: itemId,
     }));
@@ -219,7 +219,7 @@ export const useSidebar = (
     (subItemId: string) => {
       clearAutoCloseTimeout();
 
-      setState((prev) => ({
+      setStateSidebar((prev) => ({
         ...prev,
         selectedSubItem: subItemId,
       }));
@@ -230,23 +230,25 @@ export const useSidebar = (
   // Get layer position calculation
   const getLayerPosition = useCallback(
     (index: number) => {
-      const baseWidth = state.isCollapsed ? 60 : 80;
+      const baseWidth = stateSidebar.isCollapsed ? 60 : 80;
       let left = baseWidth;
 
       for (let i = 0; i < index; i++) {
-        const layerWidth = parseInt(state.activeLayers[i]?.width || '200px');
+        const layerWidth = parseInt(
+          stateSidebar.activeLayers[i]?.width || '200px'
+        );
         left += layerWidth;
       }
 
       return `${left}px`;
     },
-    [state.isCollapsed, state.activeLayers]
+    [stateSidebar.isCollapsed, stateSidebar.activeLayers]
   );
 
   // Check if sidebar should show overlay (mobile)
   const shouldShowOverlay = useCallback(() => {
-    return state.isCollapsed && state.activeLayers.length > 0;
-  }, [state.isCollapsed, state.activeLayers.length]);
+    return stateSidebar.isCollapsed && stateSidebar.activeLayers.length > 0;
+  }, [stateSidebar.isCollapsed, stateSidebar.activeLayers.length]);
 
   // Performance optimization: memoized actions object
   const actions = useCallback(
@@ -279,7 +281,7 @@ export const useSidebar = (
   );
 
   return {
-    state,
+    stateSidebar: stateSidebar,
     actions: actions(),
   };
 };

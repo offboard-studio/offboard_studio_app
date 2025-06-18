@@ -202,7 +202,7 @@ export type CategoryRenderer = (
 
 // Hook Types
 export interface UseSidebarReturn {
-  state: SidebarState;
+  stateSidebar: SidebarState;
   actions: {
     [x: string]: any;
     toggleCollapse: () => void;

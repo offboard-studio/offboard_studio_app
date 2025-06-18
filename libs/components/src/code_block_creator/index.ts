@@ -7,16 +7,16 @@ import {
 
 export default class CodeBlockCreatorAI {
   openai = new OpenAI({
-    baseURL: 'https://openrouter.ai/api/v1',
-    apiKey:
-      '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',
+    baseURL: 'http://localhost:11434/v1',
+    // baseURL: 'https://openrouter.ai/api/v1',
+    // apiKey: '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',
     defaultHeaders: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
     },
 
     // baseURL: 'http://localhost:11434/v1',
-    // apiKey: 'ollama', // required but unused
+    apiKey: 'ollama', // required but unused
     dangerouslyAllowBrowser: true,
   });
   codeBlockModel: AiCodeBlockModel | undefined;
@@ -251,8 +251,8 @@ export default class CodeBlockCreatorAI {
             JSON.stringify(this.codeBlockModel?.getData()?.ports?.out || []),
         },
       ],
-      model: 'deepseek/deepseek-r1-zero:free',
-      // model: "deepseek-r1:14b",
+      // model: 'deepseek/deepseek-r1-zero:free',
+      model: "llama3.1:8b",
     });
 
     const code = response?.choices?.[0]?.message?.content;
