@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @nx/enforce-module-boundaries */
 /**
@@ -123,58 +124,84 @@ export default class ElectronApp {
       if (this.djangoServer) {
         console.log('Django Server kapatılıyor...');
 
-        // Timeout ekle - 5 saniye içinde kapanmazsa force kill
+        let resolved = false;
+        const resolveOnce = () => {
+          if (!resolved) {
+            resolved = true;
+            this.djangoServer = null;
+            resolve();
+          }
+        };
+
+        // Set a timeout for force kill
         const timeout = setTimeout(() => {
           if (this.djangoServer && this.djangoServer.pid) {
             console.log('Django Server zorla kapatılıyor...');
-            treeKill(this.djangoServer.pid, 'SIGKILL', (err) => {
-              if (err) {
-                console.error('Django Server force kill hatası:', err);
-              } else {
-                console.log('Django Server zorla kapatıldı');
-              }
-              this.djangoServer = null;
-              resolve();
-            });
+            try {
+              treeKill(this.djangoServer.pid, 'SIGKILL', (err) => {
+                if (err) {
+                  console.error('Django Server force kill hatası:', err);
+                } else {
+                  console.log('Django Server zorla kapatıldı');
+                }
+                resolveOnce();
+              });
+            } catch (error) {
+              console.error('Force kill attempt failed:', error);
+              resolveOnce();
+            }
           } else {
-            resolve();
+            resolveOnce();
           }
         }, 5000);
 
-        // Önce graceful shutdown dene
+        // Listen for close event
         this.djangoServer.on('close', (code) => {
           console.log(`Django Server kapandı, kod: ${code}`);
           clearTimeout(timeout);
-          this.djangoServer = null;
-          resolve();
+          resolveOnce();
         });
 
         this.djangoServer.on('error', (error) => {
           console.error('Django Server kapatılırken hata:', error);
           clearTimeout(timeout);
-          this.djangoServer = null;
-          resolve();
+          resolveOnce();
         });
 
-        // Graceful shutdown dene
+        // Try graceful shutdown
         if (this.djangoServer.pid) {
           try {
+            // Check if process exists before trying to kill it
+            process.kill(this.djangoServer.pid, 0); // This throws if process doesn't exist
             process.kill(this.djangoServer.pid, 'SIGTERM');
-          } catch (error) {
-            console.error('Django Server SIGTERM gönderilirken hata:', error);
-            // Force kill dene
-            if (this.djangoServer.pid) {
-              treeKill(this.djangoServer.pid, 'SIGKILL', () => {
+          } catch (error: any) {
+            if (error.code === 'ESRCH') {
+              console.log('Django Server process already terminated');
+              clearTimeout(timeout);
+              resolveOnce();
+            } else {
+              console.error('Django Server SIGTERM gönderilirken hata:', error);
+              // Try force kill immediately
+              if (this.djangoServer.pid) {
+                try {
+                  treeKill(this.djangoServer.pid, 'SIGKILL', () => {
+                    clearTimeout(timeout);
+                    resolveOnce();
+                  });
+                } catch (killError) {
+                  console.error('Force kill failed:', killError);
+                  clearTimeout(timeout);
+                  resolveOnce();
+                }
+              } else {
                 clearTimeout(timeout);
-                this.djangoServer = null;
-                resolve();
-              });
+                resolveOnce();
+              }
             }
           }
         } else {
           clearTimeout(timeout);
-          this.djangoServer = null;
-          resolve();
+          resolveOnce();
         }
       } else {
         resolve();
@@ -291,39 +318,39 @@ export default class ElectronApp {
           'Content-Security-Policy': [
             // Allow self, inline scripts/styles, eval, and data/blob URLs
             "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: " +
-              // CDN domains for scripts/libraries
-              'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
-              // Script sources - allows Monaco Editor and other external scripts
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' " +
-              'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
-              // Script element sources - specifically for <script> tags
-              "script-src-elem 'self' 'unsafe-inline' 'unsafe-eval' " +
-              'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
-              // Connection sources - allows API calls
-              "connect-src 'self' " +
-              'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com ' +
-              'https://openrouter.ai https://api.openai.com ' +
-              'http://127.0.0.1:* http://localhost:* ' +
-              'ws://127.0.0.1:* ws://localhost:* ' +
-              'wss://127.0.0.1:* wss://localhost:*; ' +
-              // Image sources - allows all HTTPS images
-              "img-src 'self' data: blob: https: http://127.0.0.1:* http://localhost:*; " +
-              // Style sources - allows external stylesheets
-              "style-src 'self' 'unsafe-inline' " +
-              'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
-              // Font sources - allows external fonts
-              "font-src 'self' data: " +
-              'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
-              // Worker sources - for web workers
-              "worker-src 'self' blob: data:; " +
-              // Media sources - for audio/video
-              "media-src 'self' blob: data:; " +
-              // Object sources - for plugins
-              "object-src 'none'; " +
-              // Frame sources - for iframes
-              "frame-src 'self'; " +
-              // Child sources - for workers and frames
-              "child-src 'self' blob:;",
+            // CDN domains for scripts/libraries
+            'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
+            // Script sources - allows Monaco Editor and other external scripts
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval' " +
+            'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
+            // Script element sources - specifically for <script> tags
+            "script-src-elem 'self' 'unsafe-inline' 'unsafe-eval' " +
+            'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
+            // Connection sources - allows API calls
+            "connect-src 'self' " +
+            'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com ' +
+            'https://openrouter.ai https://api.openai.com ' +
+            'http://127.0.0.1:* http://localhost:* ' +
+            'ws://127.0.0.1:* ws://localhost:* ' +
+            'wss://127.0.0.1:* wss://localhost:*; ' +
+            // Image sources - allows all HTTPS images
+            "img-src 'self' data: blob: https: http://127.0.0.1:* http://localhost:*; " +
+            // Style sources - allows external stylesheets
+            "style-src 'self' 'unsafe-inline' " +
+            'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
+            // Font sources - allows external fonts
+            "font-src 'self' data: " +
+            'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
+            // Worker sources - for web workers
+            "worker-src 'self' blob: data:; " +
+            // Media sources - for audio/video
+            "media-src 'self' blob: data:; " +
+            // Object sources - for plugins
+            "object-src 'none'; " +
+            // Frame sources - for iframes
+            "frame-src 'self'; " +
+            // Child sources - for workers and frames
+            "child-src 'self' blob:;",
           ],
         },
       });
@@ -368,7 +395,7 @@ export default class ElectronApp {
         console.log('Uygulama kapatılıyor, serverlar durduruluyor...');
 
         // Tüm server'ları kapat
-        await Promise.all([this.closeServer(), this.closeDjangoServer()]);
+        await Promise.all([this.closeDjangoServer()]);
 
         console.log("Tüm server'lar kapatıldı, uygulama kapatılıyor...");
         app.quit();
@@ -490,39 +517,39 @@ export default class ElectronApp {
             'Content-Security-Policy': [
               // Allow self, inline scripts/styles, eval, and data/blob URLs
               "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: " +
-                // CDN domains for scripts/libraries
-                'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
-                // Script sources - allows Monaco Editor and other external scripts
-                "script-src 'self' 'unsafe-inline' 'unsafe-eval' " +
-                'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
-                // Script element sources - specifically for <script> tags
-                "script-src-elem 'self' 'unsafe-inline' 'unsafe-eval' " +
-                'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
-                // Connection sources - allows API calls
-                "connect-src 'self' " +
-                'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com ' +
-                'https://openrouter.ai https://api.openai.com ' +
-                'http://127.0.0.1:* http://localhost:* ' +
-                'ws://127.0.0.1:* ws://localhost:* ' +
-                'wss://127.0.0.1:* wss://localhost:*; ' +
-                // Image sources - allows all HTTPS images
-                "img-src 'self' data: blob: https: http://127.0.0.1:* http://localhost:*; " +
-                // Style sources - allows external stylesheets
-                "style-src 'self' 'unsafe-inline' " +
-                'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
-                // Font sources - allows external fonts
-                "font-src 'self' data: " +
-                'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
-                // Worker sources - for web workers
-                "worker-src 'self' blob: data:; " +
-                // Media sources - for audio/video
-                "media-src 'self' blob: data:; " +
-                // Object sources - for plugins
-                "object-src 'none'; " +
-                // Frame sources - for iframes
-                "frame-src 'self'; " +
-                // Child sources - for workers and frames
-                "child-src 'self' blob:;",
+              // CDN domains for scripts/libraries
+              'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
+              // Script sources - allows Monaco Editor and other external scripts
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' " +
+              'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
+              // Script element sources - specifically for <script> tags
+              "script-src-elem 'self' 'unsafe-inline' 'unsafe-eval' " +
+              'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
+              // Connection sources - allows API calls
+              "connect-src 'self' " +
+              'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com ' +
+              'https://openrouter.ai https://api.openai.com ' +
+              'http://127.0.0.1:* http://localhost:* ' +
+              'ws://127.0.0.1:* ws://localhost:* ' +
+              'wss://127.0.0.1:* wss://localhost:*; ' +
+              // Image sources - allows all HTTPS images
+              "img-src 'self' data: blob: https: http://127.0.0.1:* http://localhost:*; " +
+              // Style sources - allows external stylesheets
+              "style-src 'self' 'unsafe-inline' " +
+              'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
+              // Font sources - allows external fonts
+              "font-src 'self' data: " +
+              'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
+              // Worker sources - for web workers
+              "worker-src 'self' blob: data:; " +
+              // Media sources - for audio/video
+              "media-src 'self' blob: data:; " +
+              // Object sources - for plugins
+              "object-src 'none'; " +
+              // Frame sources - for iframes
+              "frame-src 'self'; " +
+              // Child sources - for workers and frames
+              "child-src 'self' blob:;",
             ],
           },
         });
@@ -561,6 +588,9 @@ export default class ElectronApp {
     mainWindow.webContents.on(
       'console-message',
       (event, level, message, line, sourceId) => {
+        // console.log(
+        //   `Console Message [${level}]: ${message} (Line: ${line}, Source: ${sourceId})`
+        // );
         if (message.includes('swagger') || message.includes('OpenAPI')) {
           console.log(`Swagger Console [${level}]: ${message}`);
         }
@@ -606,21 +636,39 @@ export default class ElectronApp {
       try {
         const response = await axios.get(
           'http://127.0.0.1:' +
-            this.djangoServerPort.toString() +
-            '/api/healthcheck',
-          { withCredentials: true }
+          this.djangoServerPort.toString() +
+          '/api/healthcheck',
+          {
+            withCredentials: false, // Change to false for local development
+            timeout: 3000, // Add timeout
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+          }
         );
         if (response.status === 200) {
           console.log('Django Server is available');
           return;
         }
-      } catch (error) {
-        console.log(
-          `Attempt ${
-            i + 1
-          }: Django Server is not available yet. Retrying... (${error})`,
-          this.djangoServerPort.toString()
-        );
+      } catch (error: any) {
+        // More detailed error logging
+        if (error.response) {
+          console.log(
+            `Attempt ${i + 1}: Django Server responded with status ${error.response.status
+            }. Retrying...`
+          );
+        } else if (error.code === 'ECONNREFUSED') {
+          console.log(
+            `Attempt ${i + 1
+            }: Django Server connection refused. Server may still be starting. Retrying...`
+          );
+        } else {
+          console.log(
+            `Attempt ${i + 1}: Django Server health check failed: ${error.message
+            }. Retrying...`
+          );
+        }
         await new Promise((resolve) => setTimeout(resolve, delay));
       }
     }
@@ -632,6 +680,7 @@ export default class ElectronApp {
   /**
    * Initialize the API and wait until it is active
    */
+
   runDjangoServer = async () => {
     const venvPath =
       os.platform() === 'win32'
@@ -641,24 +690,43 @@ export default class ElectronApp {
     console.log('venvPath', venvPath);
     console.log('getBoardAPI', this.getBoardAPI());
 
+    // Add environment variables for Django
+    const env = {
+      ...process.env,
+      DJANGO_SETTINGS_MODULE: 'your_project.settings', // Replace with your actual settings module
+      PYTHONPATH: this.getBoardAPI(),
+      // Allow all hosts for development
+      DJANGO_ALLOWED_HOSTS: '127.0.0.1,localhost',
+      // Disable CSRF for local development if needed
+      DJANGO_DEBUG: 'True',
+    };
+
     this.djangoServer = spawn(
       venvPath,
-      ['manage.py', 'runserver', this.djangoServerPort.toString()],
+      [
+        'manage.py',
+        'runserver',
+        `127.0.0.1:${this.djangoServerPort}`, // Explicitly bind to 127.0.0.1
+        '--noreload', // Prevent auto-reloading which can cause issues
+        '--insecure', // Serve static files even if DEBUG=False
+      ],
       {
         cwd: this.getBoardAPI().toString(),
         shell: true,
         stdio: ['pipe', 'pipe', 'pipe'],
+        env: env,
       }
     );
+
     this.djangoServer.stdout.setEncoding('utf8');
     this.djangoServer.stderr.setEncoding('utf8');
 
     this.djangoServer?.stdout.on('data', (data) => {
-      console.log(`${data}`);
+      console.log(`Django stdout: ${data}`);
     });
 
     this.djangoServer?.stderr.on('data', (data) => {
-      console.error(`${data}`);
+      console.error(`Django stderr: ${data}`);
     });
 
     this.djangoServer?.on('error', (error) => {
@@ -668,6 +736,9 @@ export default class ElectronApp {
     this.djangoServer?.on('close', (code) => {
       console.log(`Django Server exited with code ${code}`);
     });
+
+    // Wait a bit before starting health checks to let Django fully start
+    await new Promise((resolve) => setTimeout(resolve, 3000));
 
     await this.waitForDjangoServer();
   };
@@ -683,6 +754,7 @@ export default class ElectronApp {
 
         try {
           // Tüm server'ları paralel olarak kapat
+          // await Promise.all([this.closeDjangoServer()]);
           await Promise.all([this.closeServer(), this.closeDjangoServer()]);
 
           console.log("Tüm server'lar başarıyla kapatıldı");
@@ -820,6 +892,33 @@ export default class ElectronApp {
         console.error('Ekran bilgileri alınırken hata:', error);
       }
 
+      const url = resolveHtmlPath('index.html');
+
+      if (url.startsWith('http://')) {
+        const net = require('net');
+        const port = parseInt(process.env.PORT || '3001');
+
+        const isAlive = await new Promise<boolean>((resolve) => {
+          const client = net.createConnection({ port }, () => {
+            client.end();
+            resolve(true);
+          });
+          client.on('error', () => resolve(false));
+        });
+
+        if (!isAlive) {
+          console.error(
+            `❌ Vite dev server not running at port ${port}. Exiting Electron...`
+          );
+          setTimeout(() => {
+            app.quit(); // Bazı sistemlerde aniden çağrıldığında çalışmayabilir, bu yüzden minik delay
+          }, 500);
+          return;
+        }
+
+        console.log(`✅ Vite dev server is alive at http://localhost:${port}`);
+      }
+
       this.addIPCRenderEventListeners();
       await this.createMainWindow();
       this.createServer();
@@ -830,9 +929,11 @@ export default class ElectronApp {
       }
 
       // Start the Django server
-      await this.runDjangoServer();
+      // await this.runDjangoServer();
     } catch (err) {
       console.error('Error: setting up app - ', err);
+
+      app.quit();
     }
   }
 }

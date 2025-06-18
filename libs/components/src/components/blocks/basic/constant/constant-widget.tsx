@@ -67,7 +67,9 @@ export class ConstantBlockWidget extends React.Component<ConstantBlockWidgetProp
     }
 
     render() {
-        const { state } = this.context;
+        const { stateX } = this.context;
+        console.log('ConstantBlockWidget render', this.props.node.data.name, this.state.value);
+        console.log('state', stateX);
         return (
             <BaseBlock selected={this.props.node.isSelected()} contextOptions={this.contextOptions}
                 contextHandler={this.onContextMenu.bind(this)}>
@@ -82,7 +84,7 @@ export class ConstantBlockWidget extends React.Component<ConstantBlockWidgetProp
                                     value={this.state.value}
                                     size='small'
                                     InputProps={{
-                                        readOnly: state.locked,
+                                        readOnly: stateX.locked,
                                     }}
                                 />
                             </div>

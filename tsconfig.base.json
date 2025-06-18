@@ -19,11 +19,15 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@api": ["apps/api/src/index.ts","apps/api/src/*",],
-      "@components": ["libs/components/src/index.ts","libs/components/src/*",],
-      "@diagrams": ["libs/diagrams/src/index.ts","libs/diagrams/src/*",],
-      // "@assets": ["libs/assets/src/index.ts","libs/assets/src/*",]
-      "@assets/*": ["libs/assets/src/assets/*"]
+      "@api": ["apps/api/src/index.ts", "apps/api/src/*"],
+      "@assets/*": ["libs/assets/src/assets/*"],
+      "@components": ["libs/components/src/index.ts", "libs/components/src/*"],
+      "@components/*": ["libs/components/src/components/*"],
+      "@components/features": ["libs/components/src/features/index.ts"],
+      "@diagrams": ["libs/diagrams/src/index.ts", "libs/diagrams/src/*"],
+      "@pages": ["libs/pages/src/index.ts", "libs/pages/src/*"],
+      "@pages/*": ["libs/pages/src/pages/*"],
+      "ai-modules": ["libs/ai-modules/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

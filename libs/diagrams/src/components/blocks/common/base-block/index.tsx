@@ -7,56 +7,62 @@ import './styles.scss';
 type ContextHandlerFunction = (key: string) => void;
 
 export interface ContextOption {
-    key: string;
-    label: string;
+  key: string;
+  label: string;
 }
 
 interface BaseBlockProps {
-    selected: boolean;
-    contextOptions?: ContextOption[];
-    contextHandler?: ContextHandlerFunction;
+  selected: boolean;
+  contextOptions?: ContextOption[];
+  contextHandler?: ContextHandlerFunction;
 }
 
 const BaseBlock: React.FC<BaseBlockProps> = (props) => {
-    const selectedClass = props.selected ? 'selected' : '';
-    const options = props.contextOptions || [];
-    const contextHandler = options.length > 0 && props.contextHandler ? props.contextHandler : (_: string) => {};
-    const theme = useTheme();
-    const isDark = theme.palette.mode === 'dark';
-    const { toggleMenu, ...menuProps } = useMenuState();
-    const [anchorPoint, setAnchorPoint] = useState({ x: 0, y: 0 });
-    const [showRightPanel, setShowRightPanel] = useState(false); // <-- NEW STATE
+  const selectedClass = props.selected ? 'selected' : '';
+  const options = props.contextOptions || [];
+  const contextHandler =
+    options.length > 0 && props.contextHandler
+      ? props.contextHandler
+      : (_: string) => {};
+  const theme = useTheme();
+  const isDark = theme.palette.mode === 'dark';
+  const { toggleMenu, ...menuProps } = useMenuState();
+  const [anchorPoint, setAnchorPoint] = useState({ x: 0, y: 0 });
+  const [showRightPanel, setShowRightPanel] = useState(false); // <-- NEW STATE
 
-    const openContextMenu = (event: MouseEvent<HTMLDivElement>) => {
-        event.preventDefault();
-        setAnchorPoint({ x: event.clientX, y: event.clientY });
-        toggleMenu('initial');
-        // setShowRightPanel(true); // <-- Show sidebar on right-click
-    };
+  const openContextMenu = (event: MouseEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setAnchorPoint({ x: event.clientX, y: event.clientY });
+    toggleMenu('initial');
+    // setShowRightPanel(true); // <-- Show sidebar on right-click
+  };
 
-    return (
-        <>
-            <div className={`block-container ${selectedClass}`} onContextMenu={openContextMenu}>
-                {props.children}
-                {options.length > 0 && (
-                    <ControlledMenu
-                        {...menuProps}
-                        anchorPoint={anchorPoint}
-                        theming={isDark ? 'white' : 'dark'}
-                        className="context-menu"
-                        onMouseLeave={() => toggleMenu('initial')}
-                        onKeyDown={(e) => e.stopPropagation()}
-                    >
-                        {options.map((option, index) => (
-                            <MenuItem key={index} onClick={() => contextHandler(option.key)}>
-                                {option.label}
-                            </MenuItem>
-                        ))}
-                    </ControlledMenu>
-                )}
-            </div>
+  return (
+    <>
+      <div
+        className={`block-container ${selectedClass}`}
+        onContextMenu={openContextMenu}
+      >
+        {props.children}
+        {options.length > 0 && (
+          <ControlledMenu
+            {...menuProps}
+            anchorPoint={anchorPoint}
+            theming={isDark ? 'white' : 'dark'}
+            className="context-menu"
+            onMouseLeave={() => toggleMenu('initial')}
+            onKeyDown={(e) => e.stopPropagation()}
+          >
+            {options.map((option, index) => (
+              <MenuItem key={index} onClick={() => contextHandler(option.key)}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </ControlledMenu>
+        )}
+      </div>
 
-            {/* RIGHT SIDEBAR
+      {/* RIGHT SIDEBAR
             {showRightPanel && (
                 <div
                     className="right-sidebar"
@@ -79,8 +85,8 @@ const BaseBlock: React.FC<BaseBlockProps> = (props) => {
                     <p>Here</p>
                 </div>
             )} */}
-        </>
-    );
+    </>
+  );
 };
 
 export default BaseBlock;

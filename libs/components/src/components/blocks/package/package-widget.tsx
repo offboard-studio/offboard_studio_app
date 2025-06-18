@@ -34,9 +34,9 @@ export class PackageBlockWidget extends React.Component<PackageBlockWidgetProps>
      * And stores the lockstate and showing package in the widget state.
      */
     openPackage() {
-        const {setState} = this.context;
+        const {setStateX} = this.context;
         this.props.editor.openPackage(this.props.node);
-        setState({
+        setStateX({
             locked: this.props.editor.locked(),
             showingPackage: true
         })

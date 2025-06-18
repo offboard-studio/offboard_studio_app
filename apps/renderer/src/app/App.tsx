@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
-import { createHashRouter, RouterProvider,DOMRouterOpts } from 'react-router-dom';
+import {
+  createHashRouter,
+  RouterProvider,
+  DOMRouterOpts,
+} from 'react-router-dom';
+
 import {
   SignIn,
   SignUp,
@@ -9,6 +14,7 @@ import {
   NotFound,
   BoardPage,
 } from '@components';
+
 import './App.module.scss';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createTheme, ThemeProvider } from '@mui/material';
@@ -37,14 +43,15 @@ console.log('window.location', window.location);
 console.log('window', window);
 
 // createHashRouter solves basename issues in Electron
-const router = createHashRouter([
-  { path:  '/', element: <BoardPage />, errorElement: <ErrorPage /> },
-  { path: '/signin', element: <SignIn /> },
-  { path: '/signup', element: <SignUp /> },  
-  { path: '/dashboard', element: <DashboardPage /> },
-  { path: '/user', element: <SignUp /> },
-  { path: '*', element: <NotFound /> },
-],
+const router = createHashRouter(
+  [
+    { path: '/', element: <BoardPage />, errorElement: <ErrorPage /> },
+    { path: '/signin', element: <SignIn /> },
+    { path: '/signup', element: <SignUp /> },
+    { path: '/dashboard', element: <DashboardPage /> },
+    { path: '/user', element: <SignUp /> },
+    { path: '*', element: <NotFound /> },
+  ],
   {
     // basename: window.location.pathname || '/',
     // basename:window.location.protocol === 'file:' ? '/index.html' : '/',

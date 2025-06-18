@@ -1,39 +1,250 @@
-.sidebar-container {
-    width: 200px;
-    flex-shrink: 0;
-}
-
+// Enhanced Sidebar Styles
 .architecture-sidebar-container {
-    width: 30px;
-    flex-shrink: 0;
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+
+  // Main sidebar styles
+  .sidebar {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+
+    &.sidebar-collapsed {
+      .sidebar-text {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+    }
+
+    // Category icons
+    .category-icon {
+      position: relative;
+      overflow: hidden;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.6s;
+      }
+
+      &:hover::before {
+        left: 100%;
+      }
+
+      // Tooltip for collapsed state
+      &[title] {
+        position: relative;
+
+        &::after {
+          content: attr(title);
+          position: absolute;
+          left: calc(100% + 10px);
+          top: 50%;
+          transform: translateY(-50%);
+          background: rgba(0, 0, 0, 0.9);
+          color: white;
+          padding: 8px 12px;
+          border-radius: 6px;
+          font-size: 0.8rem;
+          white-space: nowrap;
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 0.3s ease;
+          z-index: 10000;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+
+          // Arrow pointing to icon
+          &::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 6px solid transparent;
+            border-right-color: rgba(0, 0, 0, 0.9);
+          }
+        }
+
+        &:hover::after {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  // Sidebar layers
+  .sidebar-layer {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+
+    &:nth-child(2) {
+      box-shadow: 2px 0 20px rgba(0, 0, 0, 0.15);
+    }
+
+    &:nth-child(3) {
+      box-shadow: 4px 0 25px rgba(0, 0, 0, 0.2);
+    }
+
+    &:nth-child(4) {
+      box-shadow: 6px 0 30px rgba(0, 0, 0, 0.25);
+    }
+
+    // Layer content animations
+    .category-items {
+      .category-item {
+        transform: translateX(-20px);
+        opacity: 0;
+        animation: slideInFromLeft 0.3s ease forwards;
+
+        @for $i from 1 through 10 {
+          &:nth-child(#{$i}) {
+            animation-delay: #{$i * 0.05}s;
+          }
+        }
+
+        &:last-child {
+          border-bottom: none;
+        }
+      }
+    }
+
+    .block-item {
+      transform: translateY(10px);
+      opacity: 0;
+      animation: slideInFromBottom 0.3s ease forwards;
+
+      @for $i from 1 through 10 {
+        &:nth-child(#{$i}) {
+          animation-delay: #{$i * 0.05}s;
+        }
+      }
+    }
+  }
+
+  // Responsive behavior
+  @media (max-width: 768px) {
+    .sidebar-layer {
+      width: 280px !important;
+      max-width: calc(100vw - 60px);
+    }
+
+    .sidebar {
+      width: 60px !important;
+    }
+  }
+
+  // Custom scrollbar for layers
+  .sidebar-layer {
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.2) 0%,
+        rgba(255, 255, 255, 0.1) 100%
+      );
+      border-radius: 4px;
+
+      &:hover {
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.3) 0%,
+          rgba(255, 255, 255, 0.2) 100%
+        );
+      }
+    }
+  }
+
+  // Loading states
+  .loading-skeleton {
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.1) 25%,
+      rgba(255, 255, 255, 0.2) 50%,
+      rgba(255, 255, 255, 0.1) 75%
+    );
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+  }
+
+  // Pulse effect for active elements
+  .pulse {
+    animation: pulse 2s infinite;
+  }
 }
 
-.sidebar {
-    width: 200px;
-    transition:
-        width 0.3s ease-in-out,
-        transform 0.3s ease-in-out;
-    transform-origin: left;
-    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.3);
-
-    &:hover {
-        width: 300px;
-        transform: translateX(0);
-    }
-
-    // When the screen size is smaller than 768px (for example)
-    @media (max-width: 300px) {
-        width: 60px;
-        transform: translateX(-100%);
-    }
+// Keyframe animations
+@keyframes slideInFromLeft {
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
-// To show something else when the sidebar is collapsed (e.g., a button or different content)
-.sidebar-collapsed {
-    display: none;
+@keyframes slideInFromBottom {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
 
-    @media (max-width: 300px) {
-        display: block;
-        // Styling for the collapsed sidebar content (e.g., an icon or button)
-    }
+@keyframes loading {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+// Dark theme variables
+:root {
+  --sidebar-primary: #2c3e50;
+  --sidebar-secondary: #34495e;
+  --sidebar-accent: #3498db;
+  --sidebar-hover: #4a5568;
+  --sidebar-text: #ffffff;
+  --sidebar-text-muted: #bbb;
+  --sidebar-border: rgba(255, 255, 255, 0.1);
+  --sidebar-shadow: rgba(0, 0, 0, 0.3);
+}
+
+// Light theme (optional)
+[data-theme='light'] {
+  --sidebar-primary: #f8f9fa;
+  --sidebar-secondary: #e9ecef;
+  --sidebar-accent: #007bff;
+  --sidebar-hover: #dee2e6;
+  --sidebar-text: #333333;
+  --sidebar-text-muted: #666;
+  --sidebar-border: rgba(0, 0, 0, 0.1);
+  --sidebar-shadow: rgba(0, 0, 0, 0.15);
 }

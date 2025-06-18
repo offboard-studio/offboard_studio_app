@@ -25,11 +25,11 @@ interface BoardComponentProps {
 const BoardComponent: React.FC<BoardComponentProps> = (props) => {
 
     const { editor } = props;
-    const { state } = useGlobalState();
+    const { stateX } = useGlobalState();
 
     return (
         <div id='board'>
-            {state.showingPackage && <Toolbar editor={editor} />}
+            {stateX.showingPackage && <Toolbar editor={editor} />}
             <CanvasContainer>
                 <CanvasWidget engine={editor.engine} className='canvas' />
             </CanvasContainer>
@@ -43,19 +43,19 @@ const BoardComponent: React.FC<BoardComponentProps> = (props) => {
  */
 const Toolbar: React.FC<{ editor: Editor }> = (props) => {
 
-    const { state, setState } = useGlobalState();
+    const { stateX, setStateX } = useGlobalState();
 
     const setLock = (lock: boolean) => {
         // Lock the editor to prevent any modifications
         props.editor.setLock(lock);
-        setState({ ...state, locked: lock });
+        setStateX({ ...stateX, locked: lock });
     }
 
     const goBack = () => {
         // Go up one level in the stack (to previous circuit model)
         props.editor.goToPreviousModel()
         // Set whether it is still showing a package block
-        setState({...state, showingPackage: props.editor.showingPackage(), locked: false});
+        setStateX({ ...stateX, showingPackage: props.editor.showingPackage(), locked: false });
     }
 
     return (
@@ -70,7 +70,7 @@ const Toolbar: React.FC<{ editor: Editor }> = (props) => {
                 Back
             </Fab>
             <div className='flex-spacer'></div>
-            {state.locked &&
+            {stateX.locked &&
                 <Fab
                     size='small'
                     className='toolbar-button'
@@ -79,7 +79,7 @@ const Toolbar: React.FC<{ editor: Editor }> = (props) => {
                 </Fab>
             }
 
-            {!state.locked &&
+            {!stateX.locked &&
                 <Fab
                     size='small'
                     className='toolbar-button'

@@ -11,6 +11,8 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 import { AppModule } from './app/app.module';
 
+
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const globalPrefix = 'api';
@@ -38,7 +40,8 @@ export class ServerController {
       .addTag('offboard-studio')
       .build();
 
-    const documentFactory = () => SwaggerModule.createDocument(this.app, config);
+    const documentFactory = () =>
+      SwaggerModule.createDocument(this.app, config);
     SwaggerModule.setup('docs', this.app, documentFactory());
 
     await this.app.listen(this.port);
