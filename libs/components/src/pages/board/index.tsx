@@ -19,11 +19,11 @@ interface BoardProps {
  */
 function Board(props: BoardProps) {
   const { editor } = props;
-  const { stateX } = useGlobalState();
+  const { state } = useGlobalState();
 
   return (
     <div id="board">
-      {stateX.showingPackage && <Toolbar editor={editor} />}
+      {state.showingPackage && <Toolbar editor={editor} />}
       <CanvasContainer>
       <CanvasWidget engine={editor.engine} />
       </CanvasContainer>
@@ -36,20 +36,20 @@ function Board(props: BoardProps) {
  * @param props {editor: Editor}
  */
 const Toolbar: React.FC<{ editor: Editor }> = (props) => {
-  const { stateX, setStateX } = useGlobalState();
+  const { state, setState } = useGlobalState();
 
   const setLock = (lock: boolean) => {
     // Lock the editor to prevent any modifications
     props.editor.setLock(lock);
-    setStateX({ ...stateX, locked: lock });
+    setState({ ...state, locked: lock });
   };
 
   const goBack = () => {
     // Go up one level in the stack (to previous circuit model)
     props.editor.goToPreviousModel();
     // Set whether it is still showing a package block
-    setStateX({
-      ...stateX,
+    setState({
+      ...state,
       showingPackage: props.editor.showingPackage(),
       locked: false,
     });
@@ -68,7 +68,7 @@ const Toolbar: React.FC<{ editor: Editor }> = (props) => {
         Back
       </Fab>
       <div className="flex-spacer"></div>
-      {stateX.locked && (
+      {state.locked && (
         <Fab
           size="small"
           className="toolbar-button"
@@ -78,7 +78,7 @@ const Toolbar: React.FC<{ editor: Editor }> = (props) => {
         </Fab>
       )}
 
-      {!stateX.locked && (
+      {!state.locked && (
         <Fab
           size="small"
           className="toolbar-button"

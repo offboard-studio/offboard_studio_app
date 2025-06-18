@@ -332,7 +332,9 @@ export default class ElectronApp {
             'https://openrouter.ai https://api.openai.com ' +
             'http://127.0.0.1:* http://localhost:* ' +
             'ws://127.0.0.1:* ws://localhost:* ' +
-            'wss://127.0.0.1:* wss://localhost:*; ' +
+            'wss://127.0.0.1:* wss://localhost:* ' +
+            'https://offboard-studio-backend.vercel.app; ' + // ← şimdi doğru yerde
+
             // Image sources - allows all HTTPS images
             "img-src 'self' data: blob: https: http://127.0.0.1:* http://localhost:*; " +
             // Style sources - allows external stylesheets
@@ -531,7 +533,8 @@ export default class ElectronApp {
               'https://openrouter.ai https://api.openai.com ' +
               'http://127.0.0.1:* http://localhost:* ' +
               'ws://127.0.0.1:* ws://localhost:* ' +
-              'wss://127.0.0.1:* wss://localhost:*; ' +
+              'wss://127.0.0.1:* wss://localhost:* ' +
+              'https://offboard-studio-backend.vercel.app; ' + // ← şimdi doğru yerde
               // Image sources - allows all HTTPS images
               "img-src 'self' data: blob: https: http://127.0.0.1:* http://localhost:*; " +
               // Style sources - allows external stylesheets

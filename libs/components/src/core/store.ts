@@ -18,8 +18,8 @@ export interface IGlobalState {
  * Provider pattern for Global state.
  */
 interface IGlobalStateContextProps {
-    stateX: IGlobalState;
-    setStateX: Dispatch<SetStateAction<IGlobalState>>
+    state: IGlobalState;
+    setState: Dispatch<SetStateAction<IGlobalState>>
 }
 
 export const GlobalState = React.createContext<IGlobalStateContextProps | undefined>(undefined);

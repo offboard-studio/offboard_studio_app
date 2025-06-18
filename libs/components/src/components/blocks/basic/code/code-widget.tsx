@@ -104,7 +104,7 @@ export class CodeBlockWidget extends React.Component<
   }
 
   render() {
-    const { stateX } = this.context;
+    const { state } = this.context;
     const textAreaStyle: CSS.Properties = {
       width: this.state.width,
       height: this.state.height,
@@ -180,8 +180,8 @@ export class CodeBlockWidget extends React.Component<
                   style={textAreaStyle}
                 >
                   <MonacoEditor
-                    height={stateX.height}
-                    width={stateX.width}
+                    height={state.height}
+                    width={state.width}
                     language="python"
                     defaultValue={this.state.code}
                     onChange={this.handleInput}
