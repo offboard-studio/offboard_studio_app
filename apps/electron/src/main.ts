@@ -14,12 +14,15 @@ import {
   BrowserWindow,
   shell,
   ipcMain,
+  dialog,
   IpcMainEvent,
   screen,
   session,
 } from 'electron';
 import path from 'path';
 import os from 'os';
+
+import { promises as fs } from 'fs';
 
 import { ServerController } from '@api';
 import { resolveHtmlPath } from './util';
@@ -58,6 +61,121 @@ export default class ElectronApp {
     this.INDEX_HTML_PATH = resolveHtmlPath('index.html');
 
     this.setup();
+  }
+
+
+   // Helper method to get AppIPCService
+  private getAppIPCService(): any | null {
+    return this.server?.getAppIPCService() || null;
+  }
+
+  // Generate unique request IDs
+  private generateRequestId(): string {
+    return `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  }
+
+  // Direct IPC communication with NestJS
+  async processFileViaIPC(buffer: ArrayBuffer, filename: string): Promise<any> {
+    const appIPCService = this.getAppIPCService();
+
+    if (!appIPCService) {
+      throw new Error('AppIPCService not available');
+    }
+
+    try {
+      // Use direct method call - much faster than event-based communication
+      return await appIPCService.processFileDirectly(buffer, filename);
+    } catch (error) {
+      console.error('Direct IPC file processing failed:', error);
+      throw error;
+    }
+  }
+
+
+  // Direct IPC communication with NestJS
+  async aiBuildSync(buffer: string, filename: string): Promise<any> {
+    const appIPCService = this.getAppIPCService();
+
+    if (!appIPCService) {
+      throw new Error('AppIPCService not available');
+    }
+
+    try {
+      // Use direct method call - much faster than event-based communication
+      return await appIPCService.aiBuildSync(buffer, filename);
+    } catch (error) {
+      console.error('Direct IPC file processing failed:', error);
+      throw error;
+    }
+  }
+
+  async saveFileViaIPC(buffer: ArrayBuffer, filename: string, targetPath: string): Promise<any> {
+    const appIPCService = this.getAppIPCService();
+
+    if (!appIPCService) {
+      throw new Error('AppIPCService not available');
+    }
+
+    try {
+      return await appIPCService.saveFileDirectly(buffer, filename, targetPath);
+    } catch (error) {
+      console.error('Direct IPC file save failed:', error);
+      throw error;
+    }
+  }
+
+  async validateFileViaIPC(buffer: ArrayBuffer, filename: string): Promise<any> {
+    const appIPCService = this.getAppIPCService();
+
+    if (!appIPCService) {
+      throw new Error('AppIPCService not available');
+    }
+
+    try {
+      return await appIPCService.validateFileDirectly(buffer, filename);
+    } catch (error) {
+      console.error('Direct IPC file validation failed:', error);
+      throw error;
+    }
+  }
+
+  // Event-based IPC communication (alternative approach)
+  async processFileViaEvents(buffer: ArrayBuffer, filename: string): Promise<any> {
+    const appIPCService = this.getAppIPCService();
+
+    if (!appIPCService) {
+      throw new Error('AppIPCService not available');
+    }
+
+    return new Promise((resolve, reject) => {
+      const requestId = this.generateRequestId();
+      const timeout = setTimeout(() => {
+        reject(new Error('IPC request timeout'));
+      }, 30000);
+
+      // Listen for response
+      const responseHandler = (response: any) => {
+        if (response.requestId === requestId) {
+          clearTimeout(timeout);
+          appIPCService.off('process-file-response', responseHandler);
+          
+          if (response.success) {
+            resolve(response.data);
+          } else {
+            reject(new Error(response.error));
+          }
+        }
+      };
+
+      appIPCService.on('process-file-response', responseHandler);
+      
+      // Send request
+      appIPCService.emit('process-file', {
+        buffer,
+        filename,
+        requestId
+      });
+    });
   }
 
   getPreloadScript() {
@@ -282,34 +400,6 @@ export default class ElectronApp {
 
     // Güvenli pencere boyutları al
     const windowBounds = this.getSafeWindowBounds(1424, 1028);
-    //   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
-    //   callback({
-    //     responseHeaders: {
-    //       ...details.responseHeaders,
-    //       'Content-Security-Policy': [
-    //         "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:; script-src-elem 'self' 'unsafe-inline' https://cdn.jsdelivr.net; connect-src 'self' https://cdn.jsdelivr.net;"
-    //       ]
-    //     }
-    //   });
-    // });
-
-    // session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
-    //   callback({
-    //     responseHeaders: {
-    //       ...details.responseHeaders,
-    //       'Content-Security-Policy': [
-    //         "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; " +
-    //           "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; " +
-    //           "script-src-elem 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; " +
-    //           "connect-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; " +
-    //           "img-src 'self' data: blob: https:; " +
-    //           "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; " +
-    //           "font-src 'self' data: https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; " +
-    //           "worker-src 'self' blob: data:;",
-    //       ],
-    //     },
-    //   });
-    // });
 
     session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
       callback({
@@ -866,6 +956,176 @@ export default class ElectronApp {
       (_event: IpcMainEvent, url: string, windowKey: string) =>
         this.openNewWindow(url, windowKey)
     );
+
+
+    // IPC Handler for file download with save dialog
+    ipcMain.handle('download-file', async (event, { buffer, filename, defaultPath }) => {
+      try {
+        // Show save dialog
+        const result = await dialog.showSaveDialog({
+          title: 'Save Project',
+          defaultPath: defaultPath || filename,
+          properties: ['createDirectory'],
+          filters: [
+            { name: 'All Files', extensions: ['*'] },
+            { name: 'ZIP Files', extensions: ['zip'] },
+            { name: 'Project Files', extensions: ['json', 'js', 'ts'] },
+            { name: 'Archive Files', extensions: ['tar', 'gz', 'rar'] }
+          ]
+        });
+
+        if (result.canceled) {
+          return {
+            success: false,
+            error: 'Save cancelled by user'
+          };
+        }
+
+        // Convert ArrayBuffer to Buffer
+        const fileBuffer = Buffer.from(buffer);
+
+        this.processFileViaIPC(buffer, filename)
+          .then((response) => {
+            console.log('File processed successfully via IPC:', response);
+            // You can handle the response here if needed
+          })
+          .catch((error) => {
+            console.error('Error processing file via IPC:', error);
+            return {
+              success: false,
+              error: error.message || 'Unknown error occurred during IPC processing'
+            };
+          });
+
+        // Ensure directory exists
+        if (!result.filePath) {
+          return {
+            success: false,
+            error: 'No file path selected'
+          };
+        }
+        const dir = path.dirname(result.filePath);
+        await fs.mkdir(dir, { recursive: true });
+
+        // Write file to selected location
+        await fs.writeFile(result.filePath, fileBuffer);
+
+        console.log(`File saved successfully to: ${result.filePath}`);
+
+        return {
+          success: true,
+          filePath: result.filePath
+        };
+
+      } catch (error : unknown) {
+        console.error('Download error:', error);
+        return {
+          success: false,
+          error: (error as Error).message || 'Unknown error occurred'
+        };
+      }
+    });
+
+
+    // IPC Handler for file download with save dialog
+    ipcMain.handle('ai-build-sync', async (event, { buffer, filename, defaultPath }) => {
+      try {
+        // Show save dialog
+        const result = await dialog.showMessageBox({
+          type: 'question',
+          buttons: ['Ollama', 'MCP', 'OpenAI', 'İptal'],
+          title: 'Format Seç',
+          message: 'Hangi dosya formatını seçmek istiyorsunuz?',
+          defaultId: 0,
+          cancelId: 3
+        });
+
+        if (result.response === 3) {
+          return {
+            success: false,
+            error: 'Save cancelled by user'
+          };
+        }
+
+        // Convert ArrayBuffer to Buffer
+        // const fileBuffer = Buffer.from(buffer);
+
+        this.aiBuildSync(buffer, filename)
+          .then((response) => {
+            console.log('File processed successfully via IPC:', response);
+            // You can handle the response here if needed
+          })
+          .catch((error) => {
+            console.error('Error processing file via IPC:', error);
+            return {
+              success: false,
+              error: error.message || 'Unknown error occurred during IPC processing'
+            };
+          });
+
+        // // Ensure directory exists
+        // if (!result.filePath) {
+        //   return {
+        //     success: false,
+        //     error: 'No file path selected'
+        //   };
+        // }
+        // const dir = path.dirname(result.filePath);
+        // await fs.mkdir(dir, { recursive: true });
+
+        // // Write file to selected location
+        // await fs.writeFile(result.filePath, fileBuffer);
+
+        console.log(`File saved successfully to: ${result.response}`);
+
+        return {
+          success: true,
+          filePath: result.response
+        };
+
+      } catch (error : unknown) {
+        console.error('Download error:', error);
+        return {
+          success: false,
+          error: (error as Error).message || 'Unknown error occurred'
+        };
+      }
+    });
+
+
+    // IPC Handler for direct file save (without dialog)
+    ipcMain.handle('save-file-direct', async (event, { buffer, filePath }) => {
+      try {
+        // Validate file path
+        if (!filePath || typeof filePath !== 'string') {
+          throw new Error('Invalid file path provided');
+        }
+
+        // Convert ArrayBuffer to Buffer
+        const fileBuffer = Buffer.from(buffer);
+
+        // Ensure directory exists
+        const dir = path.dirname(filePath);
+        await fs.mkdir(dir, { recursive: true });
+
+        // Write file to specified location
+        await fs.writeFile(filePath, fileBuffer);
+
+        console.log(`File saved directly to: ${filePath}`);
+
+        return {
+          success: true,
+          filePath: filePath
+        };
+
+      } catch (error) {
+        console.error('Direct save error:', error);
+        return {
+          success: false,
+          error: (error instanceof Error ? error.message : 'Unknown error occurred')
+        };
+      }
+    });
   }
 
   async setup() {

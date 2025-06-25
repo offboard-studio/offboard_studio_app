@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react/jsx-no-undef */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   AppBar,
@@ -16,7 +18,7 @@ import {
   Alert,
   Snackbar,
 } from '@mui/material';
-import React, { Fragment, useState, useEffect, useCallback } from 'react';
+import React, { Fragment, useState, useEffect, useCallback, ChangeEvent } from 'react';
 import ModalContainer from 'react-modal-promise';
 import '../styles.scss';
 import Editor from '../../../core/editor';
@@ -37,12 +39,13 @@ import BoardSidebar from '../../../components/board-sidebar';
 import { useSidebar } from '../../../components/board-sidebar/useSideBar';
 import { Button } from '@mui/material';
 import BoardUserButton from '../../../components/board/user';
-import { DownloadRounded, FileDownload } from '@mui/icons-material';
+import { DownloadingTwoTone, DownloadRounded, FileDownload, WifiProtectedSetupSharp } from '@mui/icons-material';
 import { textFile2DataURL } from '../../../core/utils';
 import { PROJECT_FILE_EXTENSION } from '../../../core/constants';
 import { useLocation, useNavigate } from 'react-router-dom';
 import BoardSettings from '../board_setting';
 import Board from '..';
+import { set } from 'lodash';
 
 const darkTheme = createTheme({
   palette: {
@@ -104,6 +107,7 @@ export const BoardPage = (): JSX.Element => {
   const [tabIndex, setTabIndex] = useState(0);
   const [tabIndexBoard, setTabIndexBoard] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [aiBuildLoading, setAiBuildLoading] = useState(false);
   const [notification, setNotification] = useState<{
     open: boolean;
     message: string;
@@ -171,6 +175,137 @@ export const BoardPage = (): JSX.Element => {
       setIsLoading(false);
     }
   }, [editor, showNotification]);
+
+
+
+  // Define FileHelper type
+  type FileHelper = {
+    fileName: string;
+    reader: FileReader;
+  };
+  
+
+    const projectReader : FileHelper = {'fileName': '', 'reader': new FileReader()};
+
+    const onFileUpload = (event: ChangeEvent<HTMLInputElement>, fileHelper: FileHelper) => {
+        const file = event.target.files?.length ? event.target.files[0] : null;
+        event.target.value = '';
+        if (file) {
+            fileHelper.fileName = file.name;
+            fileHelper.reader.readAsText(file);
+        }
+    }
+
+  
+  const uploadProject = () => {
+        projectReader.fileName = '';
+        // Simulate click to open file selection dialog.
+        document.getElementById('openProjectInput')?.click();
+        projectReader.reader.onload = (event) => {
+            if (event.target?.result) {
+                // Parse file as JSON
+                // console.log('Loading project from file:', projectReader.fileName);
+                // console.log('File content:', event.target.result);
+                editor.loadProject(JSON.parse(event.target.result.toString()), projectReader.fileName);
+            }
+        };
+    }
+
+
+
+  // Enhanced save project with feedback
+  const uploadProject2 = useCallback(async (file) => {
+    try {
+      setIsLoading(true);
+
+      editor.loadProject(editorState.projectData);
+      if (!editorState.projectData) {
+        showNotification('No project data to upload', 'warning');
+        return;
+      }
+
+    } catch (error) {
+      console.error('Save project error:', error);
+      showNotification('Failed to save project', 'error');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [editor, showNotification]);
+
+
+  // Enhanced build and download with IPC integration
+const aiBuildSync = useCallback(async () => {
+  try {
+    setAiBuildLoading(true);
+    const model = editor.serialise();
+    
+    if (!model) {
+      showNotification('No project data to build', 'warning');
+      return;
+    }
+
+    const filename = editor.getName();
+    
+    showNotification('Building project...', 'info');
+    
+    // Check if Electron API is available
+    if (window.electronAPI?.ipcRenderer?.aiBuildSync) {
+      // Use Electron IPC for download
+      const result = await window.electronAPI.ipcRenderer.aiBuildSync({
+        buffer: model,
+        filename: filename,
+        defaultPath: filename
+      });
+
+      if (result.success) {
+        showNotification(
+          `Project built and saved to: ${result.filePath}`,
+          'success'
+        );
+      } else {
+        throw new Error(result.error || 'Download failed');
+      }
+      setAiBuildLoading(false);
+    } else {
+      // Fallback to browser download if not in Electron
+      // console.warn('Electron API not available, falling back to browser download');
+      
+      // const blob = new Blob([arrayBuffer]);
+      // const downloadUrl = URL.createObjectURL(blob);
+      // const link = document.getElementById('buildProjectLink') || document.createElement('a');
+      
+      // if (!link.id) {
+      //   link.id = 'buildProjectLink';
+      //   link.style.display = 'none';
+      //   document.body.appendChild(link);
+      // }
+      
+      // link.setAttribute('href', downloadUrl);
+      // link.setAttribute('download', filename);
+      // link.click();
+      
+      // // Cleanup
+      // setTimeout(() => {
+      //   URL.revokeObjectURL(downloadUrl);
+      //   if (!document.getElementById('buildProjectLink')) {
+      //     document.body.removeChild(link);
+      //   }
+      // }, 100);
+      
+      showNotification('Project built and downloaded successfully!', 'success');
+    }
+
+  } catch (error) {
+    console.error('Build and download error:', error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    showNotification(`Build failed: ${errorMessage}`, 'error');
+  } finally {
+    setIsLoading(false);
+  }
+}, [editor, showNotification]);
+
+
+
 
   // Enhanced build and download with better error handling
   const buildAndDownload = useCallback(async () => {
@@ -335,6 +470,24 @@ export const BoardPage = (): JSX.Element => {
                 </Button>
               </Tooltip>
 
+
+              <Tooltip title="AI Build (Ctrl+Shift+B)">
+                <Button
+                  color="inherit"
+                  onClick={aiBuildSync}
+                  startIcon={
+                    aiBuildLoading ? (
+                      <CircularProgress size={16} color="inherit" />
+                    ) : (
+                      <WifiProtectedSetupSharp />
+                    )
+                  }
+                  disabled={aiBuildLoading}
+                >
+                  AI Build
+                </Button>
+              </Tooltip>
+
               <Tooltip title="Save Project (Ctrl+S)">
                 <Button
                   color="inherit"
@@ -355,7 +508,7 @@ export const BoardPage = (): JSX.Element => {
               <Tooltip title="Upload Project">
                 <Button
                   color="inherit"
-                  onClick={saveProject} // You might want to implement actual upload logic
+                  onClick={uploadProject} // You might want to implement actual upload logic
                   startIcon={<CloudUploadIcon />}
                   disabled={isLoading}
                 >
@@ -376,6 +529,9 @@ export const BoardPage = (): JSX.Element => {
           <a href="/" id="saveProjectLink" hidden download>
             Download Project
           </a>
+
+          <input type='file' id='openProjectInput' accept={PROJECT_FILE_EXTENSION}
+              onChange={(event) => onFileUpload(event, projectReader)} hidden />
         </AppBar>
 
         {/* Main content area */}

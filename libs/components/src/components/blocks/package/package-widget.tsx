@@ -77,6 +77,7 @@ export class PackageBlockWidget extends React.Component<PackageBlockWidgetProps>
                                         );
                                     })}
                                 </div>
+                                
                                 <div className='block-package-image-container'>
                                     <ArrowedTooltip 
                                         title={this.props.node.info.description} 

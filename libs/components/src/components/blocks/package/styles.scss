@@ -1,11 +1,16 @@
 #board {
     .block-package {
-        width: 130px;
-        height: 100px;
+        width: fit-content;
+        min-width: 150px;
+        max-width: 300px;
+        height: fit-content;
+        padding: 8px;
 
         .grid-container {
             display: flex;
             flex-direction: row;
+            align-items: center;
+            gap: 8px;
 
             .block-package-inputs,
             .block-package-outputs {
@@ -13,7 +18,7 @@
                 flex-direction: column;
                 justify-content: space-evenly;
 
-                .package-output-ports {
+                .package-output-port {
                     margin-right: -10px;
                 }
             }
@@ -21,28 +26,69 @@
             .block-package-image-container {
                 flex: 1;
                 margin: 5px;
-                overflow-y: auto;
+                display: flex;
+                justify-content: center;
+                align-items: center;
 
                 .block-package-image {
-                    max-width: 40px;
-                    width: 90%;
-                    position: relative;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
+                    max-width: 60px;
+                    max-height: 60px;
+                    width: auto;
+                    height: auto;
+                    object-fit: contain;
                 }
-
             }
-
-            
         }
     }
 }
 
-// .theme-dark {
-//     #board {
-//         .block-basic-code {
-//             background-color: whitesmoke;
+
+
+// #board {
+//     .block-package {
+//         width: 130px;
+//         height: 100px;
+
+//         .grid-container {
+//             display: flex;
+//             flex-direction: row;
+
+//             .block-package-inputs,
+//             .block-package-outputs {
+//                 display: flex;
+//                 flex-direction: column;
+//                 justify-content: space-evenly;
+
+//                 .package-output-ports {
+//                     margin-right: -10px;
+//                 }
+//             }
+
+//             .block-package-image-container {
+//                 flex: 1;
+//                 margin: 5px;
+//                 overflow-y: auto;
+
+//                 .block-package-image {
+//                     max-width: 40px;
+//                     width: 90%;
+//                     position: relative;
+//                     top: 50%;
+//                     left: 50%;
+//                     transform: translate(-50%, -50%);
+//                 }
+
+//             }
+
+            
 //         }
 //     }
 // }
+
+// // .theme-dark {
+// //     #board {
+// //         .block-basic-code {
+// //             background-color: whitesmoke;
+// //         }
+// //     }
+// // }

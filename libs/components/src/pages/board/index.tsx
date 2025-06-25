@@ -67,7 +67,8 @@ const Toolbar: React.FC<{ editor: Editor }> = (props) => {
         <ArrowBackIcon />
         Back
       </Fab>
-      <div className="flex-spacer"></div>
+      {/* <div className="flex-spacer"></div> */}
+      <div style={{ flexGrow: 0.1 }}></div>
       {state.locked && (
         <Fab
           size="small"
