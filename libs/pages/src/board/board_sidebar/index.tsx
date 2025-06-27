@@ -439,7 +439,7 @@ const DynamicBoardSidebar: React.FC<BoardSideBarProps> = ({ editor }) => {
         </div>
 
         {/* API Categories Section */}
-        {categories.length > 0 && (
+        {/* {categories.length > 0 && (
           <div className="api-categories">
             <div className="api-categories-title">API Categories</div>
             {categories.slice(0, 3).map((category) => (
@@ -461,7 +461,7 @@ const DynamicBoardSidebar: React.FC<BoardSideBarProps> = ({ editor }) => {
               </div>
             ))}
           </div>
-        )}
+        )} */}
       </div>
 
       {/* Dynamic Layers */}
