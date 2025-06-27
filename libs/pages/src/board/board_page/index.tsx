@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   AppBar,
@@ -15,26 +16,26 @@ import React, { Fragment, useState } from 'react';
 import ModalContainer from 'react-modal-promise';
 // import '../../../App.scss';
 import '../styles.scss';
-import Editor from '../../../core/editor';
+import Editor from '@components/core/editor';
 import {
   GlobalState,
   GlobalStateComponent,
   IGlobalState,
-} from '../../../core/store';
+} from '@components/core/store';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 import DownloadingIcon from '@mui/icons-material/Downloading';
 import SettingsIcon from '@mui/icons-material/Settings';
 
-import BoardSidebar from '../../../pages/board-sidebar';
+import DynamicBoardSidebar from '@pages/board/board_sidebar';
 import { Button } from '@mui/material';
-import BoardUserButton from '../../../pages/board/user';
+import BoardUserButton from '@components/components/board/user';
 import { DownloadRounded, FileDownload } from '@mui/icons-material';
-import { textFile2DataURL } from '../../../core/utils';
-import { PROJECT_FILE_EXTENSION } from '../../../core/constants';
+import { textFile2DataURL } from '@components/core/utils';
+import { PROJECT_FILE_EXTENSION } from '@components/core/constants';
 import { useLocation, useNavigate } from 'react-router-dom';
-import BoardSettings from '../board_setting';
+import BoardSettings from '@pages/board/board_setting';
 import Board from '..';
 
 const darkTheme = createTheme({
@@ -160,7 +161,8 @@ export const BoardPage = (): JSX.Element => {
             className="board-container"
             style={{ display: 'flex', flexGrow: 1 }}
           >
-            <BoardSidebar editor={editor} />
+            {/* <BoardSidebar editor={editor} /> */}
+            <DynamicBoardSidebar editor={editor} />
 
             <div className="main-content">
               <ThemeProvider theme={darkTheme}>

@@ -18,7 +18,7 @@ import {
   Alert,
   Snackbar,
 } from '@mui/material';
-import React, { Fragment, useState, useEffect, useCallback, ChangeEvent } from 'react';
+import React, { Fragment, useState, useEffect, RefCallback, ChangeEvent, SyntheticEvent, useCallback } from 'react';
 import ModalContainer from 'react-modal-promise';
 import '../styles.scss';
 import Editor from '../../../core/editor';
@@ -126,7 +126,7 @@ export const BoardPage = (): JSX.Element => {
   });
 
   // Handle tab changes
-  const handleTabChange = (event: React.SyntheticEvent, newIndex: number) => {
+  const handleTabChange = (event: SyntheticEvent, newIndex: number) => {
     setTabIndex(newIndex);
     // Close sidebar layers when switching tabs for cleaner UX
     sidebarActions.closeAllLayers();
@@ -183,33 +183,33 @@ export const BoardPage = (): JSX.Element => {
     fileName: string;
     reader: FileReader;
   };
-  
 
-    const projectReader : FileHelper = {'fileName': '', 'reader': new FileReader()};
 
-    const onFileUpload = (event: ChangeEvent<HTMLInputElement>, fileHelper: FileHelper) => {
-        const file = event.target.files?.length ? event.target.files[0] : null;
-        event.target.value = '';
-        if (file) {
-            fileHelper.fileName = file.name;
-            fileHelper.reader.readAsText(file);
-        }
+  const projectReader: FileHelper = { 'fileName': '', 'reader': new FileReader() };
+
+  const onFileUpload = (event: ChangeEvent<HTMLInputElement>, fileHelper: FileHelper) => {
+    const file = event.target.files?.length ? event.target.files[0] : null;
+    event.target.value = '';
+    if (file) {
+      fileHelper.fileName = file.name;
+      fileHelper.reader.readAsText(file);
     }
+  }
 
-  
+
   const uploadProject = () => {
-        projectReader.fileName = '';
-        // Simulate click to open file selection dialog.
-        document.getElementById('openProjectInput')?.click();
-        projectReader.reader.onload = (event) => {
-            if (event.target?.result) {
-                // Parse file as JSON
-                // console.log('Loading project from file:', projectReader.fileName);
-                // console.log('File content:', event.target.result);
-                editor.loadProject(JSON.parse(event.target.result.toString()), projectReader.fileName);
-            }
-        };
-    }
+    projectReader.fileName = '';
+    // Simulate click to open file selection dialog.
+    document.getElementById('openProjectInput')?.click();
+    projectReader.reader.onload = (event) => {
+      if (event.target?.result) {
+        // Parse file as JSON
+        // console.log('Loading project from file:', projectReader.fileName);
+        // console.log('File content:', event.target.result);
+        editor.loadProject(JSON.parse(event.target.result.toString()), projectReader.fileName);
+      }
+    };
+  }
 
 
 
@@ -234,75 +234,75 @@ export const BoardPage = (): JSX.Element => {
 
 
   // Enhanced build and download with IPC integration
-const aiBuildSync = useCallback(async () => {
-  try {
-    setAiBuildLoading(true);
-    const model = editor.serialise();
-    
-    if (!model) {
-      showNotification('No project data to build', 'warning');
-      return;
-    }
+  const aiBuildSync = useCallback(async () => {
+    try {
+      setAiBuildLoading(true);
+      const model = editor.serialise();
 
-    const filename = editor.getName();
-    
-    showNotification('Building project...', 'info');
-    
-    // Check if Electron API is available
-    if (window.electronAPI?.ipcRenderer?.aiBuildSync) {
-      // Use Electron IPC for download
-      const result = await window.electronAPI.ipcRenderer.aiBuildSync({
-        buffer: model,
-        filename: filename,
-        defaultPath: filename
-      });
-
-      if (result.success) {
-        showNotification(
-          `Project built and saved to: ${result.filePath}`,
-          'success'
-        );
-      } else {
-        throw new Error(result.error || 'Download failed');
+      if (!model) {
+        showNotification('No project data to build', 'warning');
+        return;
       }
-      setAiBuildLoading(false);
-    } else {
-      // Fallback to browser download if not in Electron
-      // console.warn('Electron API not available, falling back to browser download');
-      
-      // const blob = new Blob([arrayBuffer]);
-      // const downloadUrl = URL.createObjectURL(blob);
-      // const link = document.getElementById('buildProjectLink') || document.createElement('a');
-      
-      // if (!link.id) {
-      //   link.id = 'buildProjectLink';
-      //   link.style.display = 'none';
-      //   document.body.appendChild(link);
-      // }
-      
-      // link.setAttribute('href', downloadUrl);
-      // link.setAttribute('download', filename);
-      // link.click();
-      
-      // // Cleanup
-      // setTimeout(() => {
-      //   URL.revokeObjectURL(downloadUrl);
-      //   if (!document.getElementById('buildProjectLink')) {
-      //     document.body.removeChild(link);
-      //   }
-      // }, 100);
-      
-      showNotification('Project built and downloaded successfully!', 'success');
-    }
 
-  } catch (error) {
-    console.error('Build and download error:', error);
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    showNotification(`Build failed: ${errorMessage}`, 'error');
-  } finally {
-    setIsLoading(false);
-  }
-}, [editor, showNotification]);
+      const filename = editor.getName();
+
+      showNotification('Building project...', 'info');
+
+      // Check if Electron API is available
+      if (window.electronAPI?.ipcRenderer?.aiBuildSync) {
+        // Use Electron IPC for download
+        const result = await window.electronAPI.ipcRenderer.aiBuildSync({
+          buffer: model,
+          filename: filename,
+          defaultPath: filename
+        });
+
+        if (result.success) {
+          showNotification(
+            `Project built and saved to: ${result.filePath}`,
+            'success'
+          );
+        } else {
+          throw new Error(result.error || 'Download failed');
+        }
+        setAiBuildLoading(false);
+      } else {
+        // Fallback to browser download if not in Electron
+        // console.warn('Electron API not available, falling back to browser download');
+
+        // const blob = new Blob([arrayBuffer]);
+        // const downloadUrl = URL.createObjectURL(blob);
+        // const link = document.getElementById('buildProjectLink') || document.createElement('a');
+
+        // if (!link.id) {
+        //   link.id = 'buildProjectLink';
+        //   link.style.display = 'none';
+        //   document.body.appendChild(link);
+        // }
+
+        // link.setAttribute('href', downloadUrl);
+        // link.setAttribute('download', filename);
+        // link.click();
+
+        // // Cleanup
+        // setTimeout(() => {
+        //   URL.revokeObjectURL(downloadUrl);
+        //   if (!document.getElementById('buildProjectLink')) {
+        //     document.body.removeChild(link);
+        //   }
+        // }, 100);
+
+        showNotification('Project built and downloaded successfully!', 'success');
+      }
+
+    } catch (error) {
+      console.error('Build and download error:', error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      showNotification(`Build failed: ${errorMessage}`, 'error');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [editor, showNotification]);
 
 
 
@@ -531,7 +531,7 @@ const aiBuildSync = useCallback(async () => {
           </a>
 
           <input type='file' id='openProjectInput' accept={PROJECT_FILE_EXTENSION}
-              onChange={(event) => onFileUpload(event, projectReader)} hidden />
+            onChange={(event) => onFileUpload(event, projectReader)} hidden />
         </AppBar>
 
         {/* Main content area */}
@@ -542,8 +542,8 @@ const aiBuildSync = useCallback(async () => {
             {/* Enhanced Sidebar */}
             <BoardSidebar
               editor={editor}
-              // defaultCollapsed={sidebarState.isCollapsed}
-              // maxLayers={3}
+            // defaultCollapsed={sidebarState.isCollapsed}
+            // maxLayers={3}
             />
 
             {/* Main board area */}
@@ -652,3 +652,5 @@ const aiBuildSync = useCallback(async () => {
 };
 
 export default BoardPage;
+/* (Removed erroneous local useCallback definition that was shadowing React's useCallback) */
+

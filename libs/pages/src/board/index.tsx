@@ -4,9 +4,9 @@ import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import { CanvasWidget } from '@projectstorm/react-canvas-core';
 import React from 'react';
-import CanvasContainer from '../../components/canvas/canvas-container';
-import Editor from '../../core/editor';
-import { useGlobalState } from '../../core/store';
+import CanvasContainer from '@components/components/canvas/canvas-container';
+import Editor from '@components/core/editor';
+import { useGlobalState } from '@components/core/store';
 import './styles.scss';
 
 interface BoardProps {

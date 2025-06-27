@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import * as ReactDOM from 'react-dom/client';
 import './main.module.scss';
 import App from './app/App';

@@ -7,9 +7,9 @@ import {
     CanvasWidget
 } from '@projectstorm/react-canvas-core';
 import React from 'react';
-import CanvasContainer from '../../../components/canvas/canvas-container';
-import Editor from '../../../core/editor';
-import { useGlobalState, useGlobalStateComponent } from '../../../core/store';
+import CanvasContainer from '@components/components/canvas/canvas-container';
+import Editor from '@components/core/editor';
+import { useGlobalState, useGlobalStateComponent } from '@components/core/store';
 import './styles.scss';
 
 
@@ -55,7 +55,7 @@ const Toolbar: React.FC<{ editor: Editor }> = (props) => {
         // Go up one level in the stack (to previous circuit model)
         props.editor.goToPreviousModel()
         // Set whether it is still showing a package block
-        setState({...state, showingPackage: props.editor.showingPackage(), locked: false});
+        setState({ ...state, showingPackage: props.editor.showingPackage(), locked: false });
     }
 
     return (

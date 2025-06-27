@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import { useForm } from 'react-hook-form';
 import {
   TextField,
@@ -13,6 +14,7 @@ import * as yup from 'yup';
 import GoogleIcon from '@mui/icons-material/Google';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import axios from 'axios';
+import { JSX } from 'react/jsx-runtime';
 
 const schema = yup.object().shape({
   email: yup.string().email('Invalid email').required('Email is required'),

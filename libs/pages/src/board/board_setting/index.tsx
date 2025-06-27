@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, TextField } from "@mui/material";
 import { ChangeEvent, useState } from "react";
-import Editor from "../../../core/editor";
+import Editor from "@components/core/editor";
 
-import { ProjectInfo } from "../../../core/constants";
+import { ProjectInfo } from "@components/core/constants";
 
 interface BoardSettingsProps {
     editor: Editor;

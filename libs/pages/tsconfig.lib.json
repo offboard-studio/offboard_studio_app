@@ -1,12 +1,13 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "composite": true,
-    "lib": ["dom"],
     "outDir": "../../dist/out-tsc",
-    "types": ["node", "vite/client"],
-    "resolveJsonModule": true, // Ensure JSON module resolution is enabled
-    "esModuleInterop": true
+    "types": [
+      "node",
+      "@nx/react/typings/cssmodule.d.ts",
+      "@nx/react/typings/image.d.ts",
+      "vite/client"
+    ]
   },
   "exclude": [
     "**/*.spec.ts",
@@ -18,17 +19,5 @@
     "**/*.spec.jsx",
     "**/*.test.jsx"
   ],
-  "include": [
-    "src/pages/blocks/collection/**/*.json",
-    "src/**/*.js",
-    "src/**/*.jsx",
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/pricing_page"
-  ],
-  "references": [
-    { "path": "../components" },
-    { "path": "../diagrams" },
-    { "path": "../assets" }
-  ]
+  "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx"]
 }

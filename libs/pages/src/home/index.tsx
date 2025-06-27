@@ -1,3 +1,4 @@
+import { JSX } from 'react/jsx-runtime';
 import styles from './home.page.module.scss';
 import { openNewWindow, PageRoutePaths } from '@components/features';
 

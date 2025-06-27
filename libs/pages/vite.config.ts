@@ -6,7 +6,7 @@ import * as path from 'path';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 
 export default defineConfig({
-  cacheDir: '../../node_modules/.vite/diagrams',
+  cacheDir: '../../node_modules/.vite/pages',
 
   plugins: [
     react(),

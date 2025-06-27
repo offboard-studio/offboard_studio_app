@@ -19,16 +19,18 @@ export type CollectionBlockType = {
 //TODO : Add the blocks to the getCollectionBlock function
 //TODO : Add the blocks to the blockFactory function
 
-export const collectionBlocks: { 'blocks': CollectionBlockType, 
-                                 'processing': CollectionBlockType,
-                                 'drivers': CollectionBlockType } = {
+export const collectionBlocks: {
+    'blocks': CollectionBlockType,
+    'processing': CollectionBlockType,
+    'drivers': CollectionBlockType
+} = {
     'blocks': {
         'control': {
             'label': 'Control',
             'children': {
-                'motorDriver': {'label': 'MotorDriver'},
-                'pid': {'label': 'PID'},
-                'teleoperator': {'label': 'Teleoperator'}
+                'motorDriver': { 'label': 'MotorDriver' },
+                'pid': { 'label': 'PID' },
+                'teleoperator': { 'label': 'Teleoperator' }
             }
         },
         'opencv': {
@@ -36,31 +38,31 @@ export const collectionBlocks: { 'blocks': CollectionBlockType,
             'children': {
                 'blur': { 'label': 'Blur' },
                 'camera': { 'label': 'Camera' },
-                'colorFilter': {'label': 'Color Filter'},
-                'contourDetector': {'label': 'Contour Detector'},
-                'cropper': {'label': 'Cropper'},
-                'dilation': {'label': 'Dilation'},
-                'edgeDetector': {'label': 'Edge Detector'},
-                'erosion': {'label': 'Erosion'},
-                'faceDetector': {'label': 'Face Detector'},
-                'imageRead': {'label': 'Image Read'},
+                'colorFilter': { 'label': 'Color Filter' },
+                'contourDetector': { 'label': 'Contour Detector' },
+                'cropper': { 'label': 'Cropper' },
+                'dilation': { 'label': 'Dilation' },
+                'edgeDetector': { 'label': 'Edge Detector' },
+                'erosion': { 'label': 'Erosion' },
+                'faceDetector': { 'label': 'Face Detector' },
+                'imageRead': { 'label': 'Image Read' },
                 'screen': { 'label': 'Screen' },
-                'threshold': {'label': 'Threshold'},
-                'videoStreamer': {'label': 'Video Streamer'}
+                'threshold': { 'label': 'Threshold' },
+                'videoStreamer': { 'label': 'Video Streamer' }
             }
         },
         'rossensors': {
             'label': 'ROS-Sensors',
             'children': {
-                'cameraRos': {'label': 'CameraROS'},
-                'odometer': {'label': 'Odometer'},
-                'imu': {'label': 'IMU'}
+                'cameraRos': { 'label': 'CameraROS' },
+                'odometer': { 'label': 'Odometer' },
+                'imu': { 'label': 'IMU' }
             }
         },
         'tensorflow': {
             'label': 'TensorFlow',
             'children': {
-                'objectDetector': {'label': 'Object Detector'}
+                'objectDetector': { 'label': 'Object Detector' }
             }
         }
     },
@@ -68,27 +70,27 @@ export const collectionBlocks: { 'blocks': CollectionBlockType,
         'control': {
             'label': 'Control',
             'children': {
-                'pid': {'label': 'PID'},
+                'pid': { 'label': 'PID' },
             }
         },
         'opencv': {
             'label': 'OpenCV',
             'children': {
                 'blur': { 'label': 'Blur' },
-                'colorFilter': {'label': 'Color Filter'},
-                'contourDetector': {'label': 'Contour Detector'},
-                'cropper': {'label': 'Cropper'},
-                'dilation': {'label': 'Dilation'},
-                'edgeDetector': {'label': 'Edge Detector'},
-                'erosion': {'label': 'Erosion'},
-                'faceDetector': {'label': 'Face Detector'},
-                'threshold': {'label': 'Threshold'},
+                'colorFilter': { 'label': 'Color Filter' },
+                'contourDetector': { 'label': 'Contour Detector' },
+                'cropper': { 'label': 'Cropper' },
+                'dilation': { 'label': 'Dilation' },
+                'edgeDetector': { 'label': 'Edge Detector' },
+                'erosion': { 'label': 'Erosion' },
+                'faceDetector': { 'label': 'Face Detector' },
+                'threshold': { 'label': 'Threshold' },
             }
         },
         'tensorflow': {
             'label': 'TensorFlow',
             'children': {
-                'objectDetector': {'label': 'Object Detector'}
+                'objectDetector': { 'label': 'Object Detector' }
             }
         }
     },
@@ -96,34 +98,34 @@ export const collectionBlocks: { 'blocks': CollectionBlockType,
         'control': {
             'label': 'Control',
             'children': {
-                'motorDriver': {'label': 'MotorDriver'},
-                'motorDriverRos2': {'label': 'MotorDriverROS2'},
-                'teleoperator': {'label': 'Teleoperator'}
+                'motorDriver': { 'label': 'MotorDriver' },
+                'motorDriverRos2': { 'label': 'MotorDriverROS2' },
+                'teleoperator': { 'label': 'Teleoperator' }
             }
         },
         'opencv': {
             'label': 'OpenCV',
             'children': {
                 'camera': { 'label': 'Camera' },
-                'imageRead': {'label': 'Image Read'},
+                'imageRead': { 'label': 'Image Read' },
                 'screen': { 'label': 'Screen' },
-                'videoStreamer': {'label': 'Video Streamer'}
+                'videoStreamer': { 'label': 'Video Streamer' }
             }
         },
         'rossensors': {
             'label': 'ROS-Sensors',
             'children': {
-                'cameraRos': {'label': 'CameraROS'},
-                'odometer': {'label': 'Odometer'},
-                'imu': {'label': 'IMU'},
-                'laserRos':{'label':'LaserROS'}
+                'cameraRos': { 'label': 'CameraROS' },
+                'odometer': { 'label': 'Odometer' },
+                'imu': { 'label': 'IMU' },
+                'laserRos': { 'label': 'LaserROS' }
             }
         },
         'ros2sensors': {
             'label': 'ROS2-Sensors',
             'children': {
-                'cameraRos2': {'label': 'CameraROS2'},
-                'laserRos2': {'label': 'LaserROS2'},
+                'cameraRos2': { 'label': 'CameraROS2' },
+                'laserRos2': { 'label': 'LaserROS2' },
             }
         }
     }
