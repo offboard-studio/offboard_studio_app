@@ -15,6 +15,7 @@ interface BaseBlockProps {
   selected: boolean;
   contextOptions?: ContextOption[];
   contextHandler?: ContextHandlerFunction;
+
 }
 
 const BaseBlock: React.FC<BaseBlockProps> = (props) => {
@@ -23,7 +24,7 @@ const BaseBlock: React.FC<BaseBlockProps> = (props) => {
   const contextHandler =
     options.length > 0 && props.contextHandler
       ? props.contextHandler
-      : (_: string) => {};
+      : (_: string) => { };
   const theme = useTheme();
   const isDark = theme.palette.mode === 'dark';
   const { toggleMenu, ...menuProps } = useMenuState();
@@ -39,53 +40,58 @@ const BaseBlock: React.FC<BaseBlockProps> = (props) => {
 
   return (
     <>
-      <div
-        className={`block-container ${selectedClass}`}
-        onContextMenu={openContextMenu}
-      >
-        {props.children}
-        {options.length > 0 && (
-          <ControlledMenu
-            {...menuProps}
-            anchorPoint={anchorPoint}
-            theming={isDark ? 'white' : 'dark'}
-            className="context-menu"
-            onMouseLeave={() => toggleMenu('initial')}
-            onKeyDown={(e) => e.stopPropagation()}
+    <div
+        className= {`block-container ${selectedClass}`
+}
+onContextMenu = { openContextMenu }
+  >
+  { props.children }
+{
+  options.length > 0 && (
+    <ControlledMenu
+            { ...menuProps }
+            anchorPoint = { anchorPoint }
+  theming = { isDark? 'white': 'dark' }
+  className = "context-menu"
+  onMouseLeave = {() => toggleMenu('initial')
+}
+onKeyDown = {(e) => e.stopPropagation()}
           >
-            {options.map((option, index) => (
-              <MenuItem key={index} onClick={() => contextHandler(option.key)}>
-                {option.label}
-              </MenuItem>
+{
+  options.map((option, index) => (
+    <MenuItem key= { index } onClick = {() => contextHandler(option.key)} >
+  { option.label }
+  </MenuItem>
             ))}
-          </ControlledMenu>
+</ControlledMenu>
         )}
-      </div>
+</div>
 
-      {/* RIGHT SIDEBAR
-            {showRightPanel && (
-                <div
-                    className="right-sidebar"
-                    style={{
-                        position: 'fixed',
-                        top: 0,
-                        right: 0,
-                        width: '150px',
-                        height: '100vh',
-                        backgroundColor: '#333',
-                        color: 'white',
-                        padding: '10px',
-                        zIndex: 2000,
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        boxShadow: '-2px 0 5px rgba(0,0,0,0.3)',
-                    }}
-                >
-                    <p>Here</p>
-                </div>
-            )} */}
-    </>
+{/* RIGHT SIDEBAR */ }
+
+{/*{showRightPanel && (
+          <div
+            className="right-sidebar"
+            style={{
+              position: 'fixed',
+                          top: 0,
+                          right: 0,
+                          width: '150px',
+                          height: '100vh',
+                          backgroundColor: '#333',
+                          color: 'white',
+                          padding: '10px',
+                          zIndex: 2000,
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          boxShadow: '-2px 0 5px rgba(0,0,0,0.3)',
+                      }}
+                  >
+                      <p>Here</p>
+                  </div>
+              )} */}
+</>
   );
 };
 

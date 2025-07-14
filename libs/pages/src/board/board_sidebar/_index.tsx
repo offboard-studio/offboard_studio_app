@@ -11,14 +11,10 @@ import {
   Fade,
 } from '@mui/material';
 import SidebarItemCollapse from './SidebarItemCollapse';
-import Editor from '../../core/editor';
+import Editor from '@components/core/editor';
 
 import logo from '@assets/logo.png';
 
-import {
-  collectionBlocks,
-  CollectionBlockType,
-} from '../blocks/collection/collection-factory';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import HandymanIcon from '@mui/icons-material/Handyman';
 import CloseIcon from '@mui/icons-material/Close';

@@ -28,10 +28,6 @@ export class AppController {
     };
   }
 
-
-
-
-
   @Get('ipc-status')
   getIPCStatus() {
     if (this.appIPCService) {
