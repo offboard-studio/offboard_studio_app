@@ -104,7 +104,8 @@ export class CodeBlockWidget extends React.Component<
   }
 
   render() {
-    const { state } = this.context;
+
+    const { state } = this.context as { state: any };
     const textAreaStyle: CSS.Properties = {
       width: this.state.width,
       height: this.state.height,

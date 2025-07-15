@@ -1,11 +1,14 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "composite": true,         // Enables the project as a composite project
-    "declaration": true,       // Ensures declaration files (.d.ts) are emitted
-    "declarationMap": true,   
+    "composite": true, // Enables the project as a composite project
+    "declaration": true, // Ensures declaration files (.d.ts) are emitted
+    "declarationMap": true,
     "outDir": "../../dist/out-tsc",
-    "types": ["node", "vite/client"]
+    "types": [
+      "node",
+      "vite/client"
+    ]
   },
   "exclude": [
     "src/**/*.spec.ts",
@@ -26,10 +29,11 @@
     "src/**/*.jsx",
     "src/**/*.ts",
     "src/**/*.tsx",
-
     "../../libs/components/src/components/blocks/collection/**/*.json",
     "../../libs/components/src/**/*.ts",
     "../../libs/components/src/**/*.tsx",
+    "../../libs/pages/src/index.ts",
+    "../../libs/pages/src/**/*.ts",
     "../../libs/pages/src/**/*.tsx",
     "../../libs/pages/src/**/*.tsx",
     "../../libs/components/src/pages/pricing_page"

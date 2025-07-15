@@ -6,19 +6,19 @@ import path from 'path'
 
 export default defineConfig({
   cacheDir: '../../node_modules/.vite/renderer',
-  
+
   server: {
     port: Number(process.env.PORT) || 3001,
     host: 'localhost',
   },
-  
+
   preview: {
     port: Number(process.env.PORT) || 3001,
     host: 'localhost',
   },
-  
+
   plugins: [react(), nxViteTsPaths()],
-  
+
   // Fallback olarak manual alias
   resolve: {
     alias: {
