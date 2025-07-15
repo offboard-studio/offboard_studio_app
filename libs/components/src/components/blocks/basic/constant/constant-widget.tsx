@@ -68,6 +68,8 @@ export class ConstantBlockWidget extends React.Component<ConstantBlockWidgetProp
 
     render() {
         const { state } = this.context;
+        console.log('ConstantBlockWidget render', this.props.node.data.name, this.state.value);
+        console.log('state', state);
         return (
             <BaseBlock selected={this.props.node.isSelected()} contextOptions={this.contextOptions}
                 contextHandler={this.onContextMenu.bind(this)}>

@@ -45,6 +45,7 @@ const darkTheme = createTheme({
   },
 });
 
+
 export const BoardPage = (): JSX.Element => {
   const location = useLocation();
   const editorState = location.state || {};
@@ -52,7 +53,6 @@ export const BoardPage = (): JSX.Element => {
   const navigate = useNavigate();
 
   const isElectron = window.location.protocol === 'file:';
-
 
   const [tabIndex, setTabIndex] = useState(0);
   const [tabIndexBoard, setTabIndexBoard] = useState(false);
@@ -78,8 +78,6 @@ export const BoardPage = (): JSX.Element => {
   };
 
   const buildAndDownload = () => {
-
-
     const model = editor.serialise();
     let filename = editor.getName();
     // if (process.env.REACT_APP_BACKEND_HOST && model) {
@@ -164,7 +162,7 @@ export const BoardPage = (): JSX.Element => {
             style={{ display: 'flex', flexGrow: 1 }}
           >
             <BoardSidebar editor={editor} />
-            
+
             <div className="main-content">
               <ThemeProvider theme={darkTheme}>
                 <div className="App theme-dark">

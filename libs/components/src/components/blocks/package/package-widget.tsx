@@ -1,11 +1,11 @@
 
 import { DiagramEngine } from "@projectstorm/react-diagrams";
 import React from "react";
-import Editor from "../../../core/editor";
-import { GlobalState } from "../../../core/store";
+import Editor from "@components/core/editor";
+import { GlobalState } from "@components/core/store";
 import ArrowedTooltip from "../../utils/tooltip";
-import BaseBlock, { ContextOption } from "../common/base-block";
-import BasePort from "../common/base-port";
+import BaseBlock, { ContextOption } from "@components/components/blocks/common/base-block";
+import BasePort from "@components/components/blocks/common/base-port";
 import { PackageBlockModel } from "./package-model";
 import './styles.scss';
 import { Card, CardContent } from "@mui/material";
@@ -77,6 +77,7 @@ export class PackageBlockWidget extends React.Component<PackageBlockWidgetProps>
                                         );
                                     })}
                                 </div>
+                                
                                 <div className='block-package-image-container'>
                                     <ArrowedTooltip 
                                         title={this.props.node.info.description} 

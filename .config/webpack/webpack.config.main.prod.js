@@ -13,6 +13,7 @@ const checkNodeEnv = require('../scripts/checkNodeEnv');
 const deleteSourceMaps = require('../scripts/deleteSourceMaps');
 
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 checkNodeEnv('production');
 deleteSourceMaps();
@@ -53,6 +54,40 @@ const configuration = {
       analyzerMode: process.env.ANALYZE === 'true' ? 'server' : 'disabled',
       analyzerPort: 8888,
     }),
+    new MonacoWebpackPlugin({
+      languages: ['json', 'python'],
+      features: [
+        'accessibilityHelp',
+        'bracketMatching',
+        'clipboard',
+        'codeAction',
+        'colorDetector',
+        'comment',
+        'contextmenu',
+        'cursorUndo',
+        'documentSymbols',
+        'find',
+        'folding',
+        'format',
+        'gotoError',
+        'gotoLine',
+        'gotoSymbol',
+        'hover',
+        'inPlaceReplace',
+        'inspectTokens',
+        'linesOperations',
+        'links',
+        'multicursor',
+        'parameterHints',
+        'rename',
+        'smartSelect',
+        'suggest',
+      ],
+      globalAPI: true,
+      // Add this to use local files instead of CDN
+      publicPath: '',
+      filename: '[name].worker.js',
+    }),
     new CopyWebpackPlugin({
       patterns: [
         // { from: 'src/index.html', to: 'index.html' }, // Adjust the source path as needed
@@ -76,6 +111,10 @@ const configuration = {
         {
           from: 'node_modules/swagger-ui-dist/favicon-32x32.png',
           to: 'favicon-32x32.png',
+        },
+        {
+          from: 'node_modules/monaco-editor/min/vs',
+          to: 'vs',
         },
       ],
     }),

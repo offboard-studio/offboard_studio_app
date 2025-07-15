@@ -156,7 +156,9 @@ class Editor {
   public loadProject(jsonModel: { editor: unknown; design: unknown; dependencies: Dependency; package: ProjectInfo }, filename: string = '') {
     const model = new DiagramModel();
     const editor = jsonModel.editor;
+    console.log('Loading project with model:', editor);
     if (editor) {
+      console.log('Deserialising model with editor data:', editor);
       model.deserializeModel(
         {
           offsetX: 0,
@@ -175,6 +177,8 @@ class Editor {
       if (this.projectInfo.name === '' && filename !== '') {
         this.projectInfo.name = filename;
       }
+      console.log('Loaded project info:', this.projectInfo);
+      // Set the current project name to the name of
       this.engine.setModel(model);
     }
   }
