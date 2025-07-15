@@ -67,7 +67,8 @@ export class ConstantBlockWidget extends React.Component<ConstantBlockWidgetProp
     }
 
     render() {
-        const { state } = this.context;
+
+        const { state } = this.context as { state: any };
         console.log('ConstantBlockWidget render', this.props.node.data.name, this.state.value);
         console.log('state', state);
         return (

@@ -28,14 +28,14 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import DownloadingIcon from '@mui/icons-material/Downloading';
 import SettingsIcon from '@mui/icons-material/Settings';
 
-import BoardSidebar from '@pages/board/board_sidebar';
 import { Button } from '@mui/material';
 import BoardUserButton from '@components/components/board/user';
 import { DownloadRounded, FileDownload } from '@mui/icons-material';
 import { textFile2DataURL } from '@components/core/utils';
 import { PROJECT_FILE_EXTENSION } from '@components/core/constants';
 import { useLocation, useNavigate } from 'react-router-dom';
-import BoardSettings from '@pages/board/board_setting';
+import BoardSettings from '../board_setting';
+import BoardSidebar from '../board_sidebar';
 import Board from '..';
 
 const darkTheme = createTheme({

@@ -7,7 +7,7 @@
     "rootDir": ".",
     "target": "es2015",
     "module": "esnext",
-    "lib": ["es2020"],
+    "lib": ["es2020", "dom", "dom.iterable"],
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
@@ -27,7 +27,7 @@
       "@components/features": ["libs/components/src/features/index.ts"],
       "@diagrams": ["libs/diagrams/src/index.ts", "libs/diagrams/src/*"],
       "@pages": ["libs/pages/src/index.ts", "libs/pages/src/*"],
-      "@pages/*": ["libs/pages/src/*"],
+      "@pages/*": ["libs/pages/src/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]

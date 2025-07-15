@@ -50,7 +50,7 @@ export const SignIn = (): JSX.Element => {
       const { token } = response.data;
 
       // Token'ı localStorage'da saklamak
-      localStorage.setItem('jwtToken', token);
+      // localStorage.setItem('jwtToken', token);
 
       // Kullanıcıyı anasayfaya yönlendirmek (veya başka bir sayfaya)
       navigate('/dashboard'); // Örneğin dashboard'a yönlendirebilirsiniz
