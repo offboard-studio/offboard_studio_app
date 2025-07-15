@@ -35,7 +35,7 @@ interface BoardSideBarProps {
   editor?: any; // Editor prop'u opsiyonel yaptım
 }
 
-const DynamicBoardSidebar: React.FC<BoardSideBarProps> = ({ editor }) => {
+const BoardSidebar: React.FC<BoardSideBarProps> = ({ editor }) => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [activeLayers, setActiveLayers] = useState<SidebarLayer[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -439,7 +439,7 @@ const DynamicBoardSidebar: React.FC<BoardSideBarProps> = ({ editor }) => {
         </div>
 
         {/* API Categories Section */}
-        {categories.length > 0 && (
+        {/* {categories.length > 0 && (
           <div className="api-categories">
             <div className="api-categories-title">API Categories</div>
             {categories.slice(0, 3).map((category) => (
@@ -461,7 +461,7 @@ const DynamicBoardSidebar: React.FC<BoardSideBarProps> = ({ editor }) => {
               </div>
             ))}
           </div>
-        )}
+        )} */}
       </div>
 
       {/* Dynamic Layers */}
@@ -787,4 +787,4 @@ const DynamicBoardSidebar: React.FC<BoardSideBarProps> = ({ editor }) => {
   );
 };
 
-export default DynamicBoardSidebar;
+export default BoardSidebar;
