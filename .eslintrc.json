@@ -1,8 +1,6 @@
 {
   "root": true,
-  "ignorePatterns": [
-    "**/*"
-  ],
+  "ignorePatterns": ["node_modules", "dist"],
   "plugins": [
     "@nx"
   ],
@@ -41,7 +39,7 @@
         "plugin:@nx/typescript"
       ],
       "rules": {
-        "prettier/prettier": "off" // veya tamamen sil
+        "prettier/prettier": "off" 
       }
     },
     {
@@ -53,7 +51,7 @@
         "plugin:@nx/javascript"
       ],
       "rules": {
-        "prettier/prettier": "off" // veya tamamen sil
+        "prettier/prettier": "off"
       }
     }
   ]

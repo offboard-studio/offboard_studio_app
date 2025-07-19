@@ -13,6 +13,7 @@ const checkNodeEnv = require('../scripts/checkNodeEnv');
 const deleteSourceMaps = require('../scripts/deleteSourceMaps');
 
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+// const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin'); // GEÇICI OLARAK COMMENT OUT
 
 checkNodeEnv('production');
 deleteSourceMaps();
@@ -53,10 +54,46 @@ const configuration = {
       analyzerMode: process.env.ANALYZE === 'true' ? 'server' : 'disabled',
       analyzerPort: 8888,
     }),
+    
+    // MONACO EDITOR PLUGIN GEÇİCİ OLARAK DEVRE DIŞI
+    /*
+    new MonacoWebpackPlugin({
+      languages: ['json', 'python'],
+      features: [
+        'accessibilityHelp',
+        'bracketMatching',
+        'clipboard',
+        'codeAction',
+        'colorDetector',
+        'comment',
+        'contextmenu',
+        'cursorUndo',
+        'documentSymbols',
+        'find',
+        'folding',
+        'format',
+        'gotoError',
+        'gotoLine',
+        'gotoSymbol',
+        'hover',
+        'inPlaceReplace',
+        'inspectTokens',
+        'linesOperations',
+        'links',
+        'multicursor',
+        'parameterHints',
+        'rename',
+        'smartSelect',
+        'suggest',
+      ],
+      globalAPI: true,
+      publicPath: '',
+      filename: '[name].worker.js',
+    }),
+    */
+    
     new CopyWebpackPlugin({
       patterns: [
-        // { from: 'src/index.html', to: 'index.html' }, // Adjust the source path as needed
-        // { from: 'src/swagger.json', to: 'swagger.json' }, // Adjust the source path as needed
         {
           from: 'node_modules/swagger-ui-dist/swagger-ui.css',
           to: 'swagger-ui.css',
@@ -77,18 +114,14 @@ const configuration = {
           from: 'node_modules/swagger-ui-dist/favicon-32x32.png',
           to: 'favicon-32x32.png',
         },
+        // Monaco Editor dosyalarını da geçici olarak comment out edebilirsiniz
+        // {
+        //   from: 'node_modules/monaco-editor/min/vs',
+        //   to: 'vs',
+        // },
       ],
     }),
 
-    /**
-     * Create global constants which can be configured at compile time.
-     *
-     * Useful for allowing different behaviour between development builds and
-     * release builds
-     *
-     * NODE_ENV should be production so that modules do not perform certain
-     * development checks
-     */
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'production',
       DEBUG_PROD: false,
@@ -117,11 +150,6 @@ const configuration = {
     'class-transformer/storage': 'commonjs class-transformer/storage',
   },
 
-  /**
-   * Disables webpack processing of __dirname and __filename.
-   * If you run the bundle in node.js it falls back to these values of node.js.
-   * https://github.com/webpack/webpack/issues/2010
-   */
   node: {
     __dirname: false,
     __filename: false,

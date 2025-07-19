@@ -54,7 +54,7 @@ jobs:
 
   release_windows:
     needs: [create_tag]
-    runs-on: windows-2019
+    runs-on: windows-2022
 
     steps:
       - name: Check out Git repository

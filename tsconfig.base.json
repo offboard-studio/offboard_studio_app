@@ -7,7 +7,7 @@
     "rootDir": ".",
     "target": "es2015",
     "module": "esnext",
-    "lib": ["es2020"],
+    "lib": ["es2020", "dom", "dom.iterable"],
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
@@ -19,11 +19,15 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@api": ["apps/api/src/index.ts","apps/api/src/*",],
-      "@components": ["libs/components/src/index.ts","libs/components/src/*",],
-      "@diagrams": ["libs/diagrams/src/index.ts","libs/diagrams/src/*",],
-      // "@assets": ["libs/assets/src/index.ts","libs/assets/src/*",]
-      "@assets/*": ["libs/assets/src/assets/*"]
+      "@ai-modules": ["libs/ai-modules/src/index.ts"],
+      "@api": ["apps/api/src/index.ts", "apps/api/src/*"],
+      "@assets/*": ["libs/assets/src/assets/*"],
+      "@components": ["libs/components/src/index.ts", "libs/components/src/*"],
+      "@components/*": ["libs/components/src/*"],
+      "@components/features": ["libs/components/src/features/index.ts"],
+      "@diagrams": ["libs/diagrams/src/index.ts", "libs/diagrams/src/*"],
+      "@pages": ["libs/pages/src/index.ts", "libs/pages/src/*"],
+      "@pages/*": ["libs/pages/src/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]

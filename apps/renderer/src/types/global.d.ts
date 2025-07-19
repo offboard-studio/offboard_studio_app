@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { ElectronHandler } from '../../electron/preload';
 
 declare global {

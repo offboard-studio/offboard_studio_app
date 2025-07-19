@@ -15,6 +15,7 @@ interface BaseBlockProps {
     selected: boolean;
     contextOptions?: ContextOption[];
     contextHandler?: ContextHandlerFunction;
+    children?: React.ReactNode;
 }
 
 const BaseBlock: React.FC<BaseBlockProps> = (props) => {

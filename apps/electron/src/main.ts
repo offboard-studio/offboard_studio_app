@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @nx/enforce-module-boundaries */
 /**
@@ -13,11 +14,15 @@ import {
   BrowserWindow,
   shell,
   ipcMain,
+  dialog,
   IpcMainEvent,
   screen,
+  session,
 } from 'electron';
 import path from 'path';
 import os from 'os';
+
+import { promises as fs } from 'fs';
 
 import { ServerController } from '@api';
 import { resolveHtmlPath } from './util';
@@ -56,6 +61,121 @@ export default class ElectronApp {
     this.INDEX_HTML_PATH = resolveHtmlPath('index.html');
 
     this.setup();
+  }
+
+
+   // Helper method to get AppIPCService
+  private getAppIPCService(): any | null {
+    return this.server?.getAppIPCService() || null;
+  }
+
+  // Generate unique request IDs
+  private generateRequestId(): string {
+    return `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  }
+
+  // Direct IPC communication with NestJS
+  async processFileViaIPC(buffer: ArrayBuffer, filename: string): Promise<any> {
+    const appIPCService = this.getAppIPCService();
+
+    if (!appIPCService) {
+      throw new Error('AppIPCService not available');
+    }
+
+    try {
+      // Use direct method call - much faster than event-based communication
+      return await appIPCService.processFileDirectly(buffer, filename);
+    } catch (error) {
+      console.error('Direct IPC file processing failed:', error);
+      throw error;
+    }
+  }
+
+
+  // Direct IPC communication with NestJS
+  async aiBuildSync(buffer: string, filename: string): Promise<any> {
+    const appIPCService = this.getAppIPCService();
+
+    if (!appIPCService) {
+      throw new Error('AppIPCService not available');
+    }
+
+    try {
+      // Use direct method call - much faster than event-based communication
+      return await appIPCService.aiBuildSync(buffer, filename);
+    } catch (error) {
+      console.error('Direct IPC file processing failed:', error);
+      throw error;
+    }
+  }
+
+  async saveFileViaIPC(buffer: ArrayBuffer, filename: string, targetPath: string): Promise<any> {
+    const appIPCService = this.getAppIPCService();
+
+    if (!appIPCService) {
+      throw new Error('AppIPCService not available');
+    }
+
+    try {
+      return await appIPCService.saveFileDirectly(buffer, filename, targetPath);
+    } catch (error) {
+      console.error('Direct IPC file save failed:', error);
+      throw error;
+    }
+  }
+
+  async validateFileViaIPC(buffer: ArrayBuffer, filename: string): Promise<any> {
+    const appIPCService = this.getAppIPCService();
+
+    if (!appIPCService) {
+      throw new Error('AppIPCService not available');
+    }
+
+    try {
+      return await appIPCService.validateFileDirectly(buffer, filename);
+    } catch (error) {
+      console.error('Direct IPC file validation failed:', error);
+      throw error;
+    }
+  }
+
+  // Event-based IPC communication (alternative approach)
+  async processFileViaEvents(buffer: ArrayBuffer, filename: string): Promise<any> {
+    const appIPCService = this.getAppIPCService();
+
+    if (!appIPCService) {
+      throw new Error('AppIPCService not available');
+    }
+
+    return new Promise((resolve, reject) => {
+      const requestId = this.generateRequestId();
+      const timeout = setTimeout(() => {
+        reject(new Error('IPC request timeout'));
+      }, 30000);
+
+      // Listen for response
+      const responseHandler = (response: any) => {
+        if (response.requestId === requestId) {
+          clearTimeout(timeout);
+          appIPCService.off('process-file-response', responseHandler);
+          
+          if (response.success) {
+            resolve(response.data);
+          } else {
+            reject(new Error(response.error));
+          }
+        }
+      };
+
+      appIPCService.on('process-file-response', responseHandler);
+      
+      // Send request
+      appIPCService.emit('process-file', {
+        buffer,
+        filename,
+        requestId
+      });
+    });
   }
 
   getPreloadScript() {
@@ -122,58 +242,84 @@ export default class ElectronApp {
       if (this.djangoServer) {
         console.log('Django Server kapatılıyor...');
 
-        // Timeout ekle - 5 saniye içinde kapanmazsa force kill
+        let resolved = false;
+        const resolveOnce = () => {
+          if (!resolved) {
+            resolved = true;
+            this.djangoServer = null;
+            resolve();
+          }
+        };
+
+        // Set a timeout for force kill
         const timeout = setTimeout(() => {
           if (this.djangoServer && this.djangoServer.pid) {
             console.log('Django Server zorla kapatılıyor...');
-            treeKill(this.djangoServer.pid, 'SIGKILL', (err) => {
-              if (err) {
-                console.error('Django Server force kill hatası:', err);
-              } else {
-                console.log('Django Server zorla kapatıldı');
-              }
-              this.djangoServer = null;
-              resolve();
-            });
+            try {
+              treeKill(this.djangoServer.pid, 'SIGKILL', (err) => {
+                if (err) {
+                  console.error('Django Server force kill hatası:', err);
+                } else {
+                  console.log('Django Server zorla kapatıldı');
+                }
+                resolveOnce();
+              });
+            } catch (error) {
+              console.error('Force kill attempt failed:', error);
+              resolveOnce();
+            }
           } else {
-            resolve();
+            resolveOnce();
           }
         }, 5000);
 
-        // Önce graceful shutdown dene
+        // Listen for close event
         this.djangoServer.on('close', (code) => {
           console.log(`Django Server kapandı, kod: ${code}`);
           clearTimeout(timeout);
-          this.djangoServer = null;
-          resolve();
+          resolveOnce();
         });
 
         this.djangoServer.on('error', (error) => {
           console.error('Django Server kapatılırken hata:', error);
           clearTimeout(timeout);
-          this.djangoServer = null;
-          resolve();
+          resolveOnce();
         });
 
-        // Graceful shutdown dene
+        // Try graceful shutdown
         if (this.djangoServer.pid) {
           try {
+            // Check if process exists before trying to kill it
+            process.kill(this.djangoServer.pid, 0); // This throws if process doesn't exist
             process.kill(this.djangoServer.pid, 'SIGTERM');
-          } catch (error) {
-            console.error('Django Server SIGTERM gönderilirken hata:', error);
-            // Force kill dene
-            if (this.djangoServer.pid) {
-              treeKill(this.djangoServer.pid, 'SIGKILL', () => {
+          } catch (error: any) {
+            if (error.code === 'ESRCH') {
+              console.log('Django Server process already terminated');
+              clearTimeout(timeout);
+              resolveOnce();
+            } else {
+              console.error('Django Server SIGTERM gönderilirken hata:', error);
+              // Try force kill immediately
+              if (this.djangoServer.pid) {
+                try {
+                  treeKill(this.djangoServer.pid, 'SIGKILL', () => {
+                    clearTimeout(timeout);
+                    resolveOnce();
+                  });
+                } catch (killError) {
+                  console.error('Force kill failed:', killError);
+                  clearTimeout(timeout);
+                  resolveOnce();
+                }
+              } else {
                 clearTimeout(timeout);
-                this.djangoServer = null;
-                resolve();
-              });
+                resolveOnce();
+              }
             }
           }
         } else {
           clearTimeout(timeout);
-          this.djangoServer = null;
-          resolve();
+          resolveOnce();
         }
       } else {
         resolve();
@@ -255,6 +401,53 @@ export default class ElectronApp {
     // Güvenli pencere boyutları al
     const windowBounds = this.getSafeWindowBounds(1424, 1028);
 
+    // session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    //   callback({
+    //     responseHeaders: {
+    //       ...details.responseHeaders,
+    //       'Content-Security-Policy': [
+    //         // Allow self, inline scripts/styles, eval, and data/blob URLs
+    //         "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: " +
+    //         // CDN domains for scripts/libraries
+    //         'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
+    //         // Script sources - allows Monaco Editor and other external scripts
+    //         "script-src 'self' 'unsafe-inline' 'unsafe-eval' " +
+    //         'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
+    //         // Script element sources - specifically for <script> tags
+    //         "script-src-elem 'self' 'unsafe-inline' 'unsafe-eval' " +
+    //         'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
+    //         // Connection sources - allows API calls
+    //         "connect-src 'self' " +
+    //         'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com ' +
+    //         'https://openrouter.ai https://api.openai.com ' +
+    //         'http://127.0.0.1:* http://localhost:* ' +
+    //         'ws://127.0.0.1:* ws://localhost:* ' +
+    //         'wss://127.0.0.1:* wss://localhost:* ' +
+    //         'https://offboard-studio-backend.vercel.app; ' + // ← şimdi doğru yerde
+
+    //         // Image sources - allows all HTTPS images
+    //         "img-src 'self' data: blob: https: http://127.0.0.1:* http://localhost:*; " +
+    //         // Style sources - allows external stylesheets
+    //         "style-src 'self' 'unsafe-inline' " +
+    //         'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
+    //         // Font sources - allows external fonts
+    //         "font-src 'self' data: " +
+    //         'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
+    //         // Worker sources - for web workers
+    //         "worker-src 'self' blob: data:; " +
+    //         // Media sources - for audio/video
+    //         "media-src 'self' blob: data:; " +
+    //         // Object sources - for plugins
+    //         "object-src 'none'; " +
+    //         // Frame sources - for iframes
+    //         "frame-src 'self'; " +
+    //         // Child sources - for workers and frames
+    //         "child-src 'self' blob:;",
+    //       ],
+    //     },
+    //   });
+    // });
+
     const mainWindow = new BrowserWindow({
       show: false,
       width: windowBounds.width,
@@ -294,7 +487,7 @@ export default class ElectronApp {
         console.log('Uygulama kapatılıyor, serverlar durduruluyor...');
 
         // Tüm server'ları kapat
-        await Promise.all([this.closeServer(), this.closeDjangoServer()]);
+        await Promise.all([this.closeDjangoServer()]);
 
         console.log("Tüm server'lar kapatıldı, uygulama kapatılıyor...");
         app.quit();
@@ -394,19 +587,54 @@ export default class ElectronApp {
       }
     });
 
-    // Swagger ile uyumluluk için webSecurity'yi devre dışı bırak
-    mainWindow.webContents.session.webRequest.onHeadersReceived(
-      (details, callback) => {
-        callback({
-          responseHeaders: {
-            ...details.responseHeaders,
-            'Content-Security-Policy': [
-              "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:",
-            ],
-          },
-        });
-      }
-    );
+
+    // mainWindow.webContents.session.webRequest.onHeadersReceived(
+    //   (details, callback) => {
+    //     callback({
+    //       responseHeaders: {
+    //         ...details.responseHeaders,
+    //         'Content-Security-Policy': [
+    //           // Allow self, inline scripts/styles, eval, and data/blob URLs
+    //           "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: " +
+    //           // CDN domains for scripts/libraries
+    //           'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
+    //           // Script sources - allows Monaco Editor and other external scripts
+    //           "script-src 'self' 'unsafe-inline' 'unsafe-eval' " +
+    //           'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
+    //           // Script element sources - specifically for <script> tags
+    //           "script-src-elem 'self' 'unsafe-inline' 'unsafe-eval' " +
+    //           'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
+    //           // Connection sources - allows API calls
+    //           "connect-src 'self' " +
+    //           'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com ' +
+    //           'https://openrouter.ai https://api.openai.com ' +
+    //           'http://127.0.0.1:* http://localhost:* ' +
+    //           'ws://127.0.0.1:* ws://localhost:* ' +
+    //           'wss://127.0.0.1:* wss://localhost:* ' +
+    //           'https://offboard-studio-backend.vercel.app; ' + // ← şimdi doğru yerde
+    //           // Image sources - allows all HTTPS images
+    //           "img-src 'self' data: blob: https: http://127.0.0.1:* http://localhost:*; " +
+    //           // Style sources - allows external stylesheets
+    //           "style-src 'self' 'unsafe-inline' " +
+    //           'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
+    //           // Font sources - allows external fonts
+    //           "font-src 'self' data: " +
+    //           'https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; ' +
+    //           // Worker sources - for web workers
+    //           "worker-src 'self' blob: data:; " +
+    //           // Media sources - for audio/video
+    //           "media-src 'self' blob: data:; " +
+    //           // Object sources - for plugins
+    //           "object-src 'none'; " +
+    //           // Frame sources - for iframes
+    //           "frame-src 'self'; " +
+    //           // Child sources - for workers and frames
+    //           "child-src 'self' blob:;",
+    //         ],
+    //       },
+    //     });
+    //   }
+    // );
 
     // URL yükleme işlemini güvenli hale getir
     mainWindow.webContents.on(
@@ -440,6 +668,9 @@ export default class ElectronApp {
     mainWindow.webContents.on(
       'console-message',
       (event, level, message, line, sourceId) => {
+        // console.log(
+        //   `Console Message [${level}]: ${message} (Line: ${line}, Source: ${sourceId})`
+        // );
         if (message.includes('swagger') || message.includes('OpenAPI')) {
           console.log(`Swagger Console [${level}]: ${message}`);
         }
@@ -485,21 +716,39 @@ export default class ElectronApp {
       try {
         const response = await axios.get(
           'http://127.0.0.1:' +
-            this.djangoServerPort.toString() +
-            '/api/healthcheck',
-          { withCredentials: true }
+          this.djangoServerPort.toString() +
+          '/api/healthcheck',
+          {
+            withCredentials: false, // Change to false for local development
+            timeout: 3000, // Add timeout
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+          }
         );
         if (response.status === 200) {
           console.log('Django Server is available');
           return;
         }
-      } catch (error) {
-        console.log(
-          `Attempt ${
-            i + 1
-          }: Django Server is not available yet. Retrying... (${error})`,
-          this.djangoServerPort.toString()
-        );
+      } catch (error: any) {
+        // More detailed error logging
+        if (error.response) {
+          console.log(
+            `Attempt ${i + 1}: Django Server responded with status ${error.response.status
+            }. Retrying...`
+          );
+        } else if (error.code === 'ECONNREFUSED') {
+          console.log(
+            `Attempt ${i + 1
+            }: Django Server connection refused. Server may still be starting. Retrying...`
+          );
+        } else {
+          console.log(
+            `Attempt ${i + 1}: Django Server health check failed: ${error.message
+            }. Retrying...`
+          );
+        }
         await new Promise((resolve) => setTimeout(resolve, delay));
       }
     }
@@ -511,6 +760,7 @@ export default class ElectronApp {
   /**
    * Initialize the API and wait until it is active
    */
+
   runDjangoServer = async () => {
     const venvPath =
       os.platform() === 'win32'
@@ -520,24 +770,43 @@ export default class ElectronApp {
     console.log('venvPath', venvPath);
     console.log('getBoardAPI', this.getBoardAPI());
 
+    // Add environment variables for Django
+    const env = {
+      ...process.env,
+      DJANGO_SETTINGS_MODULE: 'your_project.settings', // Replace with your actual settings module
+      PYTHONPATH: this.getBoardAPI(),
+      // Allow all hosts for development
+      DJANGO_ALLOWED_HOSTS: '127.0.0.1,localhost',
+      // Disable CSRF for local development if needed
+      DJANGO_DEBUG: 'True',
+    };
+
     this.djangoServer = spawn(
       venvPath,
-      ['manage.py', 'runserver', this.djangoServerPort.toString()],
+      [
+        'manage.py',
+        'runserver',
+        `127.0.0.1:${this.djangoServerPort}`, // Explicitly bind to 127.0.0.1
+        '--noreload', // Prevent auto-reloading which can cause issues
+        '--insecure', // Serve static files even if DEBUG=False
+      ],
       {
         cwd: this.getBoardAPI().toString(),
         shell: true,
         stdio: ['pipe', 'pipe', 'pipe'],
+        env: env,
       }
     );
+
     this.djangoServer.stdout.setEncoding('utf8');
     this.djangoServer.stderr.setEncoding('utf8');
 
     this.djangoServer?.stdout.on('data', (data) => {
-      console.log(`${data}`);
+      console.log(`Django stdout: ${data}`);
     });
 
     this.djangoServer?.stderr.on('data', (data) => {
-      console.error(`${data}`);
+      console.error(`Django stderr: ${data}`);
     });
 
     this.djangoServer?.on('error', (error) => {
@@ -547,6 +816,9 @@ export default class ElectronApp {
     this.djangoServer?.on('close', (code) => {
       console.log(`Django Server exited with code ${code}`);
     });
+
+    // Wait a bit before starting health checks to let Django fully start
+    await new Promise((resolve) => setTimeout(resolve, 3000));
 
     await this.waitForDjangoServer();
   };
@@ -562,6 +834,7 @@ export default class ElectronApp {
 
         try {
           // Tüm server'ları paralel olarak kapat
+          // await Promise.all([this.closeDjangoServer()]);
           await Promise.all([this.closeServer(), this.closeDjangoServer()]);
 
           console.log("Tüm server'lar başarıyla kapatıldı");
@@ -636,10 +909,14 @@ export default class ElectronApp {
   openNewWindow(url: string, windowKey: string) {
     // Güvenli pencere boyutları al
     const windowBounds = this.getSafeWindowBounds(1024, 728);
+     const getAssetPath = (...paths: string[]): string => {
+      return path.join(this.RESOURCES_PATH, ...paths);
+    };
 
     const newWindow = new BrowserWindow({
       width: windowBounds.width,
       height: windowBounds.height,
+      icon: getAssetPath('icon.png'),
       x: windowBounds.x,
       y: windowBounds.y,
       webPreferences: {
@@ -670,6 +947,176 @@ export default class ElectronApp {
       (_event: IpcMainEvent, url: string, windowKey: string) =>
         this.openNewWindow(url, windowKey)
     );
+
+
+    // IPC Handler for file download with save dialog
+    ipcMain.handle('download-file', async (event, { buffer, filename, defaultPath }) => {
+      try {
+        // Show save dialog
+        const result = await dialog.showSaveDialog({
+          title: 'Save Project',
+          defaultPath: defaultPath || filename,
+          properties: ['createDirectory'],
+          filters: [
+            { name: 'All Files', extensions: ['*'] },
+            { name: 'ZIP Files', extensions: ['zip'] },
+            { name: 'Project Files', extensions: ['json', 'js', 'ts'] },
+            { name: 'Archive Files', extensions: ['tar', 'gz', 'rar'] }
+          ]
+        });
+
+        if (result.canceled) {
+          return {
+            success: false,
+            error: 'Save cancelled by user'
+          };
+        }
+
+        // Convert ArrayBuffer to Buffer
+        const fileBuffer = Buffer.from(buffer);
+
+        this.processFileViaIPC(buffer, filename)
+          .then((response) => {
+            console.log('File processed successfully via IPC:', response);
+            // You can handle the response here if needed
+          })
+          .catch((error) => {
+            console.error('Error processing file via IPC:', error);
+            return {
+              success: false,
+              error: error.message || 'Unknown error occurred during IPC processing'
+            };
+          });
+
+        // Ensure directory exists
+        if (!result.filePath) {
+          return {
+            success: false,
+            error: 'No file path selected'
+          };
+        }
+        const dir = path.dirname(result.filePath);
+        await fs.mkdir(dir, { recursive: true });
+
+        // Write file to selected location
+        await fs.writeFile(result.filePath, fileBuffer);
+
+        console.log(`File saved successfully to: ${result.filePath}`);
+
+        return {
+          success: true,
+          filePath: result.filePath
+        };
+
+      } catch (error : unknown) {
+        console.error('Download error:', error);
+        return {
+          success: false,
+          error: (error as Error).message || 'Unknown error occurred'
+        };
+      }
+    });
+
+
+    // IPC Handler for file download with save dialog
+    ipcMain.handle('ai-build-sync', async (event, { buffer, filename, defaultPath }) => {
+      try {
+        // Show save dialog
+        const result = await dialog.showMessageBox({
+          type: 'question',
+          buttons: ['Ollama', 'MCP', 'OpenAI', 'İptal'],
+          title: 'Format Seç',
+          message: 'Hangi dosya formatını seçmek istiyorsunuz?',
+          defaultId: 0,
+          cancelId: 3
+        });
+
+        if (result.response === 3) {
+          return {
+            success: false,
+            error: 'Save cancelled by user'
+          };
+        }
+
+        // Convert ArrayBuffer to Buffer
+        // const fileBuffer = Buffer.from(buffer);
+
+        this.aiBuildSync(buffer, filename)
+          .then((response) => {
+            console.log('File processed successfully via IPC:', response);
+            // You can handle the response here if needed
+          })
+          .catch((error) => {
+            console.error('Error processing file via IPC:', error);
+            return {
+              success: false,
+              error: error.message || 'Unknown error occurred during IPC processing'
+            };
+          });
+
+        // // Ensure directory exists
+        // if (!result.filePath) {
+        //   return {
+        //     success: false,
+        //     error: 'No file path selected'
+        //   };
+        // }
+        // const dir = path.dirname(result.filePath);
+        // await fs.mkdir(dir, { recursive: true });
+
+        // // Write file to selected location
+        // await fs.writeFile(result.filePath, fileBuffer);
+
+        console.log(`File saved successfully to: ${result.response}`);
+
+        return {
+          success: true,
+          filePath: result.response
+        };
+
+      } catch (error : unknown) {
+        console.error('Download error:', error);
+        return {
+          success: false,
+          error: (error as Error).message || 'Unknown error occurred'
+        };
+      }
+    });
+
+
+    // IPC Handler for direct file save (without dialog)
+    ipcMain.handle('save-file-direct', async (event, { buffer, filePath }) => {
+      try {
+        // Validate file path
+        if (!filePath || typeof filePath !== 'string') {
+          throw new Error('Invalid file path provided');
+        }
+
+        // Convert ArrayBuffer to Buffer
+        const fileBuffer = Buffer.from(buffer);
+
+        // Ensure directory exists
+        const dir = path.dirname(filePath);
+        await fs.mkdir(dir, { recursive: true });
+
+        // Write file to specified location
+        await fs.writeFile(filePath, fileBuffer);
+
+        console.log(`File saved directly to: ${filePath}`);
+
+        return {
+          success: true,
+          filePath: filePath
+        };
+
+      } catch (error) {
+        console.error('Direct save error:', error);
+        return {
+          success: false,
+          error: (error instanceof Error ? error.message : 'Unknown error occurred')
+        };
+      }
+    });
   }
 
   async setup() {
@@ -699,6 +1146,33 @@ export default class ElectronApp {
         console.error('Ekran bilgileri alınırken hata:', error);
       }
 
+      const url = resolveHtmlPath('index.html');
+
+      if (url.startsWith('http://')) {
+        const net = require('net');
+        const port = parseInt(process.env.PORT || '3001');
+
+        const isAlive = await new Promise<boolean>((resolve) => {
+          const client = net.createConnection({ port }, () => {
+            client.end();
+            resolve(true);
+          });
+          client.on('error', () => resolve(false));
+        });
+
+        if (!isAlive) {
+          console.error(
+            `❌ Vite dev server not running at port ${port}. Exiting Electron...`
+          );
+          setTimeout(() => {
+            app.quit(); // Bazı sistemlerde aniden çağrıldığında çalışmayabilir, bu yüzden minik delay
+          }, 500);
+          return;
+        }
+
+        console.log(`✅ Vite dev server is alive at http://localhost:${port}`);
+      }
+
       this.addIPCRenderEventListeners();
       await this.createMainWindow();
       this.createServer();
@@ -709,9 +1183,11 @@ export default class ElectronApp {
       }
 
       // Start the Django server
-      await this.runDjangoServer();
+      // await this.runDjangoServer();
     } catch (err) {
       console.error('Error: setting up app - ', err);
+
+      app.quit();
     }
   }
 }

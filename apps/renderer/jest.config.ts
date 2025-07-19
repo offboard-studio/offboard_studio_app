@@ -47,6 +47,7 @@ export default {
     '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
       '<rootDir>/testUtils/assetsTransformer.js',
     '@components': '<rootDir>/../../libs/components/src/index.ts',
+    '@pages': '<rootDir>/../../libs/pages/src/index.ts'
   },
   setupFilesAfterEnv: ['<rootDir>/testUtils/setupTests.ts'],
   coverageReporters: ['json', 'lcov', 'text', 'json-summary'],
