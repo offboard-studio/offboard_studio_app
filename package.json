@@ -5,12 +5,12 @@
   "description": "AI based Drag and Drop Offboard Studio for Robotics",
   "repository": {
     "type": "git",
-    "url": "https://github.com/offboardstudio/offboard_studio_app.git"
+    "url": "https://github.com/offboard-studio/offboard_studio_app.git"
   },
   "author": "offboardstudio",
-  "homepage": "https://offboard.studio",
+  "homepage": "https://offboard-studio.github.io/",
   "bugs": {
-    "url": "https://github.com/offboardstudio/offboard_studio_app/issues"
+    "url": "https://github.com/offboard-studio/offboard_studio_app/issues"
   },
   "license": "MIT",
   "main": "./release/build/electron/main.js",
