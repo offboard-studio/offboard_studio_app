@@ -55,6 +55,9 @@ class Editor {
   private currentProjectName: string;
   private projectInfo: ProjectInfo;
   private BlockData: BlockData;
+  private apiKey: string;
+  private aiModel: string;
+  private baseUrl: string;
 
   private stack: {
     model: DiagramModel;
@@ -79,6 +82,9 @@ class Editor {
     this.stackOfBlock = [];
     this.engine.setModel(this.activeModel);
     this.registerFactories();
+    this.apiKey = "";
+    this.baseUrl = "";
+    this.aiModel = "";
     this.projectInfo = {
       name: '',
       version: '',
@@ -362,7 +368,7 @@ class Editor {
   public async addBlock(name: string): Promise<void> {
     this.blockCount += 1;
     const block = await createBlock(name, this.blockCount);
-    
+
     if (block) {
       // Get a default position and set it as blocks position
       // TODO: Better way would be to get an empty position dynamically or track mouse's current position.
@@ -492,6 +498,30 @@ class Editor {
     }
   }
 
+  public setAiModel(model: string) {
+    this.aiModel = model;
+  }
+
+  public getAiModel(): string {
+    return this.aiModel;
+  }
+
+  public setApiKey(apiKey: string) {
+    this.apiKey = apiKey;
+  }
+
+  public setBaseUrl(baseUrl: string) {
+    this.baseUrl = baseUrl;
+  }
+
+  public getApiKey(): string {
+    return this.apiKey;
+  }
+
+  public getBaseUrl(): string {
+    return this.baseUrl;
+  }
+
   /**
    * Open a block as current project (model)
    * @param node Block to be opened
@@ -590,14 +620,14 @@ class Editor {
     }
   }
 
-   /**
-   * Edit a block node, if current model is not locked.
-   * @param node
-   */
+  /**
+  * Edit a block node, if current model is not locked.
+  * @param node
+  */
   public async editNode<T extends NodeModel>(node: T) {
     if (!this.locked()) {
       await editBlock(node);
-      
+
       this.engine.repaintCanvas();
       // return data;
     }
@@ -610,7 +640,7 @@ class Editor {
   public async editAINode<T extends NodeModel>(node: T) {
     if (!this.locked()) {
       let data: any = await editAIBlock(node);
-      
+
       this.engine.repaintCanvas();
       return data;
     }

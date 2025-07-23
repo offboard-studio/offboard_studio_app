@@ -23,6 +23,7 @@ import { PackageBlockModel } from '../package/package-model';
 import { BaseInputPortModel, BaseOutputPortModel, BaseParameterPortModel, BasePortModelOptions } from './base-port/port-model';
 import cloneDeep from 'lodash.clonedeep';
 import CodeBlockCreatorAI from '../../../code_block_creator';
+import Editor from '../../../core/editor';
 
 
 
@@ -161,13 +162,18 @@ export const editAIBlock = async (node: NodeModel) => {
 
             const block1 = new AiCodeBlockModel(data);
             const codeBlockData = block1.getData();
-            const codeBlock = await new CodeBlockCreatorAI(data, block1).generateCodeBlock(codeBlockData);
+
+            const editor: Editor = Editor.getInstance();
+            const apiKey = editor.getApiKey();
+
+            const baseurl = editor.getBaseUrl();
+            const codeBlock = await new CodeBlockCreatorAI(data, block1, apiKey, baseurl, "").generateCodeBlock(codeBlockData);
 
 
             const codeBlockString = await extractMainPythonFunctionBlock(codeBlock);
 
             const { inputCalls, outputCalls, parameterCalls } = extractFunctionCalls(codeBlockString);
-            
+
             console.log('inputCalls', inputCalls);
             console.log('outputCalls', outputCalls);
             console.log('parameterCalls', parameterCalls);
@@ -310,7 +316,7 @@ function extractFunctionCalls(code: string) {
             outputCalls.push(match[1]);
         }
     });
-     const outputPartsString = code.split('outputs.share_string(');
+    const outputPartsString = code.split('outputs.share_string(');
     outputPartsString.forEach(part => {
         const match = part.match(/^"([^"]+)"/);
         if (match) {
@@ -398,7 +404,7 @@ async function extractMainPythonFunctionBlock(markdown: string): Promise<string>
 
     for (const line of lines) {
         const trimmed = line.trim();
-        
+
 
         // Tek satırda açılan durum: \boxed{```python
         if (trimmed.startsWith("\\boxed{```python")) {

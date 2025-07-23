@@ -6,25 +6,27 @@ import {
 } from '../components/blocks/basic/ai-code/code-model';
 
 export default class CodeBlockCreatorAI {
-  openai = new OpenAI({
-    baseURL: 'http://localhost:11434/v1',
-    // baseURL: 'https://openrouter.ai/api/v1',
-    // apiKey: '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',
-    defaultHeaders: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-
-    // baseURL: 'http://localhost:11434/v1',
-    apiKey: 'ollama', // required but unused
-    dangerouslyAllowBrowser: true,
-  });
+  private openai: OpenAI;
   codeBlockModel: AiCodeBlockModel | undefined;
+  private model?: string;
   constructor(
     parameters: AiCodeBlockModelOptions,
-    codeBlockModel?: AiCodeBlockModel
+    codeBlockModel?: AiCodeBlockModel,
+    apiKey?: string,
+    baseUrl?: string,
+    model?: string
   ) {
     this.codeBlockModel = codeBlockModel;
+    this.model = model;
+    this.openai = new OpenAI({
+      baseURL: baseUrl || 'http://localhost:11434/v1',
+      defaultHeaders: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      apiKey: apiKey || 'ollama',
+      dangerouslyAllowBrowser: true,
+    });
   }
   SYSTEM_PROMPT_CODE_BLOCK: string = `
     You are an expert assistant in Python programming for an Offboard Studio. Your task is to generate Python code that follows these guidelines:
@@ -251,15 +253,14 @@ export default class CodeBlockCreatorAI {
             JSON.stringify(this.codeBlockModel?.getData()?.ports?.out || []),
         },
       ],
-      // model: 'deepseek/deepseek-r1-zero:free',
-      model: "llama3.1:8b",
+      model: this.model || "llama3.1:8b"
     });
 
     const code = response?.choices?.[0]?.message?.content;
     if (!code) {
       throw new Error(
         'AI did not return any code content. Full response: ' +
-          JSON.stringify(response)
+        JSON.stringify(response)
       );
     }
 

@@ -30,13 +30,16 @@ import SettingsIcon from '@mui/icons-material/Settings';
 
 import { Button } from '@mui/material';
 import BoardUserButton from '@components/components/board/user';
-import { DownloadRounded, FileDownload } from '@mui/icons-material';
+import { AiOptionBlockDialog, AiInterfaceOptionBlockDialog } from '@components/components/dialogs/ai-option-block-dialog';
+import { DownloadRounded, FileDownload, SettingsEthernet } from '@mui/icons-material';
 import { textFile2DataURL } from '@components/core/utils';
 import { PROJECT_FILE_EXTENSION } from '@components/core/constants';
 import { useLocation, useNavigate } from 'react-router-dom';
 import BoardSettings from '../board_setting';
 import BoardSidebar from '../board_sidebar';
 import Board from '..';
+import AiOptionSettings from '../ai_option_settings';
+
 
 const darkTheme = createTheme({
   palette: {
@@ -56,6 +59,7 @@ export const BoardPage = (): JSX.Element => {
 
   const [tabIndex, setTabIndex] = useState(0);
   const [tabIndexBoard, setTabIndexBoard] = useState(false);
+  const [aiOptionBlockDialog, setAiOptionBlockDialog] = useState(false);
 
   const handleTabChange = (event: React.SyntheticEvent, newIndex: number) => {
     setTabIndex(newIndex);
@@ -126,6 +130,13 @@ export const BoardPage = (): JSX.Element => {
             }}
             startIcon={<SettingsIcon />}
           />
+          <Button
+            color="inherit"
+            onClick={() => {
+              setAiOptionBlockDialog(true);
+            }}
+            startIcon={<SettingsEthernet />}
+          />
 
           <div style={{ flex: 10 }} />
           <Button
@@ -177,6 +188,23 @@ export const BoardPage = (): JSX.Element => {
             </div>
           </div>
         </div>
+      )}
+
+      {aiOptionBlockDialog == true && (
+        <AiOptionSettings
+          isOpen={aiOptionBlockDialog}
+          editor={editor}
+          onClose={() => setAiOptionBlockDialog(false)}
+          onResolve={(options: AiInterfaceOptionBlockDialog) => {
+            setAiOptionBlockDialog(false);
+            editor.setApiKey(options.apiKey || '<OPENROUTER_API_KEY>');
+            editor.setBaseUrl(options.baseUrl || 'https://openrouter.ai/api/v1');
+            editor.setAiModel(options.model || 'llama3.1:8b');
+          }}
+          apiKey=''
+          baseUrl=''
+          onReject={() => setAiOptionBlockDialog(false)}
+        />
       )}
 
       {tabIndexBoard === true && (
