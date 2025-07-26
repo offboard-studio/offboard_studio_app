@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @nx/enforce-module-boundaries */
 
 import { DiagramEngine } from "@projectstorm/react-diagrams";
 import React from "react";
@@ -26,7 +29,7 @@ export interface PackageBlockWidgetProps {
 export class PackageBlockWidget extends React.Component<PackageBlockWidgetProps> {
 
     static contextType = GlobalState as React.Context<unknown>;
-    readonly contextOptions: ContextOption[] = [{key: 'delete', label: 'Delete'}];
+    readonly contextOptions: ContextOption[] = [{ key: 'delete', label: 'Delete' }];
 
     /**
      * Callback for when a package block is double clicked.
@@ -58,8 +61,8 @@ export class PackageBlockWidget extends React.Component<PackageBlockWidgetProps>
 
     render() {
         return (
-            <BaseBlock 
-                selected = {this.props.node.isSelected()} contextOptions={this.contextOptions}
+            <BaseBlock
+                selected={this.props.node.isSelected()} contextOptions={this.contextOptions}
                 contextHandler={this.onContextMenu.bind(this)}>
                 <div onDoubleClick={() => this.openPackage()}>
                     <Card variant='outlined' className="block-package" raised>
@@ -68,38 +71,38 @@ export class PackageBlockWidget extends React.Component<PackageBlockWidgetProps>
                                 <div className='block-package-inputs'>
                                     {this.props.node.getInputs().map((port, index) => {
                                         return (
-                                        <BasePort className='package-input-port'
-                                            port={port!} 
-                                            engine={this.props.engine} 
-                                            isInput={true}
-                                            key={port?.getID()}>
-                                        </BasePort>
+                                            <BasePort className='package-input-port'
+                                                port={port!}
+                                                engine={this.props.engine}
+                                                isInput={true}
+                                                key={port?.getID()}>
+                                            </BasePort>
                                         );
                                     })}
                                 </div>
-                                
+
                                 <div className='block-package-image-container'>
-                                    <ArrowedTooltip 
-                                        title={this.props.node.info.description} 
+                                    <ArrowedTooltip
+                                        title={this.props.node.info.description}
                                         aria-label={this.props.node.info.description}
                                         enterDelay={1000}>
-                                    <img 
-                                        src={this.props.node.getImage()} 
-                                        className='block-package-image' 
-                                        draggable={false}
-                                        onDragStart={(e) => { e.preventDefault(); }}
-                                        alt={this.props.node.info.name}/>
+                                        <img
+                                            src={this.props.node.getImage()}
+                                            className='block-package-image'
+                                            draggable={false}
+                                            onDragStart={(e) => { e.preventDefault(); }}
+                                            alt={this.props.node.info.name} />
                                     </ArrowedTooltip>
                                 </div>
                                 <div className='block-package-outputs'>
                                     {this.props.node.getOutputs().map((port) => {
                                         return (
-                                        <BasePort className='package-output-port'
-                                            port={port!} 
-                                            engine={this.props.engine} 
-                                            isInput={false}
-                                            key={port?.getID()}>
-                                        </BasePort>
+                                            <BasePort className='package-output-port'
+                                                port={port!}
+                                                engine={this.props.engine}
+                                                isInput={false}
+                                                key={port?.getID()}>
+                                            </BasePort>
                                         );
                                     })}
                                 </div>
