@@ -34,7 +34,7 @@
 
 AI based Drag and Drop Offboard Studio for Robotics
 
-[image](.extrafiles/image.png)
+![image](.extrafiles/image.png)
 
 
 # Getting Started
