@@ -21,30 +21,19 @@ function AiOptionSettings({ editor, onClose, apiKey, baseUrl, model, isOpen, onR
 
     const [error, setError] = useState('');
 
-    const [apiKeyOut, setApiKeyOut] = useState(apiKey || '<OPENROUTER_API_KEY>');
-    const [baseUrlOut, setBaseUrlOut] = useState(baseUrl || 'https://openrouter.ai/api/v1');
-    const [modelOut, setModelOut] = useState(model || 'llama3.1:8b');
+    const [apiKeyOut, setApiKeyOut] = useState(editor.getApiKey() || 'ollama');
+    const [baseUrlOut, setBaseUrlOut] = useState(editor.getBaseUrl() || 'https://openrouter.ai/api/v1');
+    const [modelOut, setModelOut] = useState(editor.getAiModel() || 'qwen2.5-coder');
 
     /**
      * Callback for 'Ok' button of the dialog
      */
     const handleSubmit = () => {
-        // If neither input or output field is filled, show an error message.
-        // if (apiKeyOut !== 'AI Description') {
-        // Clear the previous error if any.
         setError('')
-        // Split the inputs, outputs and parameters by comma 
-        // const inputs = inputPorts.split(',').filter((port) => Boolean(port)).map((port) => port.trim());
-        // const outputs = outputPorts.split(',').filter((port) => Boolean(port)).map((port) => port.trim());
-        // const params = parameters.split(',').filter((port) => Boolean(port)).map((port) => port.trim());
-        // Send data back indicating as success
         editor.setApiKey(apiKeyOut);
         editor.setBaseUrl(baseUrlOut);
         editor.setAiModel(modelOut);
         onResolve({ apiKey: apiKeyOut, baseUrl: baseUrlOut, model: modelOut } as AiInterfaceOptionBlockDialog);
-        // } else {
-        //     setError('Code block needs a description');
-        // }
     }
 
 
