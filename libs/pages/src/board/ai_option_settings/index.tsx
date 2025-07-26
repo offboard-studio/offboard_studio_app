@@ -22,7 +22,7 @@ function AiOptionSettings({ editor, onClose, apiKey, baseUrl, model, isOpen, onR
     const [error, setError] = useState('');
 
     const [apiKeyOut, setApiKeyOut] = useState(editor.getApiKey() || 'ollama');
-    const [baseUrlOut, setBaseUrlOut] = useState(editor.getBaseUrl() || 'https://openrouter.ai/api/v1');
+    const [baseUrlOut, setBaseUrlOut] = useState(editor.getBaseUrl() || 'http://localhost:11434/api/v1');
     const [modelOut, setModelOut] = useState(editor.getAiModel() || 'qwen2.5-coder');
 
     /**
