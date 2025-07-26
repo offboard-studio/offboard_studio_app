@@ -253,7 +253,7 @@ export default class CodeBlockCreatorAI {
             JSON.stringify(this.codeBlockModel?.getData()?.ports?.out || []),
         },
       ],
-      model: this.model || "llama3.1:8b"
+      model: this.model || "qwen2.5-coder"
     });
 
     const code = response?.choices?.[0]?.message?.content;

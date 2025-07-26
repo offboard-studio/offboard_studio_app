@@ -197,9 +197,9 @@ export const BoardPage = (): JSX.Element => {
           onClose={() => setAiOptionBlockDialog(false)}
           onResolve={(options: AiInterfaceOptionBlockDialog) => {
             setAiOptionBlockDialog(false);
-            editor.setApiKey(options.apiKey || '<OPENROUTER_API_KEY>');
-            editor.setBaseUrl(options.baseUrl || 'https://openrouter.ai/api/v1');
-            editor.setAiModel(options.model || 'llama3.1:8b');
+            editor.setApiKey(options.apiKey || 'ollama');
+            editor.setBaseUrl(options.baseUrl || 'http://localhost:11434/v1');
+            editor.setAiModel(options.model || 'qwen2.5-coder');
           }}
           apiKey=''
           baseUrl=''
