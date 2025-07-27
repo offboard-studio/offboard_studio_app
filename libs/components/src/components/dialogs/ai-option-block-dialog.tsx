@@ -5,7 +5,7 @@ import { AiCodeBlockModelOptions } from '../blocks/basic/ai-code/code-model';
 import { BaseModelOptions } from '@projectstorm/react-canvas-core';
 
 
-interface AiInterfaceOptionBlockDialog extends BaseModelOptions {
+export interface AiInterfaceOptionBlockDialog extends BaseModelOptions {
     apiKey?: string;
     baseUrl?: string;
     model?: string;
@@ -93,4 +93,4 @@ const AiOptionBlockDialog = ({ isOpen, onResolve, onReject, apiKey, baseUrl }: I
 
 const aiCreateOptionDialog = create(AiOptionBlockDialog);
 
-export { AiInterfaceOptionBlockDialog, aiCreateOptionDialog,AiOptionBlockDialog };
+export { aiCreateOptionDialog, AiOptionBlockDialog };

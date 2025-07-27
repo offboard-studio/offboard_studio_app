@@ -351,49 +351,6 @@ function extractFunctionCalls(code: string) {
 }
 
 
-// async function extractMainPythonFunctionBlock(markdown: string): Promise<string> {
-//     const lines = markdown.split("\n");
-//     let isCode = false;
-//     let isPython = false;
-//     let codeBuffer = [];
-//     console.log('Markdown', markdown);
-
-//     for (const line of lines) {
-//         console.log('Line', line);
-//         if (line.startsWith("\boxed{")) {
-//             console.log('Boxed', line);
-//             if (isCode) {
-//                 console.log('Code', codeBuffer);
-//                 if (isPython) {
-//                     const code = codeBuffer.join("\n");
-//                     if (code.includes("def main(inputs:Inputs, outputs:Outputs, parameters:Parameters, synchronise:Synchronise):")) {
-//                         return code;
-//                     }
-//                 }
-//                 // codeBuffer = [];
-//             }
-//             isCode = !isCode;
-//             isPython = line.includes("```python"); // Sadece Python bloklarını işlemek için
-//         } else if (isCode) {
-//             codeBuffer.push(line);
-//         }
-//     }
-
-//     let codeLines = [
-//         "import zenoh",
-//         "import time",
-
-//         "from lib.utils import Synchronise",
-//         "from lib.inputs import Inputs",
-//         "from lib.outputs import Outputs",
-//         "from lib.parameters import Parameters",
-//         "def main(inputs:Inputs, outputs:Outputs, parameters:Parameters, synchronise:Synchronise):",
-//         "    pass",
-//     ];
-
-//     // Eğer uygun bir kod bloğu bulunmazsa boş bir Python bloğu döndür
-//     return codeLines.join("\n");
-// }
 
 async function extractMainPythonFunctionBlock(markdown: string): Promise<string> {
     const lines = markdown.split("\n");
@@ -488,27 +445,6 @@ export const createBlock = async (name: string, blockCount: number) => {
             case 'basic.code':
                 data = await createCodeDialog({ isOpen: true });
                 block = new CodeBlockModel(data);
-                // const codeBlockData = block1.getData();
-                // const codeBlock = await new CodeBlockCreatorAI(data, block1).generateCodeBlock(codeBlockData);
-
-                // const codeBlockString = await extractMainPythonFunctionBlock(codeBlock);
-
-                // const { inputCalls, outputCalls, parameterCalls } = extractFunctionCalls(codeBlockString);
-
-                // data = {
-                //     ...data,
-                //     code: codeBlockString,
-                //     inputs: inputCalls,
-                //     outputs: outputCalls,
-                //     params: parameterCalls,
-                // }
-                // block = new CodeBlockModel(data);
-
-                // Now, update the block with the new data
-                // block.setData({
-                //     ...block1.getData(),
-                //     // code: codeBlockString || '',
-                // });
 
                 break;
             case 'basic.aicode':
