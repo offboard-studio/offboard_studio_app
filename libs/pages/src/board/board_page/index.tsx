@@ -12,7 +12,7 @@ import {
   ThemeProvider,
   Typography,
 } from '@mui/material';
-import React, { Fragment, useState } from 'react';
+import React, { ChangeEvent, Fragment, useState } from 'react';
 import ModalContainer from 'react-modal-promise';
 // import '../../../App.scss';
 import '../styles.scss';
@@ -49,9 +49,18 @@ const darkTheme = createTheme({
   },
 });
 
+
+interface FileHelper {
+  fileName: string;
+  reader: FileReader;
+}
+
 export const BoardPage = (): JSX.Element => {
   const location = useLocation();
   const editorState = location.state || {};
+
+
+  const projectReader: FileHelper = { 'fileName': '', 'reader': new FileReader() };
 
   const navigate = useNavigate();
 
@@ -80,6 +89,36 @@ export const BoardPage = (): JSX.Element => {
     link?.setAttribute('download', editor.getName() + PROJECT_FILE_EXTENSION);
     link?.click();
   };
+
+
+    /**
+     * Callback when file is uploaded.
+     * @param event File field change event.
+     * @param reader Reader to open the uploaded file as text
+     */
+    const onFileUpload = (event: ChangeEvent<HTMLInputElement>, fileHelper: FileHelper) => {
+        const file = event.target.files?.length ? event.target.files[0] : null;
+        event.target.value = '';
+        if (file) {
+            fileHelper.fileName = file.name;
+            fileHelper.reader.readAsText(file);
+        }
+    }
+
+
+  const openProject = () => {
+    projectReader.fileName = '';
+    // Simulate click to open file selection dialog.
+    document.getElementById('openProjectInput')?.click();
+    projectReader.reader.onload = (event) => {
+      if (event.target?.result) {
+        // Parse file as JSON
+        editor.loadProject(JSON.parse(event.target.result.toString()), projectReader.fileName);
+      }
+    };
+  }
+
+
 
   const buildAndDownload = () => {
     const model = editor.serialise();
@@ -151,7 +190,7 @@ export const BoardPage = (): JSX.Element => {
           />
           <Button
             color="inherit"
-            onClick={saveProject}
+            onClick={openProject}
             startIcon={<CloudUploadIcon />}
           />
           <div style={{ flex: 1 }} />
@@ -164,6 +203,9 @@ export const BoardPage = (): JSX.Element => {
         <a href="/" id="saveProjectLink" hidden download>
           Download Project
         </a>
+
+        <input type='file' id='openProjectInput' accept={PROJECT_FILE_EXTENSION}
+          onChange={(event) => onFileUpload(event, projectReader)} hidden />
       </AppBar>
 
       {tabIndex === 0 && (
