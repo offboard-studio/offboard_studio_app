@@ -1131,6 +1131,7 @@ export default class ElectronApp {
     }
 
     try {
+      await app.disableHardwareAcceleration();
       await app.whenReady();
 
       // Ekran bilgilerini kontrol et

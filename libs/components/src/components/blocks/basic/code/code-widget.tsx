@@ -193,7 +193,6 @@ export class CodeBlockWidget extends React.Component<
                     //         "enabled": false
                     //     }
                     // }}
-                    options={this.options}
                   />
                 </div>
 

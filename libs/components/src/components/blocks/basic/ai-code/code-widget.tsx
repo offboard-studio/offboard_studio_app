@@ -212,13 +212,6 @@ export class AiCodeBlockWidget extends React.Component<
                     value={this.state.code}
                     onChange={this.handleInput}
                     theme="vs-dark"
-                    // options={{
-                    //     "readOnly": state.locked,
-                    //     "minimap": {
-                    //         "enabled": false
-                    //     }
-                    // }}
-                    options={this.options}
                   />
                 </div>
 

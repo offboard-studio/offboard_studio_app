@@ -32,13 +32,10 @@
 
 # About The Project
 
-This project is a starting point for an Electron desktop app.
+AI based Drag and Drop Offboard Studio for Robotics
 
-It uses React to render the UI and runs a NodeJS API on the main process should you need it.
+![image](.extrafiles/image.png)
 
-You can easily remove the NodeJs API and the app will still run as expected.
-
-It is recommended best practice to not use an API as done here, however, it was required to proxy HTTP requests in the original project, and also came in very useful for organising the logic in general.
 
 # Getting Started
 
@@ -48,15 +45,15 @@ You will need the following installed on your machine:
 
 - `git`
 - `node >= 18.0.0`
-- `yarn >= 3.6.3` and a `.yarnrc.yml` file generated in both your home and the project directories. To do this you can run the following in `/app` and `~`:
+- `npm run >= 3.6.3` and a `.npm runrc.yml` file generated in both your home and the project directories. To do this you can run the following in `/app` and `~`:
 
 # Usage
 
-This project uses Yarn so after an initial `yarn` you can run the following scripts to use the application how you see fit.
+This project uses npm run so after an initial `npm run` you can run the following scripts to use the application how you see fit.
 
 Create a `.env` file using the `.env.example`, remember as a desktop app these can be used within the source code which could be bundled so do not store sensitive data here.
 
-### Build app - `yarn build:app`
+### Build app - `npm run build:app`
 
 Runs the following;
 
@@ -64,35 +61,35 @@ Runs the following;
 - build:electron - bundles both API and electron apps under one file, output - `./release/build/electron`
 - build:renderer - bundles react code into single files for CSS, HTML and JS, output - `./release/build/renderer`
 
-### Package app - `yarn package:electron-app:<mac|win>`
+### Package app - `npm run package:electron-app:<mac|linux|win>`
 
-- requires `yarn build:app` to have been run and the resulting renderer and electron output in `./release/build` to exist
+- requires `npm run build:app` to have been run and the resulting renderer and electron output in `./release/build` to exist
 - packages electron app for windows and macos using electron-builder
 
-### Run local electron build - `yarn dev`
+### Run local electron build - `npm run dev`
 
 - Runs electron app using `nx run-many -t server -p renderer electron`
 - Runs electron app and API via nx-electron executor in project.json
 - copy-build-assets-prod - copies clean assets directories for caching games and game-engines, and game meta-data on the API
 
-### Run renderer tests - `yarn test:unit`
+### Run renderer tests - `npm run test:unit`
 
 - Runs all unit tests using nx - `npx nx run-many -t test -p renderer api components`
 - All unit tests are written in Jest
 
-### Run e2e tests - `yarn test:e2e`
+### Run e2e tests - `npm run test:e2e`
 
 - Runs playwright tests against built electron app
-- Requires a build before running to run tests against latest version using `yarn build:app`
+- Requires a build before running to run tests against latest version using `npm run build:app`
 - Requires test login credentials for targeted environment copying over `.env.e2e.example` to `.env.e2e`
 
-### Run lint command - `yarn lint:all`
+### Run lint command - `npm run lint:all`
 
 - Runs;
   - ESLint which is configured in .eslintrc.json
   - Prettier via eslint extends which is configured in .prettierrc
 - Ignored files include ./out, ./build, ./node_modules and ./docs
 
-### Run commitizen - `yarn commit`
+### Run commitizen - `npm run commit`
 
 - This will run a CLI prompt to help you build consistent commit messages
