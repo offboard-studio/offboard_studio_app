@@ -125,9 +125,9 @@ const BoardSidebar: React.FC<BoardSideBarProps> = ({ editor }) => {
       items: ['drivers'],
     },
     {
-      id: 'px4',
+      id: 'uav',
       icon: '✈️',
-      label: 'PX4 Components',
+      label: 'UAV Components',
       items: ['flight-control', 'sensors', 'actuators'],
     },
   ];

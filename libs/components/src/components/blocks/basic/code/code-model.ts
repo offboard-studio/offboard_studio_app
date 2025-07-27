@@ -54,7 +54,6 @@ export class CodeBlockModel extends BaseModel<CodeBlockData, NodeModelGenerics &
 
         const generateCode = (options: CodeBlockModelOptions) => {
             let codeLines = [
-                "import zenoh",
                 "import time",
 
                 "from lib.utils import Synchronise",

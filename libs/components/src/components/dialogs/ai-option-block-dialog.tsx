@@ -2,7 +2,14 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText, TextFi
 import React, { useState } from 'react';
 import { create, InstanceProps } from 'react-modal-promise';
 import { AiCodeBlockModelOptions } from '../blocks/basic/ai-code/code-model';
+import { BaseModelOptions } from '@projectstorm/react-canvas-core';
 
+
+export interface AiInterfaceOptionBlockDialog extends BaseModelOptions {
+    apiKey?: string;
+    baseUrl?: string;
+    model?: string;
+}
 
 /**
  * 
@@ -12,27 +19,19 @@ import { AiCodeBlockModelOptions } from '../blocks/basic/ai-code/code-model';
  *          onReject: Will be called to indicate failure.
  *        }
  */
-const AiCodeBlockDialog = ({ isOpen, onResolve, onReject, inputs, outputs, params,aiDescription }: InstanceProps<AiCodeBlockModelOptions> & Partial<AiCodeBlockModelOptions>) => {
+const AiOptionBlockDialog = ({ isOpen, onResolve, onReject, apiKey, baseUrl }: InstanceProps<AiInterfaceOptionBlockDialog> & Partial<AiInterfaceOptionBlockDialog>) => {
 
-    // Comma separated list of inputs for the Code block
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [inputPorts, setInputPorts] = useState((inputs || []).join(', ') || '');
-    // Comma separated list of outputs for the Code block
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [outputPorts, setOutputPorts] = useState((outputs || []).join(', ') || '');
-    // Comma separated list of parameters for the Code block
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [parameters, setParameters] = useState((params || []).join(', ') || '');
     const [error, setError] = useState('');
 
-    const [aiDescriptionOut, setAiDescriptionOut] = useState(aiDescription||'AI Description');
+    const [apiKeyOut, setApiKeyOut] = useState(apiKey || 'AI Description');
+    const [baseUrlOut, setBaseUrlOut] = useState(baseUrl || 'AI Description');
 
     /**
      * Callback for 'Ok' button of the dialog
      */
     const handleSubmit = () => {
         // If neither input or output field is filled, show an error message.
-        if (aiDescription!=='AI Description') {
+        if (apiKeyOut !== 'AI Description') {
             // Clear the previous error if any.
             setError('')
             // Split the inputs, outputs and parameters by comma 
@@ -40,7 +39,7 @@ const AiCodeBlockDialog = ({ isOpen, onResolve, onReject, inputs, outputs, param
             // const outputs = outputPorts.split(',').filter((port) => Boolean(port)).map((port) => port.trim());
             // const params = parameters.split(',').filter((port) => Boolean(port)).map((port) => port.trim());
             // Send data back indicating as success
-            onResolve({ inputs: inputs, outputs: outputs, params: params,aiDescription: aiDescriptionOut });
+            onResolve({ apiKey: apiKeyOut, baseUrl: baseUrlOut } as AiInterfaceOptionBlockDialog);
         } else {
             setError('Code block needs a description');
         }
@@ -51,59 +50,31 @@ const AiCodeBlockDialog = ({ isOpen, onResolve, onReject, inputs, outputs, param
 
             <DialogContent>
                 <DialogContentText>
-                    Enter Description for AI Code Block
+                    Enter Base URL for AI Code Block
                 </DialogContentText>
                 <TextField
                     autoFocus
                     margin="dense"
                     type="text"
                     variant='outlined'
-                    value={aiDescriptionOut}
-                    onChange={(event) => setAiDescriptionOut(event.target.value)}
+                    value={baseUrlOut}
+                    onChange={(event) => setBaseUrlOut(event.target.value)}
                     error={Boolean(error)}
                     helperText={error}
                     fullWidth
                 />
                 <DialogContentText>
-                    Enter the input ports
+                    Set API Key generally used for AI Code Blocks.
                 </DialogContentText>
                 <TextField
                     autoFocus
                     margin="dense"
                     type="text"
                     variant='outlined'
-                    value={inputPorts}
-                    onChange={(event) => setInputPorts(event.target.value)}
+                    value={apiKeyOut}
+                    onChange={(event) => setApiKeyOut(event.target.value)}
                     error={Boolean(error)}
                     helperText={error}
-                    fullWidth
-                />
-
-                <DialogContentText>
-                    Enter the output ports
-                </DialogContentText>
-                <TextField
-                    autoFocus
-                    margin="dense"
-                    type="text"
-                    variant='outlined'
-                    value={outputPorts}
-                    onChange={(event) => setOutputPorts(event.target.value)}
-                    error={Boolean(error)}
-                    helperText={error}
-                    fullWidth
-                />
-
-                <DialogContentText>
-                    Enter the parameters
-                </DialogContentText>
-                <TextField
-                    autoFocus
-                    margin="dense"
-                    type="text"
-                    variant='outlined'
-                    value={parameters}
-                    onChange={(event) => setParameters(event.target.value)}
                     fullWidth
                 />
 
@@ -120,6 +91,6 @@ const AiCodeBlockDialog = ({ isOpen, onResolve, onReject, inputs, outputs, param
     )
 }
 
-const aiCreateCodeDialog = create(AiCodeBlockDialog);
+const aiCreateOptionDialog = create(AiOptionBlockDialog);
 
-export default aiCreateCodeDialog;
+export { aiCreateOptionDialog, AiOptionBlockDialog };

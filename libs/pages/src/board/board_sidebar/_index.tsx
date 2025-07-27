@@ -167,6 +167,7 @@ const BoardSidebar: React.FC<BoardSideBarProps> = (
       case 'aicode':
       case 'input':
       case 'output':
+      case 'package':
       case 'information':
         return (
           <div style={{ padding: '16px' }

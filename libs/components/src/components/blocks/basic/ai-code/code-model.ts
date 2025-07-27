@@ -55,7 +55,6 @@ export class AiCodeBlockModel extends BaseModel<CodeBlockData, NodeModelGenerics
 
         const generateCode = (options: AiCodeBlockModelOptions) => {
             let codeLines = [
-                "import zenoh",
                 "import time",
                 "from lib.utils import Synchronise",
                 "from lib.inputs import Inputs",
