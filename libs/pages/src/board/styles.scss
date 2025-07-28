@@ -19,6 +19,7 @@
 .App {
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   height: 100vh;
 }
 
@@ -40,12 +41,13 @@
 
 .board-container {
   display: flex;
-  height: 100vh; /* Tam ekranı kapsaması için viewport yüksekliği */
+  height: 100vh;
 }
 
 .main-content {
   flex: 1;
-  height: 100%; /* Tam yüksekliği alır */
+
+  overflow: hidden;
 }
 
 .app-bar {
