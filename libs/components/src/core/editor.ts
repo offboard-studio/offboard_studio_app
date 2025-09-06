@@ -25,6 +25,7 @@ import {
 } from '../components/blocks/common/base-port/port-factory';
 import {
   createBlock,
+  createBlockWithAPI,
   editBlock,
   getInitialPosition,
   loadPackage,
@@ -378,6 +379,21 @@ class Editor {
       this.engine.repaintCanvas();
     }
   }
+
+  public async addBlockWithAPI(name: string,data:any): Promise<void> {
+    this.blockCount += 1;
+    const block = await createBlockWithAPI(name, this.blockCount,data);
+
+    if (block) {
+      // Get a default position and set it as blocks position
+      // TODO: Better way would be to get an empty position dynamically or track mouse's current position.
+      block.setPosition(...getInitialPosition());
+      this.activeModel.addNode(block);
+      // Once the block is added, the page has to rendered again, this is done by repainting the canvas.
+      this.engine.repaintCanvas();
+    }
+  }
+
 
   public nullLinkNodes(type: string, name: string, blockID: string) {
     // Get all nodes from the model
