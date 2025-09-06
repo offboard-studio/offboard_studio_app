@@ -104,7 +104,6 @@ export class CodeBlockWidget extends React.Component<
   }
 
   render() {
-
     const { state } = this.context as { state: any };
     const textAreaStyle: CSS.Properties = {
       width: this.state.width,
@@ -146,32 +145,11 @@ export class CodeBlockWidget extends React.Component<
             ></CardHeader>
             <CardContent className="p-0">
               <div className="block-basic-code-parameters">
-                {this.props.node.getParameters().map((port) => {
-                  console.error('Port is undefined or null', port);
-                  return (
-                    <BasePort
-                      className="code-parameter-port"
-                      port={port!}
-                      engine={this.props.engine}
-                      isInput={true}
-                      key={port?.getID()}
-                    ></BasePort>
-                  );
-                })}
+                {this.renderPortsSafely('parameters')}
               </div>
               <div className="grid-container">
                 <div className="block-basic-code-inputs">
-                  {this.props.node.getInputs().map((port, index) => {
-                    return (
-                      <BasePort
-                        className="code-input-port"
-                        port={port!}
-                        engine={this.props.engine}
-                        isInput={true}
-                        key={port?.getID()}
-                      ></BasePort>
-                    );
-                  })}
+                  {this.renderPortsSafely('inputs')}
                 </div>
                 <div
                   className="block-basic-code-textarea-container"
@@ -187,27 +165,11 @@ export class CodeBlockWidget extends React.Component<
                     defaultValue={this.state.code}
                     onChange={this.handleInput}
                     theme="vs-dark"
-                    // options={{
-                    //     "readOnly": state.locked,
-                    //     "minimap": {
-                    //         "enabled": false
-                    //     }
-                    // }}
                   />
                 </div>
 
                 <div className="block-basic-code-outputs">
-                  {this.props.node.getOutputs().map((port) => {
-                    return (
-                      <BasePort
-                        className="code-output-port"
-                        port={port!}
-                        engine={this.props.engine}
-                        isInput={false}
-                        key={port?.getID()}
-                      ></BasePort>
-                    );
-                  })}
+                  {this.renderPortsSafely('outputs')}
                 </div>
               </div>
             </CardContent>
@@ -215,6 +177,128 @@ export class CodeBlockWidget extends React.Component<
         </div>
       </BaseBlock>
     );
+  }
+
+
+  /**
+   * Port'ları güvenli şekilde render et
+   */
+  private renderPortsSafely = (portType: 'parameters' | 'inputs' | 'outputs') => {
+    try {
+      let ports: any[] = [];
+      let isInput = true;
+      let className = '';
+
+      switch (portType) {
+        case 'parameters':
+          ports = this.props.node.getParameters() || [];
+          className = 'code-parameter-port';
+          isInput = true;
+          break;
+        case 'inputs':
+          ports = this.props.node.getInputs() || [];
+          className = 'code-input-port';
+          isInput = true;
+          break;
+        case 'outputs':
+          ports = this.props.node.getOutputs() || [];
+          className = 'code-output-port';
+          isInput = false;
+          break;
+      }
+
+      // Null/undefined port'ları filtrele
+      const validPorts = ports.filter(port => {
+        if (!port) {
+          console.warn(`${portType} port is null or undefined:`, port);
+          return false;
+        }
+        return true;
+      });
+
+      return validPorts.map((port, index) => {
+        // Port ID'sini güvenli şekilde al
+        const portId = port?.getID?.() || `${portType}-${index}`;
+        
+        // Port render'ında hata kontrolü
+        try {
+          return (
+            <BasePort
+              className={className}
+              port={port}
+              engine={this.props.engine}
+              isInput={isInput}
+              key={portId}
+            />
+          );
+        } catch (error) {
+          console.error(`Error rendering ${portType} port:`, error, port);
+          return null;
+        }
+      });
+    } catch (error) {
+      console.error(`Error in renderPortsSafely for ${portType}:`, error);
+      return [];
+    }
+  }
+
+  /**
+   * Component lifecycle - componentDidUpdate
+   * Port güncellemelerini handle et
+   */
+  componentDidUpdate(prevProps: CodeBlockWidgetProps) {
+    // Node data değişikliklerini kontrol et
+    if (this.props.node !== prevProps.node) {
+      this.forceUpdate();
+    }
+
+    // Port sayısında değişiklik varsa yeniden render et
+    const prevPortCount = this.getPortCount(prevProps.node);
+    const currentPortCount = this.getPortCount(this.props.node);
+    
+    if (prevPortCount !== currentPortCount) {
+      console.log('Port count changed, forcing re-render');
+      setTimeout(() => {
+        this.forceUpdate();
+      }, 100);
+    }
+  }
+
+  /**
+   * Port sayısını hesapla
+   */
+  private getPortCount = (node: any) => {
+    try {
+      const inputs = node.getInputs()?.length || 0;
+      const outputs = node.getOutputs()?.length || 0;
+      const parameters = node.getParameters()?.length || 0;
+      return inputs + outputs + parameters;
+    } catch (error) {
+      console.error('Error getting port count:', error);
+      return 0;
+    }
+  }
+
+  /**
+   * Component will unmount - cleanup
+   */
+  componentWillUnmount() {
+    // Port listener'larını temizle
+    try {
+      const allPorts = [
+        ...(this.props.node.getInputs() || []),
+        ...(this.props.node.getOutputs() || []),
+        ...(this.props.node.getParameters() || [])
+      ];
+
+      allPorts.forEach(port => {
+        if (port && port.clearListeners) {
+          port.clearListeners();
+        }
+      });
+    } catch (error) {
+      console.error('Error during component cleanup:', error);
+    }
   }
 
   /**
