@@ -6,44 +6,21 @@ import logo from '@assets/logo.png';
 // API Base URL - Production endpoint
 const API_BASE_URL = 'https://offboard-studio-components-store.vercel.app/api';
 
-interface BlockItem {
-  id: string;
-  label: string;
-  path: string;
-  file: string;
-}
+import  './interfaces';
+import staticCategories from './statics_categroies';
+import Editor from '@components/core/editor';
+import { data } from 'react-router';
 
-interface Category {
-  id: string;
-  label: string;
-  items: BlockItem[];
-}
-
-interface SidebarLayer {
-  id: string;
-  title: string;
-  content: React.ReactNode;
-  width: string;
-}
-
-interface BlockDetail {
-  label: string;
-  json: any;
-}
-
-interface BoardSideBarProps {
-  editor?: any; // Editor prop'u opsiyonel yaptım
-}
 
 const BoardSidebar: React.FC<BoardSideBarProps> = ({ editor }) => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [activeLayers, setActiveLayers] = useState<SidebarLayer[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedSubItem, setSelectedSubItem] = useState<string | null>(null);
-  
+
   // API State
   const [categories, setCategories] = useState<Category[]>([]);
-  const [groupBlocks, setGroupBlocks] = useState<{[key: string]: BlockItem[]}>({});
+  const [groupBlocks, setGroupBlocks] = useState<{ [key: string]: BlockItem[] }>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -105,36 +82,10 @@ const BoardSidebar: React.FC<BoardSideBarProps> = ({ editor }) => {
     fetchCategories();
   }, []);
 
-  const staticCategories = [
-    {
-      id: 'basic',
-      icon: '🔧',
-      label: 'Basic Components',
-      items: ['constant', 'code', 'aicode', 'input', 'output', 'information'],
-    },
-    {
-      id: 'control',
-      icon: '⚙️',
-      label: 'Control Systems',
-      items: ['processing'],
-    },
-    {
-      id: 'robotics',
-      icon: '🤖',
-      label: 'Robotics',
-      items: ['drivers'],
-    },
-    {
-      id: 'uav',
-      icon: '✈️',
-      label: 'UAV Components',
-      items: ['flight-control', 'sensors', 'actuators'],
-    },
-  ];
-
-  const setBlock = (type: string) => {
+  const setBlock = (type: string, data: any) => {
     if (editor && editor.addBlock) {
-      editor.addBlock(type);
+      // editor.addBlock(type);
+      editor.addBlockWithAPI(type, data);
     } else {
       console.log('Block selected:', type);
       alert(`Block selected: ${type}`);
@@ -243,7 +194,7 @@ const BoardSidebar: React.FC<BoardSideBarProps> = ({ editor }) => {
 
   const renderGroupBlocks = (groupName: string) => {
     const blocks = groupBlocks[groupName];
-    
+
     if (!blocks) {
       // Load blocks if not already loaded
       fetchGroupBlocks(groupName);
@@ -264,14 +215,14 @@ const BoardSidebar: React.FC<BoardSideBarProps> = ({ editor }) => {
       }
       acc[block.path].push(block);
       return acc;
-    }, {} as {[key: string]: BlockItem[]});
+    }, {} as { [key: string]: BlockItem[] });
 
     return (
       <div style={{ padding: '8px' }}>
         {Object.entries(groupedBlocks).map(([category, categoryBlocks]) => (
           <div key={category} style={{ marginBottom: '16px' }}>
-            <h4 style={{ 
-              color: '#3498db', 
+            <h4 style={{
+              color: '#3498db',
               marginBottom: '8px',
               textTransform: 'capitalize',
               fontWeight: '600',
@@ -288,7 +239,7 @@ const BoardSidebar: React.FC<BoardSideBarProps> = ({ editor }) => {
                   if (details) {
                     console.log('Block details:', details);
                   }
-                  setBlock(`${groupName}.${category}.${block.id}`);
+                  setBlock(`${groupName}.${category}.${block.id}`, details);
                 }}
                 className="block-item group-block"
                 style={{
@@ -401,19 +352,19 @@ const BoardSidebar: React.FC<BoardSideBarProps> = ({ editor }) => {
       <div className={`sidebar ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
         {/* Logo */}
         <div className="logo-container">
-          <div className="logo" 
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginBottom: '24px',
-            paddingTop: '8px',
-          }}>
-             <img
-            src={logo}
-            alt="Logo"
-            style={{ width: '32px', height: '32px' }}
-          />
+          <div className="logo"
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginBottom: '24px',
+              paddingTop: '8px',
+            }}>
+            <img
+              src={logo}
+              alt="Logo"
+              style={{ width: '32px', height: '32px' }}
+            />
           </div>
         </div>
 

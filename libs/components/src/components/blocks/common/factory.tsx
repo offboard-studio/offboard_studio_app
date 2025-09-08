@@ -5,7 +5,7 @@
 /* eslint-disable prefer-const */
 import { AbstractModelFactory, Toolkit } from '@projectstorm/react-canvas-core';
 import { LinkModel, NodeModel, PortModel } from "@projectstorm/react-diagrams";
-import { DefaultPortModel } from "@projectstorm/react-diagrams-defaults";
+import { DefaultLinkModel, DefaultPortModel } from "@projectstorm/react-diagrams-defaults";
 import { RightAngleLinkModel } from "@projectstorm/react-diagrams-routing";
 import { PortTypes, ProjectInfo } from '../../../core/constants';
 import { Block, Dependency, ProjectDesign, Wire } from '../../../core/serialiser/interfaces';
@@ -66,17 +66,29 @@ export const createPortModel = (options: BasePortModelOptions) => {
  * Helper function to edit a block.
  * @param node Block to be edited
  */
+
 export const editBlock = async (node: NodeModel) => {
     let data;
     console.log('Edit block', (node));
+    
+    // Mevcut bağlantıları sakla
+    const existingConnections = preserveExistingConnections(node);
+    
     try {
         if (node instanceof ConstantBlockModel) {
-            data = await createConstantDialog({ isOpen: true, name: node.getData().name, local: node.getData().local });
+            data = await createConstantDialog({ 
+                isOpen: true, 
+                name: node.getData().name, 
+                local: node.getData().local 
+            });
             node.setData(data);
-        } else if (node instanceof AiCodeBlockModel) {
+        } 
+        else if (node instanceof CodeBlockModel || node instanceof AiCodeBlockModel) {
             data = await createCodeDialog({
                 isOpen: true,
-                inputs: node.getInputNames(), outputs: node.getOutputNames(), params: node.getParameterNames()
+                inputs: node.getInputNames(), 
+                outputs: node.getOutputNames(), 
+                params: node.getParameterNames()
             });
 
             let _data = {
@@ -93,55 +105,143 @@ export const editBlock = async (node: NodeModel) => {
                 },
             }
 
-            // CodeBlockModel.setData(data);
-            node.setData(_data);
-
-
-        }
-        else if (node instanceof CodeBlockModel) {
-            data = await createCodeDialog({
-                isOpen: true,
-                // onReject(reason) {
-                //     console.log('onReject', reason);
-                // },
-                // onResolve: async (aaa) => {
-                //     console.log('onResolve', aaa);
-                // },
-                inputs: node.getInputNames(), outputs: node.getOutputNames(), params: node.getParameterNames()
+            // Port güncellemesini dikkatli yap
+            updateNodePortsCarefully(node, _data, existingConnections);
+        } 
+        else if (node instanceof InputBlockModel || node instanceof OutputBlockModel) {
+            data = await createIODialog({ 
+                isOpen: true, 
+                name: node.getData().name 
             });
-            console.log('Code Block', data);
-            // code: string;
-            //     aiDescription: string;
-            //     frequency: string;
-            //     params?: PortName[],
-            //     ports: {
-            //         in: PortName[],
-            //         out: PortName[]
-            //     }
-
-            let _data = {
-                params: data.params?.map((port: string) => {
-                    return { name: port }
-                }) || [],
-                ports: {
-                    in: data.inputs?.map((port: string) => {
-                        return { name: port }
-                    }) || [],
-                    out: data.outputs?.map((port: string) => {
-                        return { name: port }
-                    }) || []
-                },
-            }
-
-            // CodeBlockModel.setData(data);
-            node.setData(_data);
-
-        } else if (node instanceof InputBlockModel || node instanceof OutputBlockModel) {
-            data = await createIODialog({ isOpen: true, name: node.getData().name });
             node.setData(data);
         }
     } catch (error) {
         console.log(error);
+    }
+}
+
+// Mevcut bağlantıları koru
+function preserveExistingConnections(node: NodeModel) {
+    const connections: Array<{
+        portId: string;
+        portType: string;
+        portLabel: string;
+        links: Array<{
+            linkId: string;
+            sourcePortId: string;
+            targetPortId: string;
+            sourceNodeId: string;
+            targetNodeId: string;
+        }>;
+    }> = [];
+
+    const ports = node.getPorts();
+    Object.values(ports).forEach(port => {
+        if (port) {
+            const links = port.getLinks();
+            const linkData = Object.values(links).map(link => ({
+                linkId: link.getID(),
+                sourcePortId: link.getSourcePort()?.getID() || '',
+                targetPortId: link.getTargetPort()?.getID() || '',
+                sourceNodeId: link.getSourcePort()?.getParent()?.getID() || '',
+                targetNodeId: link.getTargetPort()?.getParent()?.getID() || ''
+            }));
+
+            connections.push({
+                portId: port.getID(),
+                portType: port.getOptions().type || '',
+                portLabel: port.getOptions().label || '',
+                links: linkData
+            });
+        }
+    });
+
+    return connections;
+}
+
+// Node portlarını dikkatli güncelle
+function updateNodePortsCarefully(node: any, newData: any, existingConnections: any[]) {
+    // Önce yeni data'yı set et
+    node.setData(newData);
+    
+    // Port'ları yeniden oluştur
+    node.setupPorts();
+    
+    // Mevcut bağlantıları geri yükle
+    setTimeout(() => {
+        restoreConnections(node, existingConnections);
+    }, 100); // DOM güncellemesi için kısa bekle
+}
+
+// Bağlantıları geri yükle
+function restoreConnections(node: any, existingConnections: any[]) {
+    const engine = node.getOptions().engine;
+    if (!engine) return;
+
+    const model = engine.getModel();
+    const newPorts = node.getPorts();
+
+    existingConnections.forEach(connectionInfo => {
+        // Aynı label'a sahip yeni port'u bul
+        const matchingPort = Object.values(newPorts).find((port: any) => 
+            port && 
+            port.getOptions().label === connectionInfo.portLabel &&
+            port.getOptions().type === connectionInfo.portType
+        );
+
+        if (matchingPort) {
+            // Her link için yeniden bağlantı kur
+            connectionInfo.links.forEach((linkInfo: any) => {
+                const existingLink = model.getLink(linkInfo.linkId);
+                
+                if (existingLink) {
+                    // Mevcut link'i güncelle
+                    if (connectionInfo.portType === 'port.output') {
+                        existingLink.setSourcePort(matchingPort);
+                    } else if (connectionInfo.portType === 'port.input') {
+                        existingLink.setTargetPort(matchingPort);
+                    }
+                } else {
+                    // Yeni link oluştur (eğer eski link kaybolmuşsa)
+                    recreateLink(model, matchingPort, linkInfo, connectionInfo.portType);
+                }
+            });
+        }
+    });
+
+    // Canvas'ı yeniden çiz
+    engine.repaintCanvas();
+}
+
+// Link'i yeniden oluştur
+function recreateLink(model: any, port: any, linkInfo: any, portType: string) {
+    // Karşı taraftaki node ve port'u bul
+    let otherNode, otherPort;
+    
+    if (portType === 'port.output') {
+        otherNode = model.getNode(linkInfo.targetNodeId);
+        if (otherNode) {
+            otherPort = otherNode.getPort(linkInfo.targetPortId);
+        }
+    } else {
+        otherNode = model.getNode(linkInfo.sourceNodeId);
+        if (otherNode) {
+            otherPort = otherNode.getPort(linkInfo.sourcePortId);
+        }
+    }
+
+    if (otherNode && otherPort) {
+        const newLink = new DefaultLinkModel();
+        
+        if (portType === 'port.output') {
+            newLink.setSourcePort(port);
+            newLink.setTargetPort(otherPort);
+        } else {
+            newLink.setSourcePort(otherPort);
+            newLink.setTargetPort(port);
+        }
+        
+        model.addLink(newLink);
     }
 }
 
@@ -499,6 +599,90 @@ export const createBlock = async (name: string, blockCount: number) => {
     }
     return block;
 }
+
+
+export const createBlockWithAPI = async (name: string, blockCount: number,dataAPI:any) => {
+
+    let block;
+    let data;
+
+
+    const inputPortsPortModel: { name: string }[] = [];
+    const outputPortsPortModel: { name: string }[] = [];
+    const paramsPortsPortModel: { name: string }[] = [];
+
+
+
+    try {
+        switch (name) {
+            case 'basic.constant':
+                data = await createConstantDialog({ isOpen: true });
+                // This is workaround to indicate how blocks should be sorted
+                data.id = blockCount.toString().padStart(4, '0') + '-' + Toolkit.UID();
+                // eslint-disable-next-line @typescript-eslint/no-use-before-define
+                block = new ConstantBlockModel(data)
+                break;
+            case 'basic.code':
+                data = await createCodeDialog({ isOpen: true });
+                block = new CodeBlockModel(data);
+
+                break;
+            case 'basic.aicode':
+                data = await aiCreateCodeDialog({ isOpen: true });
+                const block1 = new AiCodeBlockModel(data);
+                const codeBlockData = block1.getData();
+                const codeBlock = await new CodeBlockCreatorAI(data, block1).generateCodeBlock(codeBlockData);
+
+                const codeBlockString = await extractMainPythonFunctionBlock(codeBlock);
+
+                const { inputCalls, outputCalls, parameterCalls } = extractFunctionCalls(codeBlockString);
+
+                data = {
+                    ...data,
+                    code: codeBlockString,
+                    inputs: inputCalls,
+                    outputs: outputCalls,
+                    params: parameterCalls,
+                }
+                block = new AiCodeBlockModel(data);
+
+                // Now, update the block with the new data
+                block.setData({
+                    ...block.getData(),
+                    code: codeBlockString || '',
+                });
+
+                break;
+            case 'basic.input':
+                data = await createIODialog({ isOpen: true });
+                block = new InputBlockModel(data);
+                break;
+            case 'basic.output':
+                data = await createIODialog({ isOpen: true });
+                block = new OutputBlockModel(data);
+                break;
+            default:
+                // data = await getCollectionBlock(name);
+                data = dataAPI.json;
+                console.log("DATA API",data);
+                // console.log("DATA API",data.json);
+                if (data && dataAPI.json) {
+                    const { editor, design, dependencies, package: packageInfo } = data;
+                    block = loadPackage({
+                        editor,
+                        design,
+                        dependencies: dependencies as Dependency,
+                        package: packageInfo
+                    });
+                }
+                break;
+        }
+    } catch (error) {
+        console.log(error);
+    }
+    return block;
+}
+
 
 /**
 

@@ -74,6 +74,12 @@ const BoardSidebar: React.FC<BoardSideBarProps> = (
       label: 'PX4 Components',
       items: ['flight-control', 'sensors', 'actuators'],
     },
+    {
+      id: 'industrial',
+      icon: <ControlPointIcon />,
+      label: 'Industrial Components',
+      items: ['plc', 'scada', 'hmi'],
+    },
   ];
 
   const setBlock = (type: string) => {
