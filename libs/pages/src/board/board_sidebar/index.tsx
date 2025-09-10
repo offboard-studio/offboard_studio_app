@@ -2,15 +2,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from 'react';
 import logo from '@assets/logo.png';
+import staticCategories from '@pages/board/board_sidebar/statics_categroies';
+import { BlockItem, Category, SidebarLayer, BoardSideBarProps, BlockDetail } from '@pages/board/board_sidebar/interfaces';
 
-// API Base URL - Production endpoint
 const API_BASE_URL = 'https://offboard-studio-components-store.vercel.app/api';
-
-import  './interfaces';
-import staticCategories from './statics_categroies';
-import Editor from '@components/core/editor';
-import { data } from 'react-router';
-
 
 const BoardSidebar: React.FC<BoardSideBarProps> = ({ editor }) => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -82,9 +77,9 @@ const BoardSidebar: React.FC<BoardSideBarProps> = ({ editor }) => {
     fetchCategories();
   }, []);
 
-  const setBlock = (type: string, data: any) => {
-    if (editor && editor.addBlock) {
-      // editor.addBlock(type);
+  const setBlock = async (type: string, data: any) => {
+    if (editor) {
+      await editor.addBlock(type);
       editor.addBlockWithAPI(type, data);
     } else {
       console.log('Block selected:', type);
@@ -159,38 +154,6 @@ const BoardSidebar: React.FC<BoardSideBarProps> = ({ editor }) => {
     });
   };
 
-  const renderCategoryBlocks = (categoryData: Category) => {
-    return (
-      <div style={{ padding: '8px' }}>
-        <h3 style={{ color: '#3498db', marginBottom: '12px', fontSize: '1.1em' }}>
-          {categoryData.label}
-        </h3>
-        {categoryData.items.map((block) => (
-          <div
-            key={block.id}
-            onClick={() => setBlock(`${categoryData.id}.${block.path}.${block.id}`)}
-            className="block-item api-block"
-            style={{
-              padding: '12px',
-              margin: '8px 0',
-              cursor: 'pointer',
-              borderRadius: '6px',
-              backgroundColor: '#34495e',
-              border: '1px solid #4a5568',
-              transition: 'all 0.2s',
-            }}
-          >
-            <div style={{ color: 'white', fontWeight: '500', fontSize: '0.9rem' }}>
-              {block.label}
-            </div>
-            <div style={{ color: '#bdc3c7', fontSize: '0.75rem' }}>
-              Path: {block.path}
-            </div>
-          </div>
-        ))}
-      </div>
-    );
-  };
 
   const renderGroupBlocks = (groupName: string) => {
     const blocks = groupBlocks[groupName];
@@ -274,7 +237,7 @@ const BoardSidebar: React.FC<BoardSideBarProps> = ({ editor }) => {
         return (
           <div style={{ padding: '16px' }}>
             <div
-              onClick={() => setBlock(`basic.${subItem}`)}
+              onClick={() => setBlock(`basic.${subItem}`, null)}
               className="block-item basic-block"
               style={{
                 padding: '12px',
@@ -388,31 +351,6 @@ const BoardSidebar: React.FC<BoardSideBarProps> = ({ editor }) => {
             </div>
           ))}
         </div>
-
-        {/* API Categories Section */}
-        {/* {categories.length > 0 && (
-          <div className="api-categories">
-            <div className="api-categories-title">API Categories</div>
-            {categories.slice(0, 3).map((category) => (
-              <div
-                key={category.id}
-                className="api-category-item"
-                onClick={() => {
-                  const newLayer: SidebarLayer = {
-                    id: `api-category-${category.id}`,
-                    title: category.label,
-                    width: '280px',
-                    content: renderCategoryBlocks(category),
-                  };
-                  setActiveLayers([newLayer]);
-                }}
-                title={category.label}
-              >
-                {category.label.slice(0, 8)}...
-              </div>
-            ))}
-          </div>
-        )} */}
       </div>
 
       {/* Dynamic Layers */}

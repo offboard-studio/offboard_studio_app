@@ -1,4 +1,7 @@
 
+
+import Editor from '@components/core/editor';
+
 interface BlockItem {
   id: string;
   label: string;
@@ -25,5 +28,7 @@ interface BlockDetail {
 }
 
 interface BoardSideBarProps {
-  editor?: any; // Editor prop'u opsiyonel yaptım
+  editor?: Editor;
 }
+
+export { BlockItem, Category, SidebarLayer, BoardSideBarProps, BlockDetail };
