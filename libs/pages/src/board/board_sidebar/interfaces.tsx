@@ -31,4 +31,4 @@ interface BoardSideBarProps {
   editor?: Editor;
 }
 
-export { BlockItem, Category, SidebarLayer, BoardSideBarProps, BlockDetail };
+export type { BlockItem, Category, SidebarLayer, BoardSideBarProps, BlockDetail };
