@@ -16,7 +16,7 @@ const staticCategories = [
     items: ['processing'],
   },
   {
-    id: 'computer-vision',
+    id: 'vision',
     icon: '📷',
     label: 'Computer Vision',
     items: ['cv', 'yolo', 'tensorrt'],
@@ -25,7 +25,7 @@ const staticCategories = [
     id: 'robotics',
     icon: '🤖',
     label: 'Robotics',
-    items: ['drivers', 'ros', 'ros2'],
+    items: ['drivers', 'ros2'],
   },
   {
     id: 'uav',
