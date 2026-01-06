@@ -31,7 +31,7 @@ const staticCategories = [
     id: 'uav',
     icon: '✈️',
     label: 'UAV Components',
-    items: ['flight-control', 'sensors', 'actuators'],
+    items: ['sensors', 'actuators'],
   },
   {
     id: 'industrial',
