@@ -375,6 +375,7 @@ export const DashboardPage = (): JSX.Element => {
               </Box>
               <Tooltip title="Account settings">
                 <Avatar
+                  onClick={() => navigate('/user')}
                   sx={{
                     bgcolor: '#BB86FC',
                     cursor: 'pointer',

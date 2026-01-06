@@ -425,14 +425,14 @@ const BoardSidebar: React.FC<BoardSideBarProps> = ({ editor }) => {
 
         .sidebar {
           width: 80px;
-          background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+          background: #0a0a0a;
           color: white;
           padding: 8px;
           height: 100vh;
           position: fixed;
           z-index: 1000;
-          box-shadow: 2px 0 10px rgba(0,0,0,0.3);
-          border-right: 1px solid #34495e;
+          box-shadow: 2px 0 10px rgba(0,0,0,0.5);
+          border-right: 1px solid rgba(255,255,255,0.05);
           transition: width 0.3s ease;
         }
 
@@ -451,7 +451,6 @@ const BoardSidebar: React.FC<BoardSideBarProps> = ({ editor }) => {
         .logo {
           width: 32px;
           height: 32px;
-          // background: linear-gradient(135deg, #3498db, #2980b9);
           border-radius: 50%;
           display: flex;
           align-items: center;
@@ -470,8 +469,8 @@ const BoardSidebar: React.FC<BoardSideBarProps> = ({ editor }) => {
         .spinner {
           width: 20px;
           height: 20px;
-          border: 2px solid #34495e;
-          border-top: 2px solid #3498db;
+          border: 2px solid #222;
+          border-top: 2px solid #BB86FC;
           border-radius: 50%;
           animation: spin 1s linear infinite;
         }
@@ -498,22 +497,22 @@ const BoardSidebar: React.FC<BoardSideBarProps> = ({ editor }) => {
         }
 
         .category-icon:hover {
-          background-color: #4a5568;
+          background-color: rgba(187, 134, 252, 0.1);
         }
 
         .category-icon.active {
-          background-color: #3498db;
-          border-color: #5dade2;
+          background-color: rgba(187, 134, 252, 0.2);
+          border-color: #BB86FC;
         }
 
         .api-categories {
           margin-top: 32px;
-          border-top: 1px solid #4a5568;
+          border-top: 1px solid rgba(255,255,255,0.05);
           padding-top: 16px;
         }
 
         .api-categories-title {
-          color: #bdc3c7;
+          color: #666;
           text-align: center;
           font-size: 0.7rem;
           margin-bottom: 12px;
@@ -526,7 +525,7 @@ const BoardSidebar: React.FC<BoardSideBarProps> = ({ editor }) => {
           margin-bottom: 8px;
           cursor: pointer;
           border-radius: 4px;
-          background-color: #34495e;
+          background-color: #111;
           text-align: center;
           font-size: 0.7rem;
           color: white;
@@ -534,17 +533,17 @@ const BoardSidebar: React.FC<BoardSideBarProps> = ({ editor }) => {
         }
 
         .api-category-item:hover {
-          background-color: #4a5568;
+          background-color: rgba(187, 134, 252, 0.1);
           transform: translateY(-1px);
         }
 
         .sidebar-layer {
-          background: linear-gradient(180deg, #34495e 0%, #2c3e50 100%);
+          background: #111;
           color: white;
           height: 100vh;
           position: fixed;
-          box-shadow: 2px 0 10px rgba(0,0,0,0.2);
-          border-right: 1px solid #4a5568;
+          box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+          border-right: 1px solid rgba(255,255,255,0.05);
           display: flex;
           flex-direction: column;
           animation: slideIn 0.3s ease;
@@ -563,11 +562,11 @@ const BoardSidebar: React.FC<BoardSideBarProps> = ({ editor }) => {
 
         .layer-header {
           padding: 16px;
-          border-bottom: 2px solid #4a5568;
+          border-bottom: 2px solid rgba(255,255,255,0.05);
           display: flex;
           align-items: center;
           justify-content: space-between;
-          background: linear-gradient(90deg, #3498db 0%, #2980b9 100%);
+          background: linear-gradient(90deg, #BB86FC 0%, #9965E0 100%);
         }
 
         .layer-title {
@@ -602,16 +601,16 @@ const BoardSidebar: React.FC<BoardSideBarProps> = ({ editor }) => {
         }
 
         .layer-content::-webkit-scrollbar-track {
-          background: #2c3e50;
+          background: #0a0a0a;
         }
 
         .layer-content::-webkit-scrollbar-thumb {
-          background: #4a5568;
+          background: #333;
           border-radius: 3px;
         }
 
         .layer-content::-webkit-scrollbar-thumb:hover {
-          background: #5a6578;
+          background: #444;
         }
 
         .category-items {
@@ -621,7 +620,7 @@ const BoardSidebar: React.FC<BoardSideBarProps> = ({ editor }) => {
         .category-item {
           padding: 12px 16px;
           cursor: pointer;
-          border-bottom: 1px solid #555;
+          border-bottom: 1px solid rgba(255,255,255,0.05);
           transition: background-color 0.2s;
           display: flex;
           justify-content: space-between;
@@ -629,7 +628,7 @@ const BoardSidebar: React.FC<BoardSideBarProps> = ({ editor }) => {
         }
 
         .category-item:hover {
-          background-color: #555;
+          background-color: rgba(187, 134, 252, 0.1);
         }
 
         .block-item {
@@ -638,22 +637,22 @@ const BoardSidebar: React.FC<BoardSideBarProps> = ({ editor }) => {
 
         .block-item:hover {
           transform: translateY(-2px);
-          box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+          box-shadow: 0 4px 8px rgba(0,0,0,0.3);
         }
 
         .api-block:hover {
-          background-color: #4a5568 !important;
-          border-color: #3498db !important;
+          background-color: rgba(187, 134, 252, 0.15) !important;
+          border-color: #BB86FC !important;
         }
 
         .group-block:hover {
-          background-color: #34495e !important;
-          border-color: #3498db !important;
+          background-color: rgba(187, 134, 252, 0.15) !important;
+          border-color: #BB86FC !important;
         }
 
         .basic-block:hover {
-          background-color: #4a5568 !important;
-          border-color: #3498db !important;
+          background-color: rgba(187, 134, 252, 0.15) !important;
+          border-color: #BB86FC !important;
         }
 
         .mobile-overlay {

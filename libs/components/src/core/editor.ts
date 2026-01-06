@@ -165,7 +165,8 @@ class Editor {
     const model = new DiagramModel();
     const editor = jsonModel.editor;
     console.log('Loading project with model:', editor);
-    if (editor) {
+
+    if (editor && typeof editor === 'object') {
       console.log('Deserialising model with editor data:', editor);
       model.deserializeModel(
         {
@@ -187,6 +188,19 @@ class Editor {
       }
       console.log('Loaded project info:', this.projectInfo);
       // Set the current project name to the name of
+      this.engine.setModel(model);
+      if (this.onModelChange) this.onModelChange(model);
+    } else {
+      console.warn('Editor data is undefined or invalid, initializing empty project');
+      // Initialize with empty model when editor is missing
+      this.activeModel = model;
+      this.projectInfo = jsonModel.package || {
+        name: filename || 'Untitled',
+        version: '1.0.0',
+        description: '',
+        author: '',
+        image: '',
+      };
       this.engine.setModel(model);
       if (this.onModelChange) this.onModelChange(model);
     }

@@ -14,8 +14,20 @@ import {
   Tooltip,
   IconButton,
   Divider,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Autocomplete,
+  Paper,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Chip,
 } from '@mui/material';
-import React, { ChangeEvent, Fragment, useState } from 'react';
+import React, { ChangeEvent, Fragment, useState, useEffect } from 'react';
 import ModalContainer from 'react-modal-promise';
 // import '../../../App.scss';
 import '../styles.scss';
@@ -29,6 +41,10 @@ import CollaborationManager from '@components/core/collaboration';
 import { useAuth } from '@components/auth/AuthProvider';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import PeopleIcon from '@mui/icons-material/People';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CloseIcon from '@mui/icons-material/Close';
 
 import DownloadingIcon from '@mui/icons-material/Downloading';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -44,6 +60,8 @@ import BoardSettings from '../board_setting';
 import BoardSidebar from '../board_sidebar';
 import Board from '..';
 import AiOptionSettings from '../ai_option_settings';
+import { firebaseProjectService } from '@components/infrastructure/firebase/firebase.project.service';
+import { IProject } from '@components/core/interfaces/project.service.interface';
 
 interface FileHelper {
   fileName: string;
@@ -67,6 +85,15 @@ export const BoardPage = (): JSX.Element => {
   const [tabIndexBoard, setTabIndexBoard] = useState(false);
   const [aiOptionBlockDialog, setAiOptionBlockDialog] = useState(false);
 
+  // Collaboration State
+  const [collabOpen, setCollabOpen] = useState(false);
+  const [currentProject, setCurrentProject] = useState<IProject | null>(null);
+  const [memberProfiles, setMemberProfiles] = useState<any[]>([]);
+  const [isInviting, setIsInviting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [allUsers, setAllUsers] = useState<any[]>([]);
+  const [selectedUser, setSelectedUser] = useState<any | null>(null);
+
   const handleTabChange = (event: React.SyntheticEvent, newIndex: number) => {
     setTabIndex(newIndex);
   };
@@ -87,6 +114,8 @@ export const BoardPage = (): JSX.Element => {
       collaborationManager.setUserId(user.uid);
       collaborationManager.startCollaboration(projectId).then(() => {
         setIsLoadingProject(false);
+        // Fetch project data for collaboration dialog
+        fetchCurrentProject();
       }).catch((error) => {
         console.error('Failed to start collaboration:', error);
         setIsLoadingProject(false);
@@ -97,6 +126,76 @@ export const BoardPage = (): JSX.Element => {
       collaborationManager.stopCollaboration();
     };
   }, [user, projectId]);
+
+  // Fetch current project data
+  const fetchCurrentProject = async () => {
+    try {
+      const project = await firebaseProjectService.getProject(projectId);
+      if (project) {
+        setCurrentProject(project);
+      }
+    } catch (err) {
+      console.error('Failed to fetch project:', err);
+    }
+  };
+
+  // Collaboration handlers
+  const handleOpenCollab = async () => {
+    setCollabOpen(true);
+    setErrorMessage('');
+    setSelectedUser(null);
+
+    // Fetch all users for autocomplete
+    try {
+      const users = await firebaseProjectService.getAllUsers();
+      setAllUsers(users.filter((u: any) => u.uid !== user?.uid));
+    } catch (error) {
+      console.error('Failed to fetch users:', error);
+    }
+  };
+
+  const handleInvite = async () => {
+    if (!currentProject || !selectedUser) return;
+
+    setIsInviting(true);
+    setErrorMessage('');
+
+    try {
+      await firebaseProjectService.inviteMember(currentProject.id, selectedUser.email);
+      setSelectedUser(null);
+      alert('Member invited successfully!');
+      await fetchCurrentProject();
+    } catch (err: any) {
+      setErrorMessage(err.message || 'Invitation failed');
+    } finally {
+      setIsInviting(false);
+    }
+  };
+
+  const handleRemoveMember = async (memberId: string) => {
+    if (!currentProject) return;
+    try {
+      await firebaseProjectService.removeMember(currentProject.id, memberId);
+      await fetchCurrentProject();
+    } catch (err) {
+      console.error('Failed to remove member:', err);
+    }
+  };
+
+  const fetchMemberProfiles = async (userIds: string[]) => {
+    try {
+      const profiles = await firebaseProjectService.getUserProfiles(userIds);
+      setMemberProfiles(profiles);
+    } catch (err) {
+      console.error('Failed to fetch user profiles:', err);
+    }
+  };
+
+  useEffect(() => {
+    if (currentProject?.members) {
+      fetchMemberProfiles(currentProject.members);
+    }
+  }, [currentProject?.members]);
 
   const saveProject = () => {
     const model = editor.serialise();
@@ -205,15 +304,14 @@ export const BoardPage = (): JSX.Element => {
           >
             <Typography variant="subtitle2" sx={{ fontWeight: 800, color: '#BB86FC' }}>OFFBOARD</Typography>
           </Box>
-          <Tab
-            label="Board"
-            sx={{
-              textTransform: 'none',
-              fontWeight: 600,
-              color: '#666',
-              '&.Mui-selected': { color: '#BB86FC' }
-            }}
-          />
+          <Button
+            color="inherit"
+            onClick={handleOpenCollab}
+            startIcon={<PeopleIcon />}
+            sx={{ textTransform: 'none', px: 2, color: '#666', '&:hover': { color: '#BB86FC' } }}
+          >
+            Collaborators
+          </Button>
           <Button
             color="inherit"
             onClick={() => setTabIndexBoard(true)}
@@ -353,6 +451,148 @@ export const BoardPage = (): JSX.Element => {
           }}
         />
       )}
+
+      {/* Collaboration Dialog */}
+      <Dialog
+        open={collabOpen}
+        onClose={() => setCollabOpen(false)}
+        PaperProps={{
+          sx: {
+            bgcolor: '#111',
+            borderRadius: 4,
+            minWidth: 450,
+            border: '1px solid rgba(255,255,255,0.05)'
+          }
+        }}
+      >
+        <DialogTitle sx={{ color: '#fff', fontWeight: 800, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          Manage Collaborators
+          <IconButton onClick={() => setCollabOpen(false)} sx={{ color: '#555' }}>
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <Typography variant="subtitle2" sx={{ color: '#fff', mb: 2, fontWeight: 700 }}>
+            Invite new member
+          </Typography>
+          <Box sx={{ display: 'flex', gap: 1, mb: 3 }}>
+            <Autocomplete
+              fullWidth
+              options={allUsers}
+              value={selectedUser}
+              onChange={(event, newValue) => {
+                setSelectedUser(newValue);
+                setErrorMessage('');
+              }}
+              getOptionLabel={(option) => option.displayName || option.email}
+              renderOption={(props, option) => (
+                <Box component="li" {...props} sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                  <Avatar src={option.photoURL} sx={{ width: 32, height: 32, bgcolor: '#BB86FC' }}>
+                    {option.displayName?.[0] || option.email?.[0]}
+                  </Avatar>
+                  <Box>
+                    <Typography sx={{ color: '#fff', fontSize: '0.9rem' }}>
+                      {option.displayName || 'Unknown'}
+                    </Typography>
+                    <Typography variant="caption" sx={{ color: '#666' }}>
+                      {option.email}
+                    </Typography>
+                  </Box>
+                </Box>
+              )}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  placeholder="Search users..."
+                  error={!!errorMessage}
+                  helperText={errorMessage}
+                  sx={{
+                    '& .MuiOutlinedInput-root': {
+                      color: '#fff',
+                      '& fieldset': { borderColor: '#333' },
+                      '&:hover fieldset': { borderColor: '#BB86FC' },
+                      '&.Mui-focused fieldset': { borderColor: '#BB86FC' },
+                    },
+                    '& .MuiInputLabel-root': { color: '#555' },
+                    '& .MuiInputLabel-root.Mui-focused': { color: '#BB86FC' },
+                  }}
+                />
+              )}
+              sx={{
+                '& .MuiAutocomplete-popup': { bgcolor: '#1a1a1a' },
+                '& .MuiAutocomplete-option': { color: '#fff' },
+              }}
+              PaperComponent={({ children }) => (
+                <Paper sx={{ bgcolor: '#1a1a1a', border: '1px solid #333' }}>
+                  {children}
+                </Paper>
+              )}
+            />
+            <Button
+              variant="contained"
+              onClick={handleInvite}
+              disabled={!selectedUser || isInviting}
+              startIcon={<PersonAddIcon />}
+              sx={{ textTransform: 'none', borderRadius: 2 }}
+            >
+              {isInviting ? 'Sending...' : 'Invite'}
+            </Button>
+          </Box>
+
+          <Divider sx={{ mb: 2, borderColor: 'rgba(255,255,255,0.05)' }} />
+
+          <Typography variant="subtitle2" sx={{ color: '#fff', mb: 2, fontWeight: 700 }}>
+            Current Members
+          </Typography>
+          <List>
+            {currentProject?.members?.map((memberId) => {
+              const profile = memberProfiles.find(p => p.uid === memberId);
+              const isOwner = memberId === currentProject?.ownerId;
+              const isMe = memberId === user?.uid;
+
+              return (
+                <ListItem
+                  key={memberId}
+                  secondaryAction={
+                    !isOwner && isMe === false && user?.uid === currentProject?.ownerId && (
+                      <IconButton edge="end" onClick={() => handleRemoveMember(memberId)} sx={{ color: '#f44336' }}>
+                        <DeleteIcon fontSize="small" />
+                      </IconButton>
+                    )
+                  }
+                  sx={{ px: 0 }}
+                >
+                  <ListItemIcon sx={{ minWidth: 40 }}>
+                    <Avatar
+                      src={profile?.photoURL}
+                      sx={{ width: 32, height: 32, fontSize: '0.8rem', bgcolor: isOwner ? '#BB86FC' : '#333' }}
+                    >
+                      {profile?.displayName?.[0] || profile?.email?.[0] || 'U'}
+                    </Avatar>
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Typography sx={{ color: '#fff', fontSize: '0.9rem', fontWeight: 600 }}>
+                          {profile?.displayName || 'Unknown User'}
+                        </Typography>
+                        {isOwner && (
+                          <Chip label="Owner" size="small" sx={{ height: 16, fontSize: '0.6rem', bgcolor: 'rgba(187, 134, 252, 0.2)', color: '#BB86FC' }} />
+                        )}
+                        {isMe && (
+                          <Chip label="You" size="small" sx={{ height: 16, fontSize: '0.6rem', bgcolor: 'rgba(255,255,255,0.1)', color: '#fff' }} />
+                        )}
+                      </Box>
+                    }
+                    secondary={profile?.email || memberId}
+                    secondaryTypographyProps={{ color: '#555', fontSize: '0.75rem' }}
+                  />
+                </ListItem>
+              );
+            })}
+          </List>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

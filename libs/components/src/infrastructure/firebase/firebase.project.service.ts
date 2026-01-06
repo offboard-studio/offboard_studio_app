@@ -62,7 +62,28 @@ export class FirebaseProjectService implements IProjectService {
       visibility: 'private', // Default to private
       createdAt: Timestamp.now(),
       updatedAt: Timestamp.now(),
-      status: project.status || 'draft'
+      status: project.status || 'draft',
+      // Initialize complete editor data structure
+      editor: {
+        id: '',
+        offsetX: 0,
+        offsetY: 0,
+        zoom: 100,
+        gridSize: 20,
+        layers: [],
+        locked: false
+      },
+      design: {
+        graph: { blocks: {}, wires: [] }
+      },
+      dependencies: {},
+      package: {
+        name: project.name || 'Untitled Project',
+        version: '1.0.0',
+        description: project.description || '',
+        author: '',
+        image: ''
+      }
     });
     return docRef.id;
   }

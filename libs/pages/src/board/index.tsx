@@ -3,7 +3,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import { CanvasWidget } from '@projectstorm/react-canvas-core';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import CanvasContainer from '@components/components/canvas/canvas-container';
 import Editor from '@components/core/editor';
 import { useGlobalState } from '@components/core/store';
@@ -20,12 +20,22 @@ interface BoardProps {
 function Board(props: BoardProps) {
   const { editor } = props;
   const { state } = useGlobalState();
+  const [, forceUpdate] = useState(0);
+
+  useEffect(() => {
+    // Force re-render when model changes
+    const handleModelChange = () => {
+      forceUpdate(prev => prev + 1);
+    };
+
+    editor.setOnModelChange(handleModelChange);
+  }, [editor]);
 
   return (
     <div id="board">
       {state.showingPackage && <Toolbar editor={editor} />}
       <CanvasContainer>
-      <CanvasWidget engine={editor.engine} />
+        <CanvasWidget engine={editor.engine} />
       </CanvasContainer>
     </div>
   );

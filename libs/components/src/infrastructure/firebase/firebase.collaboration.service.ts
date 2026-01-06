@@ -25,7 +25,49 @@ export class FirebaseCollaborationService implements ICollaborationService {
   async getProject(projectId: string): Promise<any> {
     const projectRef = doc(db, 'projects', projectId);
     const snapshot = await getDoc(projectRef);
-    return snapshot.exists() ? snapshot.data() : null;
+
+    if (!snapshot.exists()) {
+      console.warn('Project not found:', projectId);
+      return null;
+    }
+
+    const data = snapshot.data();
+
+    // Ensure the data has the required editor structure
+    if (!data.editor) {
+      console.warn('Project missing editor data, initializing empty structure');
+      data.editor = {
+        id: '',
+        offsetX: 0,
+        offsetY: 0,
+        zoom: 100,
+        gridSize: 20,
+        layers: [],
+        locked: false
+      };
+    }
+
+    if (!data.package) {
+      data.package = {
+        name: data.name || 'Untitled',
+        version: '1.0.0',
+        description: data.description || '',
+        author: '',
+        image: ''
+      };
+    }
+
+    if (!data.design) {
+      data.design = {
+        graph: { blocks: {}, wires: [] }
+      };
+    }
+
+    if (!data.dependencies) {
+      data.dependencies = {};
+    }
+
+    return data;
   }
 }
 
