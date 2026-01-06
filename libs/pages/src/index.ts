@@ -12,3 +12,4 @@ export * from './inital_page';
 export * from './board/board_page';
 export * from './board/board_component';
 export * from './board/board_setting';
+export { default as ProfilePage } from './user';

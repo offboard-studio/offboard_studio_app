@@ -68,6 +68,7 @@ class Editor {
   private stackOfBlock: { model: DiagramModel; info: ProjectInfo }[];
   private activeModel: DiagramModel;
   private blockCount: number = 0;
+  private onModelChange: ((model: DiagramModel) => void) | null = null;
 
   public engine: DiagramEngine;
 
@@ -187,6 +188,7 @@ class Editor {
       console.log('Loaded project info:', this.projectInfo);
       // Set the current project name to the name of
       this.engine.setModel(model);
+      if (this.onModelChange) this.onModelChange(model);
     }
   }
 
@@ -207,6 +209,13 @@ class Editor {
       image: '',
     };
     this.engine.setModel(this.activeModel);
+    if (this.onModelChange) this.onModelChange(this.activeModel);
+  }
+
+  public setOnModelChange(callback: (model: DiagramModel) => void) {
+    this.onModelChange = callback;
+    // Call it immediately for current model
+    callback(this.activeModel);
   }
 
   /**
@@ -380,9 +389,9 @@ class Editor {
     }
   }
 
-  public async addBlockWithAPI(name: string,data:any): Promise<void> {
+  public async addBlockWithAPI(name: string, data: any): Promise<void> {
     this.blockCount += 1;
-    const block = await createBlockWithAPI(name, this.blockCount,data);
+    const block = await createBlockWithAPI(name, this.blockCount, data);
 
     if (block) {
       // Get a default position and set it as blocks position

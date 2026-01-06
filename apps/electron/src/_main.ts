@@ -64,7 +64,7 @@ export default class ElectronApp {
   }
 
 
-   // Helper method to get AppIPCService
+  // Helper method to get AppIPCService
   private getAppIPCService(): any | null {
     return this.server?.getAppIPCService() || null;
   }
@@ -158,7 +158,7 @@ export default class ElectronApp {
         if (response.requestId === requestId) {
           clearTimeout(timeout);
           appIPCService.off('process-file-response', responseHandler);
-          
+
           if (response.success) {
             resolve(response.data);
           } else {
@@ -168,7 +168,7 @@ export default class ElectronApp {
       };
 
       appIPCService.on('process-file-response', responseHandler);
-      
+
       // Send request
       appIPCService.emit('process-file', {
         buffer,
@@ -909,7 +909,7 @@ export default class ElectronApp {
   openNewWindow(url: string, windowKey: string) {
     // Güvenli pencere boyutları al
     const windowBounds = this.getSafeWindowBounds(1024, 728);
-     const getAssetPath = (...paths: string[]): string => {
+    const getAssetPath = (...paths: string[]): string => {
       return path.join(this.RESOURCES_PATH, ...paths);
     };
 
@@ -1008,7 +1008,7 @@ export default class ElectronApp {
           filePath: result.filePath
         };
 
-      } catch (error : unknown) {
+      } catch (error: unknown) {
         console.error('Download error:', error);
         return {
           success: false,
@@ -1074,7 +1074,7 @@ export default class ElectronApp {
           filePath: result.response
         };
 
-      } catch (error : unknown) {
+      } catch (error: unknown) {
         console.error('Download error:', error);
         return {
           success: false,
@@ -1149,29 +1149,33 @@ export default class ElectronApp {
 
       const url = resolveHtmlPath('index.html');
 
-      if (url.startsWith('http://')) {
+      if (url.startsWith('http://127.0.0.1') || url.startsWith('http://localhost')) {
         const net = require('net');
         const port = parseInt(process.env.PORT || '3001');
 
+        console.log(`Checking if renderer is alive at 127.0.0.1:${port}...`);
         const isAlive = await new Promise<boolean>((resolve) => {
-          const client = net.createConnection({ port }, () => {
+          const client = net.createConnection({ host: '127.0.0.1', port }, () => {
             client.end();
             resolve(true);
           });
-          client.on('error', () => resolve(false));
+          client.on('error', (err: any) => {
+            console.error(`Connection check failed: ${err.message}`);
+            resolve(false);
+          });
+          // Timeout to avoid hanging
+          setTimeout(() => resolve(false), 2000);
         });
 
         if (!isAlive) {
           console.error(
-            `❌ Vite dev server not running at port ${port}. Exiting Electron...`
+            `❌ Vite dev server not running at 127.0.0.1:${port}.`
           );
-          setTimeout(() => {
-            app.quit(); // Bazı sistemlerde aniden çağrıldığında çalışmayabilir, bu yüzden minik delay
-          }, 500);
-          return;
+          // Don't quit immediately if it might be a transient error, 
+          // but if we are here, loadURL might fail too.
+        } else {
+          console.log(`✅ Vite dev server is alive at 127.0.0.1:${port}`);
         }
-
-        console.log(`✅ Vite dev server is alive at http://localhost:${port}`);
       }
 
       this.addIPCRenderEventListeners();

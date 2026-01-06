@@ -13,8 +13,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import GoogleIcon from '@mui/icons-material/Google';
 import GitHubIcon from '@mui/icons-material/GitHub';
-import axios from 'axios';
-import { JSX } from 'react/jsx-runtime';
+import { auth } from '@components/infrastructure/firebase/init';
+import { useAuth } from '@components/auth/AuthProvider';
 
 const schema = yup.object().shape({
   email: yup.string().email('Invalid email').required('Email is required'),
@@ -23,10 +23,6 @@ const schema = yup.object().shape({
     .min(6, 'Password must be at least 6 characters')
     .required('Password is required'),
 });
-
-interface LoginResponse {
-  token: string;
-}
 
 export const SignIn = (): JSX.Element => {
   const {
@@ -37,25 +33,33 @@ export const SignIn = (): JSX.Element => {
     resolver: yupResolver(schema),
   });
   const navigate = useNavigate();
+  const { authService } = useAuth();
 
-  const onSubmit = async (data: unknown) => {
+  const onSubmit = async (data: any) => {
     try {
-      const response = await axios.post<LoginResponse>(
-        'https://your-api.com/login',
-        data
-      );
-      console.log('Login Success:', response.data);
-
-      // JWT Token'ı almak
-      const { token } = response.data;
-
-      // Token'ı localStorage'da saklamak
-      // localStorage.setItem('jwtToken', token);
-
-      // Kullanıcıyı anasayfaya yönlendirmek (veya başka bir sayfaya)
-      navigate('/dashboard'); // Örneğin dashboard'a yönlendirebilirsiniz
+      await authService.signInWithEmail(data.email, data.password);
+      navigate('/dashboard');
     } catch (error) {
       console.error('Login Error:', error);
+      alert('Login failed. Please check your credentials.');
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      await authService.signInWithGoogle();
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Google Sign-In Error:', error);
+    }
+  };
+
+  const handleGithubSignIn = async () => {
+    try {
+      await authService.signInWithGithub();
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('GitHub Sign-In Error:', error);
     }
   };
 
@@ -133,9 +137,7 @@ export const SignIn = (): JSX.Element => {
                   alignItems: 'center',
                   gap: 1,
                 }}
-                onClick={() =>
-                  (window.location.href = 'https://your-api.com/auth/google')
-                }
+                onClick={handleGoogleSignIn}
               >
                 <GoogleIcon /> Sign In with Google
               </Button>
@@ -149,9 +151,7 @@ export const SignIn = (): JSX.Element => {
                   alignItems: 'center',
                   gap: 1,
                 }}
-                onClick={() =>
-                  (window.location.href = 'https://your-api.com/auth/github')
-                }
+                onClick={handleGithubSignIn}
               >
                 <GitHubIcon /> Sign In with GitHub
               </Button>

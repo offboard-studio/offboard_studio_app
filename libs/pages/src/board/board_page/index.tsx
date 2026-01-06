@@ -11,6 +11,9 @@ import {
   Toolbar,
   ThemeProvider,
   Typography,
+  Tooltip,
+  IconButton,
+  Divider,
 } from '@mui/material';
 import React, { ChangeEvent, Fragment, useState } from 'react';
 import ModalContainer from 'react-modal-promise';
@@ -22,6 +25,8 @@ import {
   GlobalStateComponent,
   IGlobalState,
 } from '@components/core/store';
+import CollaborationManager from '@components/core/collaboration';
+import { useAuth } from '@components/auth/AuthProvider';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
@@ -40,30 +45,22 @@ import BoardSidebar from '../board_sidebar';
 import Board from '..';
 import AiOptionSettings from '../ai_option_settings';
 
-
-const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: { main: '#90caf9' },
-    secondary: { main: '#f48fb1' },
-  },
-});
-
-
 interface FileHelper {
   fileName: string;
   reader: FileReader;
 }
 
+
 export const BoardPage = (): JSX.Element => {
   const location = useLocation();
-  const editorState = location.state || {};
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
+  // Get projectId from URL params
+  const searchParams = new URLSearchParams(location.search);
+  const projectId = searchParams.get('id') || 'default-project';
 
   const projectReader: FileHelper = { 'fileName': '', 'reader': new FileReader() };
-
-  const navigate = useNavigate();
-
   const isElectron = window.location.protocol === 'file:';
 
   const [tabIndex, setTabIndex] = useState(0);
@@ -81,6 +78,18 @@ export const BoardPage = (): JSX.Element => {
     showingPackage: editor.showingPackage(),
   });
 
+  React.useEffect(() => {
+    const collaborationManager = CollaborationManager.getInstance();
+    if (user) {
+      collaborationManager.setUserId(user.uid);
+      collaborationManager.startCollaboration(projectId);
+    }
+
+    return () => {
+      collaborationManager.stopCollaboration();
+    };
+  }, [user, projectId]);
+
   const saveProject = () => {
     const model = editor.serialise();
     const url = textFile2DataURL(JSON.stringify(model), 'text/json');
@@ -90,21 +99,19 @@ export const BoardPage = (): JSX.Element => {
     link?.click();
   };
 
-
-    /**
-     * Callback when file is uploaded.
-     * @param event File field change event.
-     * @param reader Reader to open the uploaded file as text
-     */
-    const onFileUpload = (event: ChangeEvent<HTMLInputElement>, fileHelper: FileHelper) => {
-        const file = event.target.files?.length ? event.target.files[0] : null;
-        event.target.value = '';
-        if (file) {
-            fileHelper.fileName = file.name;
-            fileHelper.reader.readAsText(file);
-        }
+  /**
+   * Callback when file is uploaded.
+   * @param event File field change event.
+   * @param reader Reader to open the uploaded file as text
+   */
+  const onFileUpload = (event: ChangeEvent<HTMLInputElement>, fileHelper: FileHelper) => {
+    const file = event.target.files?.length ? event.target.files[0] : null;
+    event.target.value = '';
+    if (file) {
+      fileHelper.fileName = file.name;
+      fileHelper.reader.readAsText(file);
     }
-
+  }
 
   const openProject = () => {
     projectReader.fileName = '';
@@ -118,14 +125,10 @@ export const BoardPage = (): JSX.Element => {
     };
   }
 
-
-
   const buildAndDownload = () => {
     const model = editor.serialise();
     let filename = editor.getName();
-    // if (process.env.REACT_APP_BACKEND_HOST && model) {
     if (model) {
-      // const url = process.env.REACT_APP_BACKEND_HOST + 'build';
       const url = 'https://offboard-studio-backend.vercel.app/api/build';
       const headers: HeadersInit = { 'Content-Type': 'application/json' };
       fetch(url, {
@@ -157,82 +160,90 @@ export const BoardPage = (): JSX.Element => {
     }
   };
 
+  const handleBackToDashboard = () => {
+    navigate('/dashboard');
+  };
+
   return (
     <div className="App">
-      <AppBar className="app-bar" position="static">
-        <Tabs value={tabIndex} onChange={handleTabChange} selectionFollowsFocus>
-          <Tab label="Board" />
+      <AppBar className="app-bar" position="static" sx={{ bgcolor: '#111', borderBottom: '1px solid #222' }}>
+        <Tabs value={tabIndex} onChange={handleTabChange} selectionFollowsFocus sx={{ minHeight: 48 }}>
+          <Box
+            component="div"
+            onClick={handleBackToDashboard}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              px: 2,
+              cursor: 'pointer',
+              '&:hover': { bgcolor: 'rgba(255,255,255,0.05)' }
+            }}
+          >
+            <Typography variant="subtitle2" sx={{ fontWeight: 800, color: '#BB86FC' }}>OFFBOARD</Typography>
+          </Box>
+          <Tab label="Board" sx={{ textTransform: 'none', fontWeight: 600 }} />
           <Button
             color="inherit"
-            onClick={() => {
-              setTabIndexBoard(true);
-            }}
+            onClick={() => setTabIndexBoard(true)}
             startIcon={<SettingsIcon />}
-          />
+            sx={{ textTransform: 'none', px: 2 }}
+          >
+            Settings
+          </Button>
           <Button
             color="inherit"
-            onClick={() => {
-              setAiOptionBlockDialog(true);
-            }}
+            onClick={() => setAiOptionBlockDialog(true)}
             startIcon={<SettingsEthernet />}
-          />
+            sx={{ textTransform: 'none', px: 2 }}
+          >
+            AI Config
+          </Button>
 
-          <div style={{ flex: 10 }} />
-          <Button
-            color="inherit"
-            onClick={buildAndDownload}
-            startIcon={<DownloadingIcon />}
-          />
-          <Button
-            color="inherit"
-            onClick={saveProject}
-            startIcon={<CloudDownloadIcon />}
-          />
-          <Button
-            color="inherit"
-            onClick={openProject}
-            startIcon={<CloudUploadIcon />}
-          />
           <div style={{ flex: 1 }} />
-          <BoardUserButton></BoardUserButton>
+          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', pr: 2 }}>
+            <Tooltip title="Build project">
+              <IconButton color="inherit" onClick={buildAndDownload} size="small">
+                <DownloadingIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Save locally">
+              <IconButton color="inherit" onClick={saveProject} size="small">
+                <CloudDownloadIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Open local project">
+              <IconButton color="inherit" onClick={openProject} size="small">
+                <CloudUploadIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+            <Divider orientation="vertical" flexItem sx={{ mx: 1, height: 20, my: 'auto', borderColor: '#333' }} />
+            <BoardUserButton />
+          </Box>
         </Tabs>
 
-        <a href="/" id="buildProjectLink" hidden download>
-          Build Project
-        </a>
-        <a href="/" id="saveProjectLink" hidden download>
-          Download Project
-        </a>
-
+        <a href="/" id="buildProjectLink" hidden download>Build Project</a>
+        <a href="/" id="saveProjectLink" hidden download>Download Project</a>
         <input type='file' id='openProjectInput' accept={PROJECT_FILE_EXTENSION}
           onChange={(event) => onFileUpload(event, projectReader)} hidden />
       </AppBar>
 
       {tabIndex === 0 && (
         <div style={{ display: 'flex', flexGrow: 1 }}>
-          <div
-            className="board-container"
-            style={{ display: 'flex', flexGrow: 1 }}
-          >
-            {/* <BoardSidebar editor={editor} /> */}
+          <div className="board-container" style={{ display: 'flex', flexGrow: 1, backgroundColor: '#0a0a0a' }}>
             <BoardSidebar editor={editor} />
-
             <div className="main-content">
-              <ThemeProvider theme={darkTheme}>
-                <div className="App theme-dark">
-                  <GlobalState.Provider value={{ state, setState }}>
-                    <Board editor={editor} />
-                    {/*  sağ tarafta ai response kodlarını verdir. */}
-                  </GlobalState.Provider>
-                </div>
-                <ModalContainer />
-              </ThemeProvider>
+              <div className="App theme-dark">
+                <GlobalState.Provider value={{ state, setState }}>
+                  <Board editor={editor} />
+                </GlobalState.Provider>
+              </div>
+              <ModalContainer />
             </div>
           </div>
         </div>
       )}
 
-      {aiOptionBlockDialog == true && (
+      {aiOptionBlockDialog && (
         <AiOptionSettings
           isOpen={aiOptionBlockDialog}
           editor={editor}
@@ -249,11 +260,10 @@ export const BoardPage = (): JSX.Element => {
         />
       )}
 
-      {tabIndexBoard === true && (
+      {tabIndexBoard && (
         <BoardSettings
           editor={editor}
           onClose={() => {
-            navigate(isElectron ? '/#/' : '/');
             setTabIndexBoard(false);
           }}
         />

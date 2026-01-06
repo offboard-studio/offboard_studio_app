@@ -14,12 +14,15 @@ import {
   DashboardPage,
   NotFound,
   BoardPage,
+  ProfilePage,
 } from '@pages';
+
+import { AuthProvider, useAuth } from '@components/auth/AuthProvider';
+import { Navigate } from 'react-router-dom';
 
 import './App.module.scss';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createTheme, ThemeProvider } from '@mui/material';
-import { basename } from 'path';
 import { JSX } from 'react/jsx-runtime';
 
 const queryClient = new QueryClient();
@@ -44,14 +47,48 @@ const darkTheme = createTheme({
 // console.log('window.location', window.location);
 // console.log('window', window);
 
+const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { user, loading } = useAuth();
+
+  if (loading) return <div>Loading...</div>;
+  if (!user) return <Navigate to="/signin" replace />;
+
+  return <>{children}</>;
+};
+
 // createHashRouter solves basename issues in Electron
 const router = createHashRouter(
   [
-    { path: '/', element: <BoardPage />, errorElement: <ErrorPage /> },
+    {
+      path: '/',
+      element: <Navigate to="/dashboard" replace />
+    },
     { path: '/signin', element: <SignIn /> },
     { path: '/signup', element: <SignUp /> },
-    { path: '/dashboard', element: <DashboardPage /> },
-    { path: '/user', element: <SignUp /> },
+    {
+      path: '/dashboard',
+      element: (
+        <ProtectedRoute>
+          <DashboardPage />
+        </ProtectedRoute>
+      )
+    },
+    {
+      path: '/board',
+      element: (
+        <ProtectedRoute>
+          <BoardPage />
+        </ProtectedRoute>
+      )
+    },
+    {
+      path: '/user',
+      element: (
+        <ProtectedRoute>
+          <ProfilePage />
+        </ProtectedRoute>
+      )
+    },
     { path: '*', element: <NotFound /> },
   ],
   {
@@ -64,7 +101,9 @@ const router = createHashRouter(
 const App = (): JSX.Element => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider theme={darkTheme}>
-      <RouterProvider router={router} />
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
     </ThemeProvider>
   </QueryClientProvider>
 );

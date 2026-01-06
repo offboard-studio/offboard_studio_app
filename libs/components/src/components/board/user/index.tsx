@@ -1,16 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from 'react';
 import './styles.scss';
-import { Avatar, IconButton, Menu, MenuItem } from '@mui/material';
+import { Avatar, IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@components/auth/AuthProvider';
 import { Link as RouterLink } from 'react-router-dom';
 import { Link } from '@mui/material';
 import { AccountCircle, SupervisedUserCircle } from '@mui/icons-material';
 
 const BoardUserButton: React.FC = () => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const { user, logout } = useAuth();
     const open = Boolean(anchorEl);
-    const navigate = useNavigate(); // useNavigate hook'unu kullan
+    const navigate = useNavigate();
 
     const isElectron = window.location.protocol === 'file:';
 
@@ -23,26 +25,32 @@ const BoardUserButton: React.FC = () => {
     };
 
     const handleProfile = () => {
-        // navigate('/user'); // Profile sayfasına yönlendirme
-
-     navigate(isElectron ? '/#/user' : '/user');
+        navigate(isElectron ? '/#/user' : '/user');
         handleClose();
     };
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        await logout();
+        navigate('/signin');
+        handleClose();
     };
 
     return (
         <>
-            <IconButton onClick={handleClick}>
-                <AccountCircle style={{ scale: 1.5 }} />
-
-                <div style={{ right: 20 }} />
+            <IconButton onClick={handleClick} color="inherit">
+                {user?.photoURL ? (
+                    <Avatar src={user.photoURL} sx={{ width: 32, height: 32 }} />
+                ) : (
+                    <AccountCircle sx={{ width: 32, height: 32 }} />
+                )}
             </IconButton>
             <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-                <MenuItem>
-                    <Link component={RouterLink} to="/user" style={{ textDecoration: "none", color: "inherit" }}>Profile</Link>
-                </MenuItem>
+                {user && (
+                    <MenuItem disabled sx={{ opacity: 1 + "!important" }}>
+                        <Typography variant="body2" color="textSecondary">{user.email}</Typography>
+                    </MenuItem>
+                )}
+                <MenuItem onClick={handleProfile}>Profile</MenuItem>
                 <MenuItem onClick={handleClose}>Settings</MenuItem>
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </Menu>
