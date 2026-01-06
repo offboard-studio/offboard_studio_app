@@ -70,24 +70,24 @@ export const createPortModel = (options: BasePortModelOptions) => {
 export const editBlock = async (node: NodeModel) => {
     let data;
     console.log('Edit block', (node));
-    
+
     // Mevcut bağlantıları sakla
     const existingConnections = preserveExistingConnections(node);
-    
+
     try {
         if (node instanceof ConstantBlockModel) {
-            data = await createConstantDialog({ 
-                isOpen: true, 
-                name: node.getData().name, 
-                local: node.getData().local 
+            data = await createConstantDialog({
+                isOpen: true,
+                name: node.getData().name,
+                local: node.getData().local
             });
             node.setData(data);
-        } 
+        }
         else if (node instanceof CodeBlockModel || node instanceof AiCodeBlockModel) {
             data = await createCodeDialog({
                 isOpen: true,
-                inputs: node.getInputNames(), 
-                outputs: node.getOutputNames(), 
+                inputs: node.getInputNames(),
+                outputs: node.getOutputNames(),
                 params: node.getParameterNames()
             });
 
@@ -107,11 +107,11 @@ export const editBlock = async (node: NodeModel) => {
 
             // Port güncellemesini dikkatli yap
             updateNodePortsCarefully(node, _data, existingConnections);
-        } 
+        }
         else if (node instanceof InputBlockModel || node instanceof OutputBlockModel) {
-            data = await createIODialog({ 
-                isOpen: true, 
-                name: node.getData().name 
+            data = await createIODialog({
+                isOpen: true,
+                name: node.getData().name
             });
             node.setData(data);
         }
@@ -163,10 +163,10 @@ function preserveExistingConnections(node: NodeModel) {
 function updateNodePortsCarefully(node: any, newData: any, existingConnections: any[]) {
     // Önce yeni data'yı set et
     node.setData(newData);
-    
+
     // Port'ları yeniden oluştur
     node.setupPorts();
-    
+
     // Mevcut bağlantıları geri yükle
     setTimeout(() => {
         restoreConnections(node, existingConnections);
@@ -183,8 +183,8 @@ function restoreConnections(node: any, existingConnections: any[]) {
 
     existingConnections.forEach(connectionInfo => {
         // Aynı label'a sahip yeni port'u bul
-        const matchingPort = Object.values(newPorts).find((port: any) => 
-            port && 
+        const matchingPort = Object.values(newPorts).find((port: any) =>
+            port &&
             port.getOptions().label === connectionInfo.portLabel &&
             port.getOptions().type === connectionInfo.portType
         );
@@ -193,7 +193,7 @@ function restoreConnections(node: any, existingConnections: any[]) {
             // Her link için yeniden bağlantı kur
             connectionInfo.links.forEach((linkInfo: any) => {
                 const existingLink = model.getLink(linkInfo.linkId);
-                
+
                 if (existingLink) {
                     // Mevcut link'i güncelle
                     if (connectionInfo.portType === 'port.output') {
@@ -217,7 +217,7 @@ function restoreConnections(node: any, existingConnections: any[]) {
 function recreateLink(model: any, port: any, linkInfo: any, portType: string) {
     // Karşı taraftaki node ve port'u bul
     let otherNode, otherPort;
-    
+
     if (portType === 'port.output') {
         otherNode = model.getNode(linkInfo.targetNodeId);
         if (otherNode) {
@@ -232,7 +232,7 @@ function recreateLink(model: any, port: any, linkInfo: any, portType: string) {
 
     if (otherNode && otherPort) {
         const newLink = new DefaultLinkModel();
-        
+
         if (portType === 'port.output') {
             newLink.setSourcePort(port);
             newLink.setTargetPort(otherPort);
@@ -240,7 +240,7 @@ function recreateLink(model: any, port: any, linkInfo: any, portType: string) {
             newLink.setSourcePort(otherPort);
             newLink.setTargetPort(port);
         }
-        
+
         model.addLink(newLink);
     }
 }
@@ -601,7 +601,7 @@ export const createBlock = async (name: string, blockCount: number) => {
 }
 
 
-export const createBlockWithAPI = async (name: string, blockCount: number,dataAPI:any) => {
+export const createBlockWithAPI = async (name: string, blockCount: number, dataAPI: any) => {
 
     let block;
     let data;
@@ -663,10 +663,10 @@ export const createBlockWithAPI = async (name: string, blockCount: number,dataAP
                 break;
             default:
                 // data = await getCollectionBlock(name);
-                data = dataAPI.json;
-                console.log("DATA API",data);
+                data = dataAPI?.json;
+                console.log("DATA API", data);
                 // console.log("DATA API",data.json);
-                if (data && dataAPI.json) {
+                if (data && dataAPI?.json) {
                     const { editor, design, dependencies, package: packageInfo } = data;
                     block = loadPackage({
                         editor,

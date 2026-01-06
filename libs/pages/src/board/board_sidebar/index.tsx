@@ -79,8 +79,11 @@ const BoardSidebar: React.FC<BoardSideBarProps> = ({ editor }) => {
 
   const setBlock = async (type: string, data: any) => {
     if (editor) {
-      await editor.addBlock(type);
-      editor.addBlockWithAPI(type, data);
+      if (data) {
+        await editor.addBlockWithAPI(type, data);
+      } else {
+        await editor.addBlock(type);
+      }
     } else {
       console.log('Block selected:', type);
       alert(`Block selected: ${type}`);
