@@ -78,11 +78,19 @@ export const BoardPage = (): JSX.Element => {
     showingPackage: editor.showingPackage(),
   });
 
+  const [isLoadingProject, setIsLoadingProject] = useState(true);
+
   React.useEffect(() => {
     const collaborationManager = CollaborationManager.getInstance();
     if (user) {
+      setIsLoadingProject(true);
       collaborationManager.setUserId(user.uid);
-      collaborationManager.startCollaboration(projectId);
+      collaborationManager.startCollaboration(projectId).then(() => {
+        setIsLoadingProject(false);
+      }).catch((error) => {
+        console.error('Failed to start collaboration:', error);
+        setIsLoadingProject(false);
+      });
     }
 
     return () => {
@@ -165,9 +173,25 @@ export const BoardPage = (): JSX.Element => {
   };
 
   return (
-    <div className="App">
-      <AppBar className="app-bar" position="static" sx={{ bgcolor: '#111', borderBottom: '1px solid #222' }}>
-        <Tabs value={tabIndex} onChange={handleTabChange} selectionFollowsFocus sx={{ minHeight: 48 }}>
+    <div className="App" style={{ backgroundColor: '#0a0a0a', minHeight: '100vh' }}>
+      <AppBar
+        className="app-bar"
+        position="static"
+        sx={{
+          bgcolor: '#111',
+          borderBottom: '1px solid rgba(255,255,255,0.05)',
+          boxShadow: 'none'
+        }}
+      >
+        <Tabs
+          value={tabIndex}
+          onChange={handleTabChange}
+          selectionFollowsFocus
+          sx={{
+            minHeight: 48,
+            '& .MuiTabs-indicator': { bgcolor: '#BB86FC' }
+          }}
+        >
           <Box
             component="div"
             onClick={handleBackToDashboard}
@@ -181,7 +205,15 @@ export const BoardPage = (): JSX.Element => {
           >
             <Typography variant="subtitle2" sx={{ fontWeight: 800, color: '#BB86FC' }}>OFFBOARD</Typography>
           </Box>
-          <Tab label="Board" sx={{ textTransform: 'none', fontWeight: 600 }} />
+          <Tab
+            label="Board"
+            sx={{
+              textTransform: 'none',
+              fontWeight: 600,
+              color: '#666',
+              '&.Mui-selected': { color: '#BB86FC' }
+            }}
+          />
           <Button
             color="inherit"
             onClick={() => setTabIndexBoard(true)}
@@ -202,17 +234,41 @@ export const BoardPage = (): JSX.Element => {
           <div style={{ flex: 1 }} />
           <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', pr: 2 }}>
             <Tooltip title="Build project">
-              <IconButton color="inherit" onClick={buildAndDownload} size="small">
+              <IconButton
+                color="inherit"
+                onClick={buildAndDownload}
+                size="small"
+                sx={{
+                  color: '#666',
+                  '&:hover': { color: '#BB86FC', bgcolor: 'rgba(187, 134, 252, 0.1)' }
+                }}
+              >
                 <DownloadingIcon fontSize="small" />
               </IconButton>
             </Tooltip>
             <Tooltip title="Save locally">
-              <IconButton color="inherit" onClick={saveProject} size="small">
+              <IconButton
+                color="inherit"
+                onClick={saveProject}
+                size="small"
+                sx={{
+                  color: '#666',
+                  '&:hover': { color: '#BB86FC', bgcolor: 'rgba(187, 134, 252, 0.1)' }
+                }}
+              >
                 <CloudDownloadIcon fontSize="small" />
               </IconButton>
             </Tooltip>
             <Tooltip title="Open local project">
-              <IconButton color="inherit" onClick={openProject} size="small">
+              <IconButton
+                color="inherit"
+                onClick={openProject}
+                size="small"
+                sx={{
+                  color: '#666',
+                  '&:hover': { color: '#BB86FC', bgcolor: 'rgba(187, 134, 252, 0.1)' }
+                }}
+              >
                 <CloudUploadIcon fontSize="small" />
               </IconButton>
             </Tooltip>
@@ -227,19 +283,48 @@ export const BoardPage = (): JSX.Element => {
           onChange={(event) => onFileUpload(event, projectReader)} hidden />
       </AppBar>
 
+
       {tabIndex === 0 && (
         <div style={{ display: 'flex', flexGrow: 1 }}>
-          <div className="board-container" style={{ display: 'flex', flexGrow: 1, backgroundColor: '#0a0a0a' }}>
-            <BoardSidebar editor={editor} />
-            <div className="main-content">
-              <div className="App theme-dark">
-                <GlobalState.Provider value={{ state, setState }}>
-                  <Board editor={editor} />
-                </GlobalState.Provider>
+          {isLoadingProject ? (
+            <Box sx={{
+              display: 'flex',
+              flexGrow: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+              bgcolor: '#0a0a0a',
+              flexDirection: 'column',
+              gap: 2
+            }}>
+              <Typography sx={{ color: '#666', fontSize: '0.9rem' }}>
+                Loading project...
+              </Typography>
+              <Box sx={{
+                width: 40,
+                height: 40,
+                border: '3px solid #222',
+                borderTopColor: '#BB86FC',
+                borderRadius: '50%',
+                animation: 'spin 1s linear infinite',
+                '@keyframes spin': {
+                  '0%': { transform: 'rotate(0deg)' },
+                  '100%': { transform: 'rotate(360deg)' }
+                }
+              }} />
+            </Box>
+          ) : (
+            <div className="board-container" style={{ display: 'flex', flexGrow: 1, backgroundColor: '#0a0a0a' }}>
+              <BoardSidebar editor={editor} />
+              <div className="main-content">
+                <div className="App theme-dark">
+                  <GlobalState.Provider value={{ state, setState }}>
+                    <Board editor={editor} />
+                  </GlobalState.Provider>
+                </div>
+                <ModalContainer />
               </div>
-              <ModalContainer />
             </div>
-          </div>
+          )}
         </div>
       )}
 

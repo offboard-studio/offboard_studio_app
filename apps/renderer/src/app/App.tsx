@@ -15,6 +15,7 @@ import {
   NotFound,
   BoardPage,
   ProfilePage,
+  ProjectDetailPage,
 } from '@pages';
 
 import { AuthProvider, useAuth } from '@components/auth/AuthProvider';
@@ -78,6 +79,14 @@ const router = createHashRouter(
       element: (
         <ProtectedRoute>
           <BoardPage />
+        </ProtectedRoute>
+      )
+    },
+    {
+      path: '/project/:id',
+      element: (
+        <ProtectedRoute>
+          <ProjectDetailPage />
         </ProtectedRoute>
       )
     },

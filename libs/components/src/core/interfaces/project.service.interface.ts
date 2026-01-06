@@ -9,6 +9,7 @@ export interface IProject {
   status: 'draft' | 'active' | 'completed' | 'archived';
   thumbnailUrl?: string;
   data?: any;
+  visibility: 'public' | 'private'; // New field for open-source control
 }
 
 export interface IProjectService {
@@ -21,4 +22,6 @@ export interface IProjectService {
   removeMember(projectId: string, userId: string): Promise<void>;
   getUserProfiles(userIds: string[]): Promise<any[]>;
   getUserProfile(userId: string): Promise<any | null>;
+  getAllUsers(limit?: number): Promise<any[]>; // For user browsing/search
+  startListeningToProject(projectId: string, callback: (project: IProject) => void): () => void; // Real-time listener
 }

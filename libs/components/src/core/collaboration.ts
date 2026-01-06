@@ -37,9 +37,36 @@ class CollaborationManager {
     // Initial load
     const data = await this.collaborationService.getProject(projectId);
     if (data) {
-      this.isRemoteUpdate = true;
-      this.editor.loadProject(data, data.package?.name || 'Untitled');
-      this.isRemoteUpdate = false;
+      // Check if project has valid data structure
+      if (!data.data || !data.data.nodes || !data.data.links) {
+        console.log('Initializing empty project structure');
+        // Initialize with empty structure
+        const emptyProject = {
+          ...data,
+          data: {
+            nodes: [],
+            links: [],
+            offset: { x: 0, y: 0 },
+            zoom: 100
+          },
+          package: {
+            name: data.name || 'Untitled Project',
+            version: '1.0.0'
+          }
+        };
+        this.isRemoteUpdate = true;
+        this.editor.loadProject(emptyProject, emptyProject.package.name);
+        this.isRemoteUpdate = false;
+
+        // Save initialized structure to Firestore
+        await this.collaborationService.updateProject(projectId, emptyProject, this.userId);
+      } else {
+        this.isRemoteUpdate = true;
+        this.editor.loadProject(data, data.package?.name || 'Untitled');
+        this.isRemoteUpdate = false;
+      }
+    } else {
+      console.error('Project not found:', projectId);
     }
 
     // Start listening for remote changes

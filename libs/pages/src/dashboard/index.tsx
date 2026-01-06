@@ -28,6 +28,7 @@ import {
   DialogActions,
   TextField,
   Tooltip,
+  Autocomplete,
 } from '@mui/material';
 
 import { useNavigate } from 'react-router-dom';
@@ -49,6 +50,9 @@ import PeopleIcon from '@mui/icons-material/People';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
+import InfoIcon from '@mui/icons-material/Info';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { Menu, MenuItem } from '@mui/material';
 
 const drawerWidth = 260;
 
@@ -69,6 +73,20 @@ export const DashboardPage = (): JSX.Element => {
   const [isInviting, setIsInviting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
+  // Card menu state
+  const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
+  const [menuProject, setMenuProject] = useState<IProject | null>(null);
+
+  // Search state
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // All users for autocomplete
+  const [allUsers, setAllUsers] = useState<any[]>([]);
+  const [selectedUser, setSelectedUser] = useState<any | null>(null);
+
+  // Section navigation
+  const [activeSection, setActiveSection] = useState<'dashboard' | 'projects' | 'analytics'>('dashboard');
+
   useEffect(() => {
     if (user) {
       fetchProjects();
@@ -80,6 +98,7 @@ export const DashboardPage = (): JSX.Element => {
       setLoading(true);
       const data = await firebaseProjectService.getProjects(user!.uid);
       setProjects(data);
+      // TODO: Add real-time listener here for live updates across all users
     } catch (err) {
       console.error('Failed to fetch projects:', err);
     } finally {
@@ -112,20 +131,31 @@ export const DashboardPage = (): JSX.Element => {
     navigate('/signin');
   };
 
-  const handleOpenCollab = (project: IProject) => {
+  const handleOpenCollab = async (project: IProject) => {
     setSelectedProject(project);
     setCollabOpen(true);
     setErrorMessage('');
-    setInviteEmail('');
+    setSelectedUser(null);
+
+    // Fetch all users for autocomplete
+    try {
+      const users = await firebaseProjectService.getAllUsers();
+      setAllUsers(users.filter((u: any) => u.uid !== user?.uid)); // Exclude current user
+    } catch (error) {
+      console.error('Failed to fetch users:', error);
+    }
   };
 
   const handleInvite = async () => {
-    if (!selectedProject || !inviteEmail) return;
+    if (!selectedProject || !selectedUser) return;
+
     setIsInviting(true);
     setErrorMessage('');
+
     try {
-      await firebaseProjectService.inviteMember(selectedProject.id, inviteEmail);
-      setInviteEmail('');
+      await firebaseProjectService.inviteMember(selectedProject.id, selectedUser.email);
+      setSelectedUser(null);
+      alert('Member invited successfully!');
       // Refresh project to show new member (ideally we should fetch member names but UID is fine for now)
       const updated = await firebaseProjectService.getProject(selectedProject.id);
       if (updated) setSelectedProject(updated);
@@ -164,6 +194,38 @@ export const DashboardPage = (): JSX.Element => {
     }
   }, [selectedProject?.members]);
 
+  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>, project: IProject) => {
+    event.stopPropagation();
+    setMenuAnchor(event.currentTarget);
+    setMenuProject(project);
+  };
+
+  const handleCloseMenu = () => {
+    setMenuAnchor(null);
+    setMenuProject(null);
+  };
+
+  const handleViewDetails = () => {
+    if (menuProject) {
+      navigate(`/project/${menuProject.id}`);
+    }
+    handleCloseMenu();
+  };
+
+  const handleOpenEditor = () => {
+    if (menuProject) {
+      navigate(`/board?id=${menuProject.id}`);
+    }
+    handleCloseMenu();
+  };
+
+  // Filter projects based on search query
+  const filteredProjects = projects.filter(project =>
+    project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    project.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    project.status.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'active': return 'success';
@@ -186,12 +248,12 @@ export const DashboardPage = (): JSX.Element => {
           [`& .MuiDrawer-paper`]: {
             width: drawerWidth,
             boxSizing: 'border-box',
-            bgcolor: '#111',
+            bgcolor: '#0a0a0a',
             borderRight: '1px solid rgba(255,255,255,0.05)',
           },
         }}
       >
-        <Toolbar sx={{ display: 'flex', alignItems: 'center', p: 3 }}>
+        <Toolbar sx={{ display: 'flex', alignItems: 'center', p: 3, bgcolor: '#111' }}>
           <Box
             component="img"
             src="/assets/logo.png"
@@ -203,7 +265,7 @@ export const DashboardPage = (): JSX.Element => {
           </Typography>
         </Toolbar>
 
-        <Box sx={{ p: 2 }}>
+        <Box sx={{ p: 2, borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
           <Button
             fullWidth
             variant="contained"
@@ -226,25 +288,33 @@ export const DashboardPage = (): JSX.Element => {
 
         <List sx={{ px: 2 }}>
           {[
-            { text: 'Dashboard', icon: <DashboardIcon />, active: true },
-            { text: 'My Projects', icon: <FolderIcon />, active: false },
-            { text: 'Components', icon: <ExtensionIcon />, active: false },
-            { text: 'Analytics', icon: <AssessmentIcon />, active: false },
+            { text: 'Dashboard', icon: <DashboardIcon />, section: 'dashboard' as const },
+            { text: 'Projects', icon: <FolderIcon />, section: 'projects' as const },
+            { text: 'Analytics', icon: <AssessmentIcon />, section: 'analytics' as const },
           ].map((item) => (
             <ListItemButton
               key={item.text}
+              selected={activeSection === item.section}
+              onClick={() => setActiveSection(item.section)}
               sx={{
                 borderRadius: 2,
                 mb: 0.5,
-                bgcolor: item.active ? 'rgba(187, 134, 252, 0.08)' : 'transparent',
-                color: item.active ? '#BB86FC' : '#888',
-                '&:hover': { bgcolor: 'rgba(255,255,255,0.03)' }
+                color: activeSection === item.section ? '#BB86FC' : '#666',
+                bgcolor: activeSection === item.section ? 'rgba(187, 134, 252, 0.1)' : 'transparent',
+                '&:hover': {
+                  bgcolor: 'rgba(187, 134, 252, 0.1)',
+                  color: '#BB86FC'
+                },
+                '&.Mui-selected': {
+                  bgcolor: 'rgba(187, 134, 252, 0.15)',
+                  '&:hover': { bgcolor: 'rgba(187, 134, 252, 0.2)' }
+                }
               }}
             >
-              <ListItemIcon sx={{ color: item.active ? '#BB86FC' : '#555', minWidth: 40 }}>
+              <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
                 {item.icon}
               </ListItemIcon>
-              <ListItemText primary={item.text} primaryTypographyProps={{ fontWeight: item.active ? 600 : 400 }} />
+              <ListItemText primary={item.text} primaryTypographyProps={{ fontWeight: 600 }} />
             </ListItemButton>
           ))}
         </List>
@@ -288,7 +358,20 @@ export const DashboardPage = (): JSX.Element => {
                 }}
               >
                 <SearchIcon sx={{ color: '#444', mr: 1 }} />
-                <Typography sx={{ color: '#555', fontSize: '0.9rem' }}>Search projects...</Typography>
+                <input
+                  type="text"
+                  placeholder="Search projects..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  style={{
+                    border: 'none',
+                    outline: 'none',
+                    background: 'transparent',
+                    color: '#fff',
+                    fontSize: '0.9rem',
+                    width: '200px'
+                  }}
+                />
               </Box>
               <Tooltip title="Account settings">
                 <Avatar
@@ -308,38 +391,6 @@ export const DashboardPage = (): JSX.Element => {
           </Toolbar>
         </AppBar>
 
-        {/* Stats Grid */}
-        <Grid container spacing={3} sx={{ mb: 6 }}>
-          {[
-            { label: 'Total Projects', value: projects.length, color: '#BB86FC' },
-            { label: 'Active Sessions', value: 2, color: '#03DAC6' },
-            { label: 'Components', value: 34, color: '#f48fb1' },
-          ].map((stat) => (
-            <Grid item xs={12} sm={4} key={stat.label}>
-              <Paper
-                sx={{
-                  p: 3,
-                  borderRadius: 4,
-                  bgcolor: '#111',
-                  border: '1px solid rgba(255,255,255,0.03)',
-                  transition: '0.3s',
-                  '&:hover': { transform: 'translateY(-4px)', borderColor: 'rgba(255,255,255,0.1)' }
-                }}
-              >
-                <Typography variant="body2" sx={{ color: '#666', mb: 1 }}>{stat.label}</Typography>
-                <Typography variant="h3" sx={{ fontWeight: 800, color: stat.color }}>{stat.value}</Typography>
-              </Paper>
-            </Grid>
-          ))}
-        </Grid>
-
-        {/* Projects Section */}
-        <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-          <Typography variant="h5" sx={{ fontWeight: 700, color: '#fff' }}>
-            Recent Projects
-          </Typography>
-          <Button variant="text" sx={{ color: '#BB86FC', textTransform: 'none' }}>View all projects</Button>
-        </Box>
 
         <Grid container spacing={3}>
           {loading ? (
@@ -348,7 +399,16 @@ export const DashboardPage = (): JSX.Element => {
                 <Skeleton variant="rectangular" height={200} sx={{ borderRadius: 4, bgcolor: '#111' }} />
               </Grid>
             ))
-          ) : projects.length === 0 ? (
+          ) : filteredProjects.length === 0 && searchQuery ? (
+            <Grid item xs={12}>
+              <Paper sx={{ p: 8, textAlign: 'center', bgcolor: '#111', borderRadius: 4, border: '1px dashed #222' }}>
+                <SearchIcon sx={{ fontSize: 64, color: '#222', mb: 2 }} />
+                <Typography variant="h6" sx={{ color: '#555', mb: 2 }}>No projects found</Typography>
+                <Typography variant="body2" sx={{ color: '#666', mb: 3 }}>Try searching with different keywords</Typography>
+                <Button variant="outlined" onClick={() => setSearchQuery('')}>Clear search</Button>
+              </Paper>
+            </Grid>
+          ) : filteredProjects.length === 0 ? (
             <Grid item xs={12}>
               <Paper sx={{ p: 8, textAlign: 'center', bgcolor: '#111', borderRadius: 4, border: '1px dashed #222' }}>
                 <FolderIcon sx={{ fontSize: 64, color: '#222', mb: 2 }} />
@@ -357,7 +417,7 @@ export const DashboardPage = (): JSX.Element => {
               </Paper>
             </Grid>
           ) : (
-            projects.map((project) => (
+            filteredProjects.map((project) => (
               <Grid item xs={12} sm={6} md={4} key={project.id}>
                 <Card
                   sx={{
@@ -405,11 +465,13 @@ export const DashboardPage = (): JSX.Element => {
                         <Typography sx={{ color: '#BB86FC', fontWeight: 700 }}>Open Project</Typography>
                       </Box>
                     </Box>
-                    <CardContent sx={{ p: 2.5 }}>
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
-                        <Typography variant="h6" sx={{ fontWeight: 700, color: '#fff', lineHeight: 1.2 }}>
-                          {project.name}
-                        </Typography>
+                  </CardActionArea>
+                  <CardContent sx={{ p: 2.5 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
+                      <Typography variant="h6" sx={{ fontWeight: 700, color: '#fff', lineHeight: 1.2, flex: 1 }}>
+                        {project.name}
+                      </Typography>
+                      <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center' }}>
                         <Chip
                           label={project.status}
                           size="small"
@@ -417,32 +479,89 @@ export const DashboardPage = (): JSX.Element => {
                           variant="outlined"
                           sx={{ height: 20, fontSize: '0.65rem', fontWeight: 700 }}
                         />
-                      </Box>
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Typography variant="caption" sx={{ color: '#555', display: 'block' }}>
-                          Modified {project.updatedAt?.toDate ? project.updatedAt.toDate().toLocaleDateString() : 'recently'}
-                        </Typography>
-                        <Tooltip title="Manage Collaborators">
-                          <IconButton
+                        {project.visibility === 'public' && (
+                          <Chip
+                            label="Public"
                             size="small"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleOpenCollab(project);
+                            sx={{
+                              height: 20,
+                              fontSize: '0.65rem',
+                              fontWeight: 700,
+                              bgcolor: 'rgba(3, 218, 198, 0.1)',
+                              color: '#03DAC6',
+                              border: '1px solid #03DAC6'
                             }}
-                            sx={{ color: '#555', '&:hover': { color: '#BB86FC' } }}
-                          >
-                            <PeopleIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
+                          />
+                        )}
+                        <IconButton
+                          size="small"
+                          onClick={(e) => handleOpenMenu(e, project)}
+                          sx={{ color: '#666', '&:hover': { color: '#BB86FC' } }}
+                        >
+                          <MoreVertIcon fontSize="small" />
+                        </IconButton>
                       </Box>
-                    </CardContent>
-                  </CardActionArea>
+                    </Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Typography variant="caption" sx={{ color: '#555', display: 'block' }}>
+                        Modified {project.updatedAt?.toDate ? project.updatedAt.toDate().toLocaleDateString() : 'recently'}
+                      </Typography>
+                      <Tooltip title="Manage Collaborators">
+                        <IconButton
+                          size="small"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleOpenCollab(project);
+                          }}
+                          sx={{ color: '#555', '&:hover': { color: '#BB86FC' } }}
+                        >
+                          <PeopleIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
+                  </CardContent>
                 </Card>
               </Grid>
             ))
           )}
         </Grid>
       </Box>
+
+      {/* Project Card Context Menu */}
+      <Menu
+        anchorEl={menuAnchor}
+        open={Boolean(menuAnchor)}
+        onClose={handleCloseMenu}
+        PaperProps={{
+          sx: {
+            bgcolor: '#1a1a1a',
+            border: '1px solid rgba(255,255,255,0.1)',
+            borderRadius: 2,
+            minWidth: 200
+          }
+        }}
+      >
+        <MenuItem
+          onClick={handleViewDetails}
+          sx={{
+            color: '#fff',
+            '&:hover': { bgcolor: 'rgba(187, 134, 252, 0.1)' }
+          }}
+        >
+          <InfoIcon sx={{ mr: 1.5, fontSize: 20, color: '#BB86FC' }} />
+          View Details
+        </MenuItem>
+        <MenuItem
+          onClick={handleOpenEditor}
+          sx={{
+            color: '#fff',
+            '&:hover': { bgcolor: 'rgba(187, 134, 252, 0.1)' }
+          }}
+        >
+          <OpenInNewIcon sx={{ mr: 1.5, fontSize: 20, color: '#BB86FC' }} />
+          Open Editor
+        </MenuItem>
+      </Menu>
 
       {/* New Project Dialog */}
       <Dialog
@@ -519,25 +638,62 @@ export const DashboardPage = (): JSX.Element => {
             Invite new member
           </Typography>
           <Box sx={{ display: 'flex', gap: 1, mb: 3 }}>
-            <TextField
+            <Autocomplete
               fullWidth
-              size="small"
-              placeholder="Enter user email..."
-              value={inviteEmail}
-              onChange={(e) => setInviteEmail(e.target.value)}
-              error={!!errorMessage}
-              helperText={errorMessage}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  color: '#fff',
-                  '& fieldset': { borderColor: '#333' },
-                }
+              options={allUsers}
+              value={selectedUser}
+              onChange={(event, newValue) => {
+                setSelectedUser(newValue);
+                setErrorMessage('');
               }}
+              getOptionLabel={(option) => option.displayName || option.email}
+              renderOption={(props, option) => (
+                <Box component="li" {...props} sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                  <Avatar src={option.photoURL} sx={{ width: 32, height: 32, bgcolor: '#BB86FC' }}>
+                    {option.displayName?.[0] || option.email?.[0]}
+                  </Avatar>
+                  <Box>
+                    <Typography sx={{ color: '#fff', fontSize: '0.9rem' }}>
+                      {option.displayName || 'Unknown'}
+                    </Typography>
+                    <Typography variant="caption" sx={{ color: '#666' }}>
+                      {option.email}
+                    </Typography>
+                  </Box>
+                </Box>
+              )}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  placeholder="Search users..."
+                  error={!!errorMessage}
+                  helperText={errorMessage}
+                  sx={{
+                    '& .MuiOutlinedInput-root': {
+                      color: '#fff',
+                      '& fieldset': { borderColor: '#333' },
+                      '&:hover fieldset': { borderColor: '#BB86FC' },
+                      '&.Mui-focused fieldset': { borderColor: '#BB86FC' },
+                    },
+                    '& .MuiInputLabel-root': { color: '#555' },
+                    '& .MuiInputLabel-root.Mui-focused': { color: '#BB86FC' },
+                  }}
+                />
+              )}
+              sx={{
+                '& .MuiAutocomplete-popup': { bgcolor: '#1a1a1a' },
+                '& .MuiAutocomplete-option': { color: '#fff' },
+              }}
+              PaperComponent={({ children }) => (
+                <Paper sx={{ bgcolor: '#1a1a1a', border: '1px solid #333' }}>
+                  {children}
+                </Paper>
+              )}
             />
             <Button
               variant="contained"
               onClick={handleInvite}
-              disabled={!inviteEmail || isInviting}
+              disabled={!selectedUser || isInviting}
               startIcon={<PersonAddIcon />}
               sx={{ textTransform: 'none', borderRadius: 2 }}
             >
@@ -553,14 +709,14 @@ export const DashboardPage = (): JSX.Element => {
           <List>
             {selectedProject?.members?.map((memberId) => {
               const profile = memberProfiles.find(p => p.uid === memberId);
-              const isOwner = memberId === selectedProject.ownerId;
+              const isOwner = memberId === selectedProject?.ownerId;
               const isMe = memberId === user?.uid;
 
               return (
                 <ListItem
                   key={memberId}
                   secondaryAction={
-                    !isOwner && isMe === false && user?.uid === selectedProject.ownerId && (
+                    !isOwner && isMe === false && user?.uid === selectedProject?.ownerId && (
                       <IconButton edge="end" onClick={() => handleRemoveMember(memberId)} sx={{ color: '#f44336' }}>
                         <DeleteIcon fontSize="small" />
                       </IconButton>
@@ -599,6 +755,6 @@ export const DashboardPage = (): JSX.Element => {
           </List>
         </DialogContent>
       </Dialog>
-    </Box>
+    </Box >
   );
 };

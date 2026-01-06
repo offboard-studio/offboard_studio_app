@@ -10,9 +10,11 @@ import {
   getDoc,
   Timestamp,
   orderBy,
+  limit,
   arrayUnion,
   arrayRemove,
-  or
+  or,
+  onSnapshot
 } from 'firebase/firestore';
 import { db } from './init';
 import { IProject, IProjectService } from '../../core/interfaces/project.service.interface';
@@ -57,6 +59,7 @@ export class FirebaseProjectService implements IProjectService {
       ...project,
       ownerId,
       members: [ownerId], // Owner is always a member
+      visibility: 'private', // Default to private
       createdAt: Timestamp.now(),
       updatedAt: Timestamp.now(),
       status: project.status || 'draft'
@@ -121,6 +124,31 @@ export class FirebaseProjectService implements IProjectService {
     const userRef = doc(db, this.usersCollection, userId);
     const snapshot = await getDoc(userRef);
     return snapshot.exists() ? snapshot.data() : null;
+  }
+
+  async getAllUsers(limitNum: number = 50): Promise<any[]> {
+    const usersQuery = query(
+      collection(db, this.usersCollection),
+      orderBy('displayName'),
+      limit(limitNum)
+    );
+    const snapshot = await getDocs(usersQuery);
+    return snapshot.docs.map(doc => ({ ...doc.data(), uid: doc.id }));
+  }
+
+  startListeningToProject(projectId: string, callback: (project: IProject) => void): () => void {
+    const projectRef = doc(db, 'projects', projectId);
+
+    const unsubscribe = onSnapshot(projectRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.data();
+        callback({ id: snapshot.id, ...data } as IProject);
+      }
+    }, (error) => {
+      console.error('Error listening to project:', error);
+    });
+
+    return unsubscribe;
   }
 }
 

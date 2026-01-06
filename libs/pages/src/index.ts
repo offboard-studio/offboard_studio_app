@@ -13,3 +13,4 @@ export * from './board/board_page';
 export * from './board/board_component';
 export * from './board/board_setting';
 export { default as ProfilePage } from './user';
+export { default as ProjectDetailPage } from './project-detail';
