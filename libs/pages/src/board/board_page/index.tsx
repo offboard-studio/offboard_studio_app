@@ -60,8 +60,16 @@ import BoardSettings from '../board_setting';
 import BoardSidebar from '../board_sidebar';
 import Board from '..';
 import AiOptionSettings from '../ai_option_settings';
-import { firebaseProjectService } from '@components/infrastructure/firebase/firebase.project.service';
 import { IProject } from '@components/core/interfaces/project.service.interface';
+import { firebaseProjectService } from '@components/infrastructure/firebase/firebase.project.service';
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: { main: '#BB86FC' },
+    secondary: { main: '#03DAC6' },
+  },
+});
 
 interface FileHelper {
   fileName: string;
@@ -105,6 +113,22 @@ export const BoardPage = (): JSX.Element => {
     showingPackage: editor.showingPackage(),
   });
 
+  // Sync editor state with React state
+  useEffect(() => {
+    const handleEditorChange = () => {
+      setState({
+        locked: editor.locked(),
+        showingPackage: editor.showingPackage(),
+      });
+    };
+
+    const unregister = editor.addOnModelChange(handleEditorChange);
+    // Initial sync
+    handleEditorChange();
+
+    return unregister;
+  }, [editor]);
+
   const [isLoadingProject, setIsLoadingProject] = useState(true);
 
   React.useEffect(() => {
@@ -133,6 +157,10 @@ export const BoardPage = (): JSX.Element => {
       const project = await firebaseProjectService.getProject(projectId);
       if (project) {
         setCurrentProject(project);
+        // Sync editor's project info with the fetched data
+        if (project.package) {
+          editor.editSaveInfoProject(project.package);
+        }
       }
     } catch (err) {
       console.error('Failed to fetch project:', err);
@@ -154,19 +182,19 @@ export const BoardPage = (): JSX.Element => {
     }
   };
 
-  const handleInvite = async () => {
+  const handleAddMember = async () => {
     if (!currentProject || !selectedUser) return;
 
     setIsInviting(true);
     setErrorMessage('');
 
     try {
-      await firebaseProjectService.inviteMember(currentProject.id, selectedUser.email);
+      await firebaseProjectService.addMember(currentProject.id, selectedUser.email);
       setSelectedUser(null);
-      alert('Member invited successfully!');
+      alert('Member added successfully!');
       await fetchCurrentProject();
     } catch (err: any) {
-      setErrorMessage(err.message || 'Invitation failed');
+      setErrorMessage(err.message || 'Addition failed');
     } finally {
       setIsInviting(false);
     }
@@ -371,7 +399,7 @@ export const BoardPage = (): JSX.Element => {
               </IconButton>
             </Tooltip>
             <Divider orientation="vertical" flexItem sx={{ mx: 1, height: 20, my: 'auto', borderColor: '#333' }} />
-            <BoardUserButton />
+            <BoardUserButton onSettingsClick={() => setTabIndexBoard(true)} />
           </Box>
         </Tabs>
 
@@ -414,12 +442,14 @@ export const BoardPage = (): JSX.Element => {
             <div className="board-container" style={{ display: 'flex', flexGrow: 1, backgroundColor: '#0a0a0a' }}>
               <BoardSidebar editor={editor} />
               <div className="main-content">
-                <div className="App theme-dark">
-                  <GlobalState.Provider value={{ state, setState }}>
-                    <Board editor={editor} />
-                  </GlobalState.Provider>
-                </div>
-                <ModalContainer />
+                <ThemeProvider theme={darkTheme}>
+                  <div className="App theme-dark">
+                    <GlobalState.Provider value={{ state, setState }}>
+                      <Board editor={editor} />
+                    </GlobalState.Provider>
+                  </div>
+                  <ModalContainer />
+                </ThemeProvider>
               </div>
             </div>
           )}
@@ -446,6 +476,9 @@ export const BoardPage = (): JSX.Element => {
       {tabIndexBoard && (
         <BoardSettings
           editor={editor}
+          projectId={projectId}
+          currentProject={currentProject}
+          onSave={fetchCurrentProject}
           onClose={() => {
             setTabIndexBoard(false);
           }}
@@ -530,12 +563,12 @@ export const BoardPage = (): JSX.Element => {
             />
             <Button
               variant="contained"
-              onClick={handleInvite}
+              onClick={handleAddMember}
               disabled={!selectedUser || isInviting}
               startIcon={<PersonAddIcon />}
               sx={{ textTransform: 'none', borderRadius: 2 }}
             >
-              {isInviting ? 'Sending...' : 'Invite'}
+              {isInviting ? 'Adding...' : 'Add Member'}
             </Button>
           </Box>
 

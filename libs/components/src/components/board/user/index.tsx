@@ -8,7 +8,11 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Link } from '@mui/material';
 import { AccountCircle, SupervisedUserCircle } from '@mui/icons-material';
 
-const BoardUserButton: React.FC = () => {
+interface BoardUserButtonProps {
+    onSettingsClick?: () => void;
+}
+
+const BoardUserButton: React.FC<BoardUserButtonProps> = ({ onSettingsClick }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const { user, logout } = useAuth();
     const open = Boolean(anchorEl);
@@ -51,7 +55,10 @@ const BoardUserButton: React.FC = () => {
                     </MenuItem>
                 )}
                 <MenuItem onClick={handleProfile}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>Settings</MenuItem>
+                <MenuItem onClick={() => {
+                    handleClose();
+                    onSettingsClick?.();
+                }}>Settings</MenuItem>
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </Menu>
         </>

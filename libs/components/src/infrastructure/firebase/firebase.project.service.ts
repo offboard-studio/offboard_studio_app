@@ -101,7 +101,7 @@ export class FirebaseProjectService implements IProjectService {
     await deleteDoc(projectRef);
   }
 
-  async inviteMember(projectId: string, email: string): Promise<void> {
+  async addMember(projectId: string, email: string): Promise<void> {
     // 1. Find user by email in 'users' collection
     const usersQ = query(collection(db, this.usersCollection), where('email', '==', email));
     const userSnapshot = await getDocs(usersQ);

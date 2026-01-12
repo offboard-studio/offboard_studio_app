@@ -8,9 +8,12 @@ import { ProjectInfo } from "@components/core/constants";
 interface BoardSettingsProps {
     editor: Editor;
     onClose: () => void;
+    projectId: string;
+    currentProject?: any;
+    onSave?: () => void;
 }
 
-function BoardSettings({ editor, onClose }: BoardSettingsProps) {
+function BoardSettings({ editor, onClose, projectId, currentProject, onSave }: BoardSettingsProps) {
     const [formData, setFormData] = useState({
         projectName: editor.getName(),
         description: "",
@@ -25,6 +28,8 @@ function BoardSettings({ editor, onClose }: BoardSettingsProps) {
     };
 
     const [open, setOpen] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const [error, setError] = useState('');
 
     // Name of package. Use empty string if not defined
     const [nameInput, setName] = useState(editor.projectInfoData.name || '');
@@ -36,6 +41,9 @@ function BoardSettings({ editor, onClose }: BoardSettingsProps) {
     const [authorInput, setAuthor] = useState(editor.projectInfoData.author || '');
     // Icon of package. Use empty string if not defined
     const [imageInput, setImage] = useState(editor.projectInfoData.image || '');
+    // Documentation fields
+    const [documentationContent, setDocumentationContent] = useState(currentProject?.documentationContent || '');
+    const [videoUrl, setVideoUrl] = useState(currentProject?.videoUrl || '');
 
     const fileReader = new FileReader();
     fileReader.onload = (event) => {
@@ -60,7 +68,7 @@ function BoardSettings({ editor, onClose }: BoardSettingsProps) {
     /**
      * Callback for 'Ok' button of the dialog
      */
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         const projectinfo: ProjectInfo = {
             name: nameInput,
             version: versionInput,
@@ -68,9 +76,37 @@ function BoardSettings({ editor, onClose }: BoardSettingsProps) {
             author: authorInput,
             image: imageInput,
         };
-        editor.editSaveInfoProject(projectinfo);
-        setOpen(false);
-        onClose();
+
+        // Persist to Firebase
+        setSaving(true);
+        setError('');
+        try {
+            // Update editor first
+            editor.editSaveInfoProject(projectinfo);
+
+            // Import services
+            const { firebaseProjectService } = await import('@components/infrastructure/firebase/firebase.project.service');
+            const CollaborationManager = (await import('@components/core/collaboration')).default;
+
+            // Update project settings in Firebase
+            await firebaseProjectService.updateProject(projectId, {
+                package: projectinfo,
+                documentationContent,
+                videoUrl,
+            });
+
+            // Sync the complete serialized project data through collaboration manager
+            const collaborationManager = CollaborationManager.getInstance();
+            collaborationManager.syncLocalToRemote();
+
+            setOpen(false);
+            onSave?.();
+            onClose();
+        } catch (err: any) {
+            setError(err.message || 'Failed to save project settings');
+        } finally {
+            setSaving(false);
+        }
     }
 
 
@@ -88,9 +124,17 @@ function BoardSettings({ editor, onClose }: BoardSettingsProps) {
             fullWidth={true}
             maxWidth='md'
             onClose={handleClose}
-            aria-labelledby="form-dialog-title">
+            aria-labelledby="form-dialog-title"
+            PaperProps={{
+                sx: {
+                    bgcolor: '#111',
+                    color: '#fff',
+                    border: '1px solid rgba(255,255,255,0.05)'
+                }
+            }}
+        >
             <DialogContent>
-                <DialogContentText>
+                <DialogContentText sx={{ color: '#fff' }}>
                     Name
                 </DialogContentText>
                 <TextField
@@ -101,46 +145,75 @@ function BoardSettings({ editor, onClose }: BoardSettingsProps) {
                     value={nameInput}
                     onChange={(event) => setName(event.target.value)}
                     fullWidth
+                    sx={{
+                        '& .MuiOutlinedInput-root': {
+                            color: '#fff',
+                            '& fieldset': { borderColor: 'rgba(255,255,255,0.23)' },
+                            '&:hover fieldset': { borderColor: '#BB86FC' },
+                            '&.Mui-focused fieldset': { borderColor: '#BB86FC' },
+                        }
+                    }}
                 />
-                <DialogContentText>
+                <DialogContentText sx={{ color: '#fff', mt: 2 }}>
                     Version
                 </DialogContentText>
                 <TextField
-                    autoFocus
                     margin="dense"
                     type="text"
                     variant='outlined'
                     value={versionInput}
                     onChange={(event) => setVersion(event.target.value)}
                     fullWidth
+                    sx={{
+                        '& .MuiOutlinedInput-root': {
+                            color: '#fff',
+                            '& fieldset': { borderColor: 'rgba(255,255,255,0.23)' },
+                            '&:hover fieldset': { borderColor: '#BB86FC' },
+                            '&.Mui-focused fieldset': { borderColor: '#BB86FC' },
+                        }
+                    }}
                 />
 
-                <DialogContentText>
+                <DialogContentText sx={{ color: '#fff', mt: 2 }}>
                     Description
                 </DialogContentText>
                 <TextField
-                    autoFocus
                     margin="dense"
                     type="text"
                     variant='outlined'
                     value={descriptionInput}
                     onChange={(event) => setDescription(event.target.value)}
                     fullWidth
+                    sx={{
+                        '& .MuiOutlinedInput-root': {
+                            color: '#fff',
+                            '& fieldset': { borderColor: 'rgba(255,255,255,0.23)' },
+                            '&:hover fieldset': { borderColor: '#BB86FC' },
+                            '&.Mui-focused fieldset': { borderColor: '#BB86FC' },
+                        }
+                    }}
                 />
 
-                <DialogContentText>
+                <DialogContentText sx={{ color: '#fff', mt: 2 }}>
                     Author
                 </DialogContentText>
                 <TextField
-                    autoFocus
                     margin="dense"
                     type="text"
                     variant='outlined'
                     value={authorInput}
                     onChange={(event) => setAuthor(event.target.value)}
                     fullWidth
+                    sx={{
+                        '& .MuiOutlinedInput-root': {
+                            color: '#fff',
+                            '& fieldset': { borderColor: 'rgba(255,255,255,0.23)' },
+                            '&:hover fieldset': { borderColor: '#BB86FC' },
+                            '&.Mui-focused fieldset': { borderColor: '#BB86FC' },
+                        }
+                    }}
                 />
-                <DialogContentText>
+                <DialogContentText sx={{ color: '#fff', mt: 2 }}>
                     Image
                 </DialogContentText>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -148,6 +221,7 @@ function BoardSettings({ editor, onClose }: BoardSettingsProps) {
                         <Button
                             variant="outlined"
                             component="label"
+                            sx={{ color: '#BB86FC', borderColor: '#BB86FC' }}
                         >
                             Upload File Image
                             <input
@@ -161,16 +235,67 @@ function BoardSettings({ editor, onClose }: BoardSettingsProps) {
                     {imageInput &&
                         <img src={imageInput} style={{ width: '80px', height: '80px' }} alt='block icon' />}
                 </div>
+
+                <DialogContentText sx={{ color: '#fff', mt: 3 }}>
+                    Documentation (Markdown)
+                </DialogContentText>
+                <TextField
+                    margin="dense"
+                    type="text"
+                    variant='outlined'
+                    value={documentationContent}
+                    onChange={(event) => setDocumentationContent(event.target.value)}
+                    fullWidth
+                    multiline
+                    rows={6}
+                    placeholder="# Project Documentation\n\nAdd your markdown content here..."
+                    sx={{
+                        '& .MuiOutlinedInput-root': {
+                            color: '#fff',
+                            fontFamily: 'monospace',
+                            '& fieldset': { borderColor: 'rgba(255,255,255,0.23)' },
+                            '&:hover fieldset': { borderColor: '#BB86FC' },
+                            '&.Mui-focused fieldset': { borderColor: '#BB86FC' },
+                        }
+                    }}
+                />
+
+                <DialogContentText sx={{ color: '#fff', mt: 2 }}>
+                    Video URL (YouTube, Vimeo, etc.)
+                </DialogContentText>
+                <TextField
+                    margin="dense"
+                    type="text"
+                    variant='outlined'
+                    value={videoUrl}
+                    onChange={(event) => setVideoUrl(event.target.value)}
+                    fullWidth
+                    placeholder="https://www.youtube.com/watch?v=..."
+                    sx={{
+                        '& .MuiOutlinedInput-root': {
+                            color: '#fff',
+                            '& fieldset': { borderColor: 'rgba(255,255,255,0.23)' },
+                            '&:hover fieldset': { borderColor: '#BB86FC' },
+                            '&.Mui-focused fieldset': { borderColor: '#BB86FC' },
+                        }
+                    }}
+                />
+                {error && (
+                    <DialogContentText sx={{ color: '#f44336', mt: 2 }}>
+                        {error}
+                    </DialogContentText>
+                )}
+
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleSubmit} color="primary">
-                    Save
+                <Button onClick={handleSubmit} disabled={saving} sx={{ color: '#BB86FC' }}>
+                    {saving ? 'Saving...' : 'Save'}
                 </Button>
-                <Button onClick={handleClose} color="primary">
+                <Button onClick={handleClose} disabled={saving} sx={{ color: '#aaa' }}>
                     Cancel
                 </Button>
             </DialogActions>
-        </Dialog>
+        </Dialog >
     );
 }
 

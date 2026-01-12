@@ -35,6 +35,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@components/auth/AuthProvider';
 import { firebaseProjectService } from '@components/infrastructure/firebase/firebase.project.service';
 import { IProject } from '@components/core/interfaces/project.service.interface';
+import { AnalyticsDashboard } from '@components/components/dashboard/analytics';
+import { DocumentationViewer } from '@components/components/dashboard/documentation-viewer';
 
 // Icons
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -76,6 +78,10 @@ export const DashboardPage = (): JSX.Element => {
   // Card menu state
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
   const [menuProject, setMenuProject] = useState<IProject | null>(null);
+
+  // Documentation Dialog State
+  const [docsOpen, setDocsOpen] = useState(false);
+  const [viewingProject, setViewingProject] = useState<IProject | null>(null);
 
   // Search state
   const [searchQuery, setSearchQuery] = useState('');
@@ -153,7 +159,7 @@ export const DashboardPage = (): JSX.Element => {
     setErrorMessage('');
 
     try {
-      await firebaseProjectService.inviteMember(selectedProject.id, selectedUser.email);
+      await firebaseProjectService.addMember(selectedProject.id, selectedUser.email);
       setSelectedUser(null);
       alert('Member invited successfully!');
       // Refresh project to show new member (ideally we should fetch member names but UID is fine for now)
@@ -212,6 +218,14 @@ export const DashboardPage = (): JSX.Element => {
     handleCloseMenu();
   };
 
+  const handleOpenDocs = (project: IProject | null) => {
+    if (project) {
+      setViewingProject(project);
+      setDocsOpen(true);
+    }
+    handleCloseMenu();
+  };
+
   const handleOpenEditor = () => {
     if (menuProject) {
       navigate(`/board?id=${menuProject.id}`);
@@ -233,6 +247,153 @@ export const DashboardPage = (): JSX.Element => {
       case 'completed': return 'info';
       default: return 'default';
     }
+  };
+
+  const renderContent = () => {
+    if (activeSection === 'analytics') {
+      return <AnalyticsDashboard projects={projects} />;
+    }
+
+    // Default to projects view (also used for 'dashboard' for now, can be customized later)
+    return (
+      <Grid container spacing={3}>
+        {loading ? (
+          Array.from({ length: 6 }).map((_, i) => (
+            <Grid item xs={12} sm={6} md={4} key={i}>
+              <Skeleton variant="rectangular" height={200} sx={{ borderRadius: 4, bgcolor: '#111' }} />
+            </Grid>
+          ))
+        ) : filteredProjects.length === 0 && searchQuery ? (
+          <Grid item xs={12}>
+            <Paper sx={{ p: 8, textAlign: 'center', bgcolor: '#111', borderRadius: 4, border: '1px dashed #222' }}>
+              <SearchIcon sx={{ fontSize: 64, color: '#222', mb: 2 }} />
+              <Typography variant="h6" sx={{ color: '#555', mb: 2 }}>No projects found</Typography>
+              <Typography variant="body2" sx={{ color: '#666', mb: 3 }}>Try searching with different keywords</Typography>
+              <Button variant="outlined" onClick={() => setSearchQuery('')}>Clear search</Button>
+            </Paper>
+          </Grid>
+        ) : filteredProjects.length === 0 ? (
+          <Grid item xs={12}>
+            <Paper sx={{ p: 8, textAlign: 'center', bgcolor: '#111', borderRadius: 4, border: '1px dashed #222' }}>
+              <FolderIcon sx={{ fontSize: 64, color: '#222', mb: 2 }} />
+              <Typography variant="h6" sx={{ color: '#555', mb: 2 }}>No projects yet</Typography>
+              <Button variant="outlined" onClick={() => setOpenDialog(true)}>Create your first project</Button>
+            </Paper>
+          </Grid>
+        ) : (
+          filteredProjects.map((project) => (
+            <Grid item xs={12} sm={6} md={4} key={project.id}>
+              <Card
+                sx={{
+                  bgcolor: '#111',
+                  borderRadius: 4,
+                  border: '1px solid rgba(255,255,255,0.03)',
+                  transition: '0.3s',
+                  overflow: 'visible',
+                  '&:hover': {
+                    transform: 'translateY(-8px)',
+                    borderColor: '#BB86FC',
+                    '& .project-overlay': { opacity: 1 }
+                  }
+                }}
+              >
+                <CardActionArea
+                  onClick={() => navigate(`/board?id=${project.id}`)}
+                  sx={{ p: 0 }}
+                >
+                  <Box sx={{
+                    height: 140,
+                    bgcolor: '#1a1a1a',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    position: 'relative',
+                    borderTopLeftRadius: 16,
+                    borderTopRightRadius: 16,
+                    overflow: 'hidden',
+                    backgroundImage: project.image ? `url(${project.image})` : undefined,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                  }}>
+                    {!project.image && <ExtensionIcon sx={{ fontSize: 48, color: '#333' }} />}
+                    <Box
+                      className="project-overlay"
+                      sx={{
+                        position: 'absolute',
+                        inset: 0,
+                        bgcolor: 'rgba(0,0,0,0.4)', // Darker overlay for images
+                        opacity: 0,
+                        transition: '0.2s',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backdropFilter: 'blur(2px)'
+                      }}
+                    >
+                      <Typography sx={{ color: '#BB86FC', fontWeight: 700, textShadow: '0 2px 4px rgba(0,0,0,0.8)' }}>Open Project</Typography>
+                    </Box>
+                  </Box>
+                </CardActionArea>
+                <CardContent sx={{ p: 2.5 }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
+                    <Typography variant="h6" sx={{ fontWeight: 700, color: '#fff', lineHeight: 1.2, flex: 1 }}>
+                      {project.name}
+                    </Typography>
+                    <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center' }}>
+                      <Chip
+                        label={project.status}
+                        size="small"
+                        color={getStatusColor(project.status) as any}
+                        variant="outlined"
+                        sx={{ height: 20, fontSize: '0.65rem', fontWeight: 700 }}
+                      />
+                      {project.visibility === 'public' && (
+                        <Chip
+                          label="Public"
+                          size="small"
+                          sx={{
+                            height: 20,
+                            fontSize: '0.65rem',
+                            fontWeight: 700,
+                            bgcolor: 'rgba(3, 218, 198, 0.1)',
+                            color: '#03DAC6',
+                            border: '1px solid #03DAC6'
+                          }}
+                        />
+                      )}
+                      <IconButton
+                        size="small"
+                        onClick={(e) => handleOpenMenu(e, project)}
+                        sx={{ color: '#666', '&:hover': { color: '#BB86FC' } }}
+                      >
+                        <MoreVertIcon fontSize="small" />
+                      </IconButton>
+                    </Box>
+                  </Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Typography variant="caption" sx={{ color: '#555', display: 'block' }}>
+                      Modified {project.updatedAt?.toDate ? project.updatedAt.toDate().toLocaleDateString() : 'recently'}
+                    </Typography>
+                    <Tooltip title="Manage Collaborators">
+                      <IconButton
+                        size="small"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleOpenCollab(project);
+                        }}
+                        sx={{ color: '#555', '&:hover': { color: '#BB86FC' } }}
+                      >
+                        <PeopleIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))
+        )}
+      </Grid>
+    );
   };
 
   return (
@@ -393,139 +554,7 @@ export const DashboardPage = (): JSX.Element => {
         </AppBar>
 
 
-        <Grid container spacing={3}>
-          {loading ? (
-            Array.from({ length: 6 }).map((_, i) => (
-              <Grid item xs={12} sm={6} md={4} key={i}>
-                <Skeleton variant="rectangular" height={200} sx={{ borderRadius: 4, bgcolor: '#111' }} />
-              </Grid>
-            ))
-          ) : filteredProjects.length === 0 && searchQuery ? (
-            <Grid item xs={12}>
-              <Paper sx={{ p: 8, textAlign: 'center', bgcolor: '#111', borderRadius: 4, border: '1px dashed #222' }}>
-                <SearchIcon sx={{ fontSize: 64, color: '#222', mb: 2 }} />
-                <Typography variant="h6" sx={{ color: '#555', mb: 2 }}>No projects found</Typography>
-                <Typography variant="body2" sx={{ color: '#666', mb: 3 }}>Try searching with different keywords</Typography>
-                <Button variant="outlined" onClick={() => setSearchQuery('')}>Clear search</Button>
-              </Paper>
-            </Grid>
-          ) : filteredProjects.length === 0 ? (
-            <Grid item xs={12}>
-              <Paper sx={{ p: 8, textAlign: 'center', bgcolor: '#111', borderRadius: 4, border: '1px dashed #222' }}>
-                <FolderIcon sx={{ fontSize: 64, color: '#222', mb: 2 }} />
-                <Typography variant="h6" sx={{ color: '#555', mb: 2 }}>No projects yet</Typography>
-                <Button variant="outlined" onClick={() => setOpenDialog(true)}>Create your first project</Button>
-              </Paper>
-            </Grid>
-          ) : (
-            filteredProjects.map((project) => (
-              <Grid item xs={12} sm={6} md={4} key={project.id}>
-                <Card
-                  sx={{
-                    bgcolor: '#111',
-                    borderRadius: 4,
-                    border: '1px solid rgba(255,255,255,0.03)',
-                    transition: '0.3s',
-                    overflow: 'visible',
-                    '&:hover': {
-                      transform: 'translateY(-8px)',
-                      borderColor: '#BB86FC',
-                      '& .project-overlay': { opacity: 1 }
-                    }
-                  }}
-                >
-                  <CardActionArea
-                    onClick={() => navigate(`/board?id=${project.id}`)}
-                    sx={{ p: 0 }}
-                  >
-                    <Box sx={{
-                      height: 140,
-                      bgcolor: '#1a1a1a',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      position: 'relative',
-                      borderTopLeftRadius: 16,
-                      borderTopRightRadius: 16,
-                      overflow: 'hidden'
-                    }}>
-                      <ExtensionIcon sx={{ fontSize: 48, color: '#333' }} />
-                      <Box
-                        className="project-overlay"
-                        sx={{
-                          position: 'absolute',
-                          inset: 0,
-                          bgcolor: 'rgba(187, 134, 252, 0.1)',
-                          opacity: 0,
-                          transition: '0.2s',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center'
-                        }}
-                      >
-                        <Typography sx={{ color: '#BB86FC', fontWeight: 700 }}>Open Project</Typography>
-                      </Box>
-                    </Box>
-                  </CardActionArea>
-                  <CardContent sx={{ p: 2.5 }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
-                      <Typography variant="h6" sx={{ fontWeight: 700, color: '#fff', lineHeight: 1.2, flex: 1 }}>
-                        {project.name}
-                      </Typography>
-                      <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center' }}>
-                        <Chip
-                          label={project.status}
-                          size="small"
-                          color={getStatusColor(project.status) as any}
-                          variant="outlined"
-                          sx={{ height: 20, fontSize: '0.65rem', fontWeight: 700 }}
-                        />
-                        {project.visibility === 'public' && (
-                          <Chip
-                            label="Public"
-                            size="small"
-                            sx={{
-                              height: 20,
-                              fontSize: '0.65rem',
-                              fontWeight: 700,
-                              bgcolor: 'rgba(3, 218, 198, 0.1)',
-                              color: '#03DAC6',
-                              border: '1px solid #03DAC6'
-                            }}
-                          />
-                        )}
-                        <IconButton
-                          size="small"
-                          onClick={(e) => handleOpenMenu(e, project)}
-                          sx={{ color: '#666', '&:hover': { color: '#BB86FC' } }}
-                        >
-                          <MoreVertIcon fontSize="small" />
-                        </IconButton>
-                      </Box>
-                    </Box>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <Typography variant="caption" sx={{ color: '#555', display: 'block' }}>
-                        Modified {project.updatedAt?.toDate ? project.updatedAt.toDate().toLocaleDateString() : 'recently'}
-                      </Typography>
-                      <Tooltip title="Manage Collaborators">
-                        <IconButton
-                          size="small"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleOpenCollab(project);
-                          }}
-                          sx={{ color: '#555', '&:hover': { color: '#BB86FC' } }}
-                        >
-                          <PeopleIcon fontSize="small" />
-                        </IconButton>
-                      </Tooltip>
-                    </Box>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))
-          )}
-        </Grid>
+        {renderContent()}
       </Box>
 
       {/* Project Card Context Menu */}
@@ -561,6 +590,26 @@ export const DashboardPage = (): JSX.Element => {
         >
           <OpenInNewIcon sx={{ mr: 1.5, fontSize: 20, color: '#BB86FC' }} />
           Open Editor
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            // Navigate to documentation or open dialog (simplest: navigate to new route or use state)
+            // For now, let's use a dialog or just log it, but based on plan we need to display it.
+            // Let's assume we want to show it in the dashboard area or a dedicated page.
+            // I'll update activeSection to 'documentation' and set selectedViewingProject
+            // But wait, the current structure supports sections. Let's add 'documentation' section dynamically or just a simple way.
+            // BETTER APPROACH for this turn: Add a proper "Documentation" section that shows docs for selected project?
+            // OR: Just open a Dialog with DocumentationViewer.
+            // I'll go with Dialog for quick win as it keeps context.
+            handleOpenDocs(menuProject);
+          }}
+          sx={{
+            color: '#fff',
+            '&:hover': { bgcolor: 'rgba(187, 134, 252, 0.1)' }
+          }}
+        >
+          <AssessmentIcon sx={{ mr: 1.5, fontSize: 20, color: '#BB86FC' }} />
+          Documentation
         </MenuItem>
       </Menu>
 
@@ -754,6 +803,40 @@ export const DashboardPage = (): JSX.Element => {
               );
             })}
           </List>
+        </DialogContent>
+      </Dialog>
+
+
+      {/* Documentation Dialog */}
+      <Dialog
+        open={docsOpen}
+        onClose={() => setDocsOpen(false)}
+        maxWidth="lg"
+        fullWidth
+        PaperProps={{
+          sx: {
+            bgcolor: '#111',
+            borderRadius: 4,
+            border: '1px solid rgba(255,255,255,0.05)',
+            minHeight: '80vh'
+          }
+        }}
+      >
+        <DialogTitle sx={{ color: '#fff', fontWeight: 800, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          {viewingProject?.name}
+          <IconButton onClick={() => setDocsOpen(false)} sx={{ color: '#555' }}>
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          {viewingProject && (
+            <DocumentationViewer
+              content={viewingProject.documentationUrl ? "Loading content from " + viewingProject.documentationUrl : ''}
+              videoUrl={viewingProject.videoUrl}
+              projectName={viewingProject.name}
+            />
+          )}
+          {/* Note: In a real app, we would fetch the markdown content from the URL here */}
         </DialogContent>
       </Dialog>
     </Box >

@@ -7,9 +7,19 @@ export interface IProject {
   createdAt: any;
   updatedAt: any;
   status: 'draft' | 'active' | 'completed' | 'archived';
-  thumbnailUrl?: string;
+  thumbnailUrl?: string; // For cloud storage URLs
+  image?: string; // For base64 data URIs
   data?: any;
   visibility: 'public' | 'private'; // New field for open-source control
+  documentationUrl?: string;
+  documentationContent?: string; // Store markdown content directly
+  videoUrl?: string;
+  tags?: string[];
+  stats?: {
+    stars: number;
+    usageCount: number;
+    forks: number;
+  };
 }
 
 export interface IProjectService {
@@ -18,7 +28,7 @@ export interface IProjectService {
   createProject(project: Partial<IProject>): Promise<string>;
   updateProject(projectId: string, data: Partial<IProject>): Promise<void>;
   deleteProject(projectId: string): Promise<void>;
-  inviteMember(projectId: string, email: string): Promise<void>;
+  addMember(projectId: string, email: string): Promise<void>;
   removeMember(projectId: string, userId: string): Promise<void>;
   getUserProfiles(userIds: string[]): Promise<any[]>;
   getUserProfile(userId: string): Promise<any | null>;

@@ -71,9 +71,6 @@ export const editBlock = async (node: NodeModel) => {
     let data;
     console.log('Edit block', (node));
 
-    // Mevcut bağlantıları sakla
-    const existingConnections = preserveExistingConnections(node);
-
     try {
         if (node instanceof ConstantBlockModel) {
             data = await createConstantDialog({
@@ -91,6 +88,9 @@ export const editBlock = async (node: NodeModel) => {
                 params: node.getParameterNames()
             });
 
+            // The CodeBlockModel.setData method now handles smart updates
+            // so we don't need to manually manage ports or connections here.
+            // Just pass the new configuration.
             let _data = {
                 params: data.params?.map((port: string) => {
                     return { name: port }
@@ -104,9 +104,7 @@ export const editBlock = async (node: NodeModel) => {
                     }) || []
                 },
             }
-
-            // Port güncellemesini dikkatli yap
-            updateNodePortsCarefully(node, _data, existingConnections);
+            node.setData(_data);
         }
         else if (node instanceof InputBlockModel || node instanceof OutputBlockModel) {
             data = await createIODialog({

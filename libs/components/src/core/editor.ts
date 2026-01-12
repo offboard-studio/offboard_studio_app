@@ -41,7 +41,7 @@ import BaseModel from '../components/blocks/common/base-model';
 import { count } from 'console';
 import createBlockDialog from '../components/dialogs/blocks-dialog';
 import cloneDeep from 'lodash.clonedeep';
-import { PortModelOptions } from '@projectstorm/react-diagrams-core';
+import { PortModelOptions, NodeLayerFactory, LinkLayerFactory, NodeLayerModel } from '@projectstorm/react-diagrams-core';
 import { Dependency } from './serialiser/interfaces';
 
 declare module '@projectstorm/react-diagrams-core' {
@@ -68,7 +68,7 @@ class Editor {
   private stackOfBlock: { model: DiagramModel; info: ProjectInfo }[];
   private activeModel: DiagramModel;
   private blockCount: number = 0;
-  private onModelChange: ((model: DiagramModel) => void) | null = null;
+  private onModelChangeListeners: ((model: DiagramModel) => void)[] = [];
 
   public engine: DiagramEngine;
 
@@ -127,7 +127,7 @@ class Editor {
     // register an DeleteItemsAction with custom keyCodes (in this case, only Delete key)
     this.engine
       .getActionEventBus()
-      .registerAction(new DeleteItemsAction({ keyCodes: [46] }));
+      .registerAction(new DeleteItemsAction({ keyCodes: [46, 8] }));
   }
   /**
    * Main entry point to get Editor object, since constructor is private.
@@ -174,13 +174,28 @@ class Editor {
           offsetY: 0,
           zoom: 100,
           gridSize: 20,
-          layers: [],
+          layers: [], // Required by interface, will be populated by self-healing if empty
           id: '',
           locked: false,
           ...editor,
         },
         this.engine
       );
+
+      const layerCount = model.getLayers().length;
+      console.log(`[Editor] Layers after deserialization: ${layerCount}`);
+
+      // FIX: Ensure we have layers if deserialization resulted in 0 layers
+      if (layerCount === 0) {
+        console.warn('[Editor] Model has 0 layers! Forcing default layers...');
+        const nodeLayer = new NodeLayerFactory().generateModel({});
+        const linkLayer = new LinkLayerFactory().generateModel({});
+        model.addLayer(linkLayer);
+        model.addLayer(nodeLayer);
+        console.log('[Editor] Default layers added. New count:', model.getLayers().length);
+      } else {
+        console.log('[Editor] Layers present, IDs:', model.getLayers().map(l => l.getID()));
+      }
       this.activeModel = model;
       this.projectInfo = jsonModel.package;
       if (this.projectInfo.name === '' && filename !== '') {
@@ -189,7 +204,8 @@ class Editor {
       console.log('Loaded project info:', this.projectInfo);
       // Set the current project name to the name of
       this.engine.setModel(model);
-      if (this.onModelChange) this.onModelChange(model);
+      this.engine.repaintCanvas();
+      this.onModelChangeListeners.forEach(cb => cb(model));
     } else {
       console.warn('Editor data is undefined or invalid, initializing empty project');
       // Initialize with empty model when editor is missing
@@ -202,7 +218,8 @@ class Editor {
         image: '',
       };
       this.engine.setModel(model);
-      if (this.onModelChange) this.onModelChange(model);
+      this.engine.repaintCanvas();
+      this.onModelChangeListeners.forEach(cb => cb(model));
     }
   }
 
@@ -223,13 +240,18 @@ class Editor {
       image: '',
     };
     this.engine.setModel(this.activeModel);
-    if (this.onModelChange) this.onModelChange(this.activeModel);
+    this.onModelChangeListeners.forEach(cb => cb(this.activeModel));
   }
 
-  public setOnModelChange(callback: (model: DiagramModel) => void) {
-    this.onModelChange = callback;
+  public addOnModelChange(callback: (model: DiagramModel) => void): () => void {
+    this.onModelChangeListeners.push(callback);
     // Call it immediately for current model
     callback(this.activeModel);
+
+    // Return unregister function
+    return () => {
+      this.onModelChangeListeners = this.onModelChangeListeners.filter(cb => cb !== callback);
+    };
   }
 
   /**
@@ -390,16 +412,48 @@ class Editor {
    * @param name : Name / type of the block to add to model.
    */
   public async addBlock(name: string): Promise<void> {
+    console.log(`Editor.addBlock called for ${name}`);
     this.blockCount += 1;
     const block = await createBlock(name, this.blockCount);
 
     if (block) {
+      console.log(`Block created: ${block.getID()}`);
+
+      // Self-healing: Ensure layers exist
+      let nodeLayer = this.activeModel.getLayers().find(l => l instanceof NodeLayerModel);
+
+      if (!nodeLayer) {
+        console.warn('[Editor] No NodeLayer found! Creating one...');
+        nodeLayer = new NodeLayerFactory().generateModel({});
+        // Ensure we have at least 2 layers usually (Node and Link), but let's just make sure NodeLayer exists
+        if (this.activeModel.getLayers().length === 0) {
+          const linkLayer = new LinkLayerFactory().generateModel({});
+          this.activeModel.addLayer(linkLayer);
+          this.activeModel.addLayer(nodeLayer);
+        } else {
+          this.activeModel.addLayer(nodeLayer);
+        }
+        console.log('[Editor] Self-healing complete. NodeLayer added.');
+      }
+
       // Get a default position and set it as blocks position
       // TODO: Better way would be to get an empty position dynamically or track mouse's current position.
       block.setPosition(...getInitialPosition());
-      this.activeModel.addNode(block);
+
+      // Explicitly add to node layer
+      if (nodeLayer instanceof NodeLayerModel) {
+        nodeLayer.addModel(block);
+        console.log(`[Editor] Node added to layer ${nodeLayer.getID()}. Total nodes: ${Object.keys(this.activeModel.getNodes()).length}`);
+      } else {
+        console.error('[Editor] Failed to find or create a valid NodeLayer to add the block!');
+      }
+
       // Once the block is added, the page has to rendered again, this is done by repainting the canvas.
       this.engine.repaintCanvas();
+      console.log(`Notifying ${this.onModelChangeListeners.length} listeners`);
+      this.onModelChangeListeners.forEach(cb => cb(this.activeModel));
+    } else {
+      console.warn(`Block creation failed for ${name}`);
     }
   }
 
@@ -408,12 +462,23 @@ class Editor {
     const block = await createBlockWithAPI(name, this.blockCount, data);
 
     if (block) {
+      // Self-healing: Ensure layers exist
+      if (this.activeModel.getLayers().length === 0) {
+        console.warn('[Editor] NO LAYERS in active model! Performing self-healing...');
+        const nodeLayer = new NodeLayerFactory().generateModel({});
+        const linkLayer = new LinkLayerFactory().generateModel({});
+        this.activeModel.addLayer(linkLayer);
+        this.activeModel.addLayer(nodeLayer);
+        console.log('[Editor] Self-healing complete. Layers added.');
+      }
+
       // Get a default position and set it as blocks position
       // TODO: Better way would be to get an empty position dynamically or track mouse's current position.
       block.setPosition(...getInitialPosition());
       this.activeModel.addNode(block);
       // Once the block is added, the page has to rendered again, this is done by repainting the canvas.
       this.engine.repaintCanvas();
+      this.onModelChangeListeners.forEach(cb => cb(this.activeModel));
     }
   }
 
@@ -493,6 +558,7 @@ class Editor {
     saveProjectInfo: ProjectInfo
   ): Promise<void> {
     this.projectInfo = saveProjectInfo;
+    this.onModelChangeListeners.forEach(cb => cb(this.activeModel));
   }
 
   /**
@@ -646,6 +712,8 @@ class Editor {
       this.setLock(false);
     }
   }
+
+
 
 
   /**

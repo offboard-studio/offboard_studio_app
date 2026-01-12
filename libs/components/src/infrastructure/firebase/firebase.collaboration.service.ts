@@ -14,12 +14,19 @@ export class FirebaseCollaborationService implements ICollaborationService {
   }
 
   async updateProject(projectId: string, data: any, userId: string): Promise<void> {
-    const projectRef = doc(db, 'projects', projectId);
-    await setDoc(projectRef, {
-      ...data,
-      updatedAt: Timestamp.now(),
-      updatedBy: userId
-    }, { merge: true });
+    console.log(`[FirebaseService] Updating project ${projectId}, userId: ${userId}`);
+    try {
+      const projectRef = doc(db, 'projects', projectId);
+      await setDoc(projectRef, {
+        ...data,
+        updatedAt: Timestamp.now(),
+        updatedBy: userId
+      }, { merge: true });
+      console.log(`[FirebaseService] updateProject success for ${projectId}`);
+    } catch (error) {
+      console.error(`[FirebaseService] updateProject failed for ${projectId}:`, error);
+      throw error;
+    }
   }
 
   async getProject(projectId: string): Promise<any> {
