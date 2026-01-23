@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, TextField, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState, useEffect } from "react";
 import Editor from "@components/core/editor";
 
 import { ProjectInfo } from "@components/core/constants";
@@ -29,17 +29,45 @@ function AiOptionSettings({ editor, onClose, apiKey, baseUrl, model, isOpen, onR
         { value: 'custom', label: 'Custom', baseUrl: '', apiKey: '', defaultModel: '' },
     ];
 
-    const [provider, setProvider] = useState('ollama');
-    const [apiKeyOut, setApiKeyOut] = useState(editor.getApiKey() || 'ollama');
+    const getProviderFromBaseUrl = (url: string) => {
+        if (!url) return 'ollama'; // Default if empty
+        const found = providers.find(p => p.value !== 'custom' && url.includes(p.baseUrl));
+        return found ? found.value : 'custom';
+    };
+
+    const [provider, setProvider] = useState(getProviderFromBaseUrl(editor.getBaseUrl()));
+    const [apiKeyOut, setApiKeyOut] = useState(editor.getApiKey() || '');
     const [baseUrlOut, setBaseUrlOut] = useState(editor.getBaseUrl() || 'http://localhost:11434/v1');
     const [modelOut, setModelOut] = useState(editor.getAiModel() || 'qwen2.5-coder');
+
+    // Sync state when dialog opens or editor updates
+    useEffect(() => {
+        if (isOpen) {
+            const currentBaseUrl = editor.getBaseUrl();
+            const currentApiKey = editor.getApiKey();
+            const currentModel = editor.getAiModel();
+            
+            setBaseUrlOut(currentBaseUrl || 'http://localhost:11434/v1');
+            setApiKeyOut(currentApiKey || '');
+            setModelOut(currentModel || 'qwen2.5-coder');
+            setProvider(getProviderFromBaseUrl(currentBaseUrl));
+        }
+    }, [isOpen, editor]);
 
     const handleProviderChange = (newProvider: string) => {
         setProvider(newProvider);
         const preset = providers.find(p => p.value === newProvider);
         if (preset && newProvider !== 'custom') {
             setBaseUrlOut(preset.baseUrl);
-            setApiKeyOut(preset.apiKey);
+            // Only overwrite API key if it's a known preset default (like 'ollama') or empty
+            // Otherwise keep user's key? No, switching provider usually means different key.
+            // Exception: Ollama needs dummy key.
+            if (preset.value === 'ollama') {
+                 setApiKeyOut('ollama');
+            } else {
+                 setApiKeyOut(''); // Clear key for new provider
+            }
+            
             if (preset.defaultModel) {
                 setModelOut(preset.defaultModel);
             }

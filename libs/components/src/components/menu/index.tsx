@@ -244,6 +244,7 @@ function MenuBar(props: MenuBarProps) {
                     menuButton={<Button className='menu-button'>Edit</Button>}
                     theming={isDark ? 'dark' : undefined}>
                     <MenuItem onClick={editProjectInfo}>Edit Project Information</MenuItem>
+                    <MenuItem onClick={() => editor.editAiSettings()}>AI Settings</MenuItem>
                 </Menu>
                 <Menu
                     menuButton={<Button className='menu-button'>Help</Button>}

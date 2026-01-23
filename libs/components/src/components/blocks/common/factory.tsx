@@ -265,7 +265,8 @@ export const editAIBlock = async (node: NodeModel) => {
             const apiKey = editor.getApiKey();
 
             const baseurl = editor.getBaseUrl();
-            const codeBlock = await new CodeBlockCreatorAI(data, block1, apiKey, baseurl, "").generateCodeBlock(codeBlockData);
+            const aiModel = editor.getAiModel();
+            const codeBlock = await new CodeBlockCreatorAI(data, block1, apiKey, baseurl, aiModel).generateCodeBlock(codeBlockData);
 
 
             const codeBlockString = await extractMainPythonFunctionBlock(codeBlock);
@@ -333,113 +334,39 @@ export const editAIBlock = async (node: NodeModel) => {
 
 
 // Function to extract inputs.read_number, outputs.share_number, and parameters.read_number
+// Function to extract inputs, outputs, and parameters using Regex
 function extractFunctionCalls(code: string) {
     const inputCalls: string[] = [];
     const outputCalls: string[] = [];
     const parameterCalls: string[] = [];
 
-    // Extract inputs.read_number calls
-    const inputParts = code.split('inputs.read_number(');
-    inputParts.forEach(part => {
-        const match = part.match(/^"([^"]+)"/);
-        if (match) {
-            inputCalls.push(match[1]);
-        }
-    });
-    const inputPartsImage = code.split('inputs.read_image(');
-    inputPartsImage.forEach(part => {
-        const match = part.match(/^"([^"]+)"/);
-        if (match) {
-            inputCalls.push(match[1]);
-        }
-    });
+    // Valid call patterns
+    // inputs.read_number("name") or inputs.read_number('name')
+    const inputRegex = /inputs\.read_(?:number|string|array|image)\(\s*(['"])(.*?)\1\s*\)/g;
+    
+    // outputs.share_number("name") or outputs.share_number('name')
+    const outputRegex = /outputs\.share_(?:number|string|array|image)\(\s*(['"])(.*?)\1\s*\)/g;
 
-    // Extract inputs.read_number calls
-    const inputPartsString = code.split('inputs.read_string(');
-    inputPartsString.forEach(part => {
-        const match = part.match(/^"([^"]+)"/);
-        if (match) {
-            inputCalls.push(match[1]);
-        }
-    });
+    // parameters.read_number("name") or parameters.read_number('name')
+    const paramRegex = /parameters\.read_(?:number|string)\(\s*(['"])(.*?)\1\s*\)/g;
 
-    // Extract inputs.read_number calls
-    const inputPartsArray = code.split('inputs.read_array(');
-    inputPartsArray.forEach(part => {
-        const match = part.match(/^"([^"]+)"/);
-        if (match) {
-            inputCalls.push(match[1]);
-        }
-    });
+    let match;
 
-    // const outputParts = code.split(/outputs\.share_(string:number|image|array|string)\(/); // share_number ve share_image için
+    // Extract Inputs
+    while ((match = inputRegex.exec(code)) !== null) {
+        // match[2] contains the name (captured group inside quotes)
+        inputCalls.push(match[2]);
+    }
 
+    // Extract Outputs
+    while ((match = outputRegex.exec(code)) !== null) {
+        outputCalls.push(match[2]);
+    }
 
-    // Extract outputs.share_number calls
-    const outputParts = code.split('outputs.share_number(');
-    outputParts.forEach(part => {
-        const match = part.match(/^"([^"]+)"/);
-        if (match) {
-            outputCalls.push(match[1]);
-        }
-    });
-
-    // // Extract outputs.share_number calls
-    const outputPartsArray = code.split('outputs.share_array(');
-    outputPartsArray.forEach(part => {
-        const match = part.match(/^"([^"]+)"/);
-        if (match) {
-            outputCalls.push(match[1]);
-        }
-    });
-    const outputPartsArray2 = code.split('outputs.share_array(');
-    outputPartsArray2.forEach(part => {
-        const match = part.match(/^'([^']+)'/);
-        if (match) {
-            outputCalls.push(match[1]);
-        }
-    });
-    // Extract outputs.share_number calls
-    const outputPartsImage = code.split('outputs.share_image(');
-    outputPartsImage.forEach(part => {
-        const match = part.match(/^"([^"]+)"/);
-        if (match) {
-            outputCalls.push(match[1]);
-        }
-    });
-    const outputPartsImage2 = code.split('outputs.share_image(');
-    outputPartsImage2.forEach(part => {
-        const match = part.match(/^'([^']+)'/);
-        if (match) {
-            outputCalls.push(match[1]);
-        }
-    });
-    const outputPartsString = code.split('outputs.share_string(');
-    outputPartsString.forEach(part => {
-        const match = part.match(/^"([^"]+)"/);
-        if (match) {
-            outputCalls.push(match[1]);
-        }
-    });
-
-    // Extract parameters.read_number calls
-    const parameterParts = code.split('parameters.read_number(');
-    parameterParts.forEach(part => {
-        const match = part.match(/^"([^"]+)"/);
-        if (match) {
-            parameterCalls.push(match[1]);
-        }
-    });
-
-    // Extract parameters.read_number calls
-    const parameterPartsString = code.split('parameters.read_string(');
-    parameterPartsString.forEach(part => {
-        const match = part.match(/^"([^"]+)"/);
-        if (match) {
-            parameterCalls.push(match[1]);
-        }
-    });
-
+    // Extract Parameters
+    while ((match = paramRegex.exec(code)) !== null) {
+        parameterCalls.push(match[2]);
+    }
 
     return {
         inputCalls,
@@ -549,7 +476,8 @@ export const createBlock = async (name: string, blockCount: number) => {
                 data = await aiCreateCodeDialog({ isOpen: true });
                 const block1 = new AiCodeBlockModel(data);
                 const codeBlockData = block1.getData();
-                const codeBlock = await new CodeBlockCreatorAI(data, block1).generateCodeBlock(codeBlockData);
+                const editor = Editor.getInstance();
+                const codeBlock = await new CodeBlockCreatorAI(data, block1, editor.getApiKey(), editor.getBaseUrl(), editor.getAiModel()).generateCodeBlock(codeBlockData);
 
                 const codeBlockString = await extractMainPythonFunctionBlock(codeBlock);
 
@@ -629,7 +557,8 @@ export const createBlockWithAPI = async (name: string, blockCount: number, dataA
                 data = await aiCreateCodeDialog({ isOpen: true });
                 const block1 = new AiCodeBlockModel(data);
                 const codeBlockData = block1.getData();
-                const codeBlock = await new CodeBlockCreatorAI(data, block1).generateCodeBlock(codeBlockData);
+                const editor = Editor.getInstance();
+                const codeBlock = await new CodeBlockCreatorAI(data, block1, editor.getApiKey(), editor.getBaseUrl(), editor.getAiModel()).generateCodeBlock(codeBlockData);
 
                 const codeBlockString = await extractMainPythonFunctionBlock(codeBlock);
 

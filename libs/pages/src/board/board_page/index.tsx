@@ -116,6 +116,7 @@ export const BoardPage = (): JSX.Element => {
   // Sync editor state with React state
   useEffect(() => {
     const handleEditorChange = () => {
+      console.log('[BoardPage] handleEditorChange: showingPackage=', editor.showingPackage());
       setState({
         locked: editor.locked(),
         showingPackage: editor.showingPackage(),

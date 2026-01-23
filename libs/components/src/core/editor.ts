@@ -12,7 +12,11 @@ import createEngine, {
   DiagramModel,
   NodeModel,
   RightAngleLinkFactory,
+  NodeLayerFactory,
+  LinkLayerFactory,
+  NodeLayerModel
 } from '@projectstorm/react-diagrams';
+import { CustomLinkFactory } from '../components/blocks/common/custom-link/custom-link-factory';
 import { CodeBlockFactory } from '../components/blocks/basic/code/code-factory';
 import { AiCodeBlockFactory } from '../components/blocks/basic/ai-code/code-factory';
 import { ConstantBlockFactory } from '../components/blocks/basic/constant/constant-factory';
@@ -28,7 +32,6 @@ import {
   createBlockWithAPI,
   editBlock,
   getInitialPosition,
-  loadPackage,
   createComposedBlock,
   editAIBlock,
 } from '../components/blocks/common/factory';
@@ -36,13 +39,13 @@ import { PackageBlockFactory } from '../components/blocks/package/package-factor
 import { PackageBlockModel } from '../components/blocks/package/package-model';
 import createProjectInfoDialog from '../components/dialogs/project-info-dialog';
 import { ProjectInfo, BlockData } from './constants';
-import { convertToOld } from './serialiser/converter';
 import BaseModel from '../components/blocks/common/base-model';
-import { count } from 'console';
 import createBlockDialog from '../components/dialogs/blocks-dialog';
 import cloneDeep from 'lodash.clonedeep';
-import { PortModelOptions, NodeLayerFactory, LinkLayerFactory, NodeLayerModel } from '@projectstorm/react-diagrams-core';
 import { Dependency } from './serialiser/interfaces';
+import { ProjectManager } from './managers/project-manager';
+import { NavigationStack } from './managers/navigation-stack';
+import { AiManager } from './managers/ai-manager';
 
 declare module '@projectstorm/react-diagrams-core' {
   export interface PortModelOptions {
@@ -53,47 +56,29 @@ declare module '@projectstorm/react-diagrams-core' {
 class Editor {
   private static instance: Editor;
   private static instanceComponent: Editor;
-  private currentProjectName: string;
-  private projectInfo: ProjectInfo;
-  private BlockData: BlockData;
-  private apiKey: string;
-  private aiModel: string;
-  private baseUrl: string;
+  
+  private projectManager: ProjectManager;
+  private navigationStack: NavigationStack;
+  private aiManager: AiManager;
 
-  private stack: {
-    model: DiagramModel;
-    info: ProjectInfo;
-    node: PackageBlockModel;
-  }[];
-  private stackOfBlock: { model: DiagramModel; info: ProjectInfo }[];
-  private activeModel: DiagramModel;
+  private BlockData: BlockData;
+  private stackOfBlock: { model: DiagramModel; info: ProjectInfo }[] = [];
   private blockCount: number = 0;
-  private onModelChangeListeners: ((model: DiagramModel) => void)[] = [];
 
   public engine: DiagramEngine;
 
   private constructor() {
-    // Name of the project. Used as file name while downloading.
-    this.currentProjectName = 'Untitled';
     // Do not register default delete action keyboard keys, because Backspace is also included in it.
     // Only Delete button is registered under register factories method.
     this.engine = createEngine({ registerDefaultDeleteItemsAction: false });
-    this.activeModel = new DiagramModel();
-    // Use an array as stack, to keep track of levels of circuit model.
-    this.stack = [];
-    this.stackOfBlock = [];
-    this.engine.setModel(this.activeModel);
+    
+    // Initialize Managers
+    this.projectManager = new ProjectManager(this.engine);
+    this.navigationStack = new NavigationStack(this.projectManager, this.engine);
+    this.aiManager = new AiManager();
+
     this.registerFactories();
-    this.apiKey = "";
-    this.baseUrl = "";
-    this.aiModel = "";
-    this.projectInfo = {
-      name: '',
-      version: '',
-      description: '',
-      author: '',
-      image: '',
-    };
+
     this.BlockData = {
       selectedInputIds: [],
       selectedOutputIds: [],
@@ -104,8 +89,8 @@ class Editor {
    * Register factories for different blocks and links
    */
   private registerFactories() {
-    // RightAngle links is not used as of now. Its for future when links might be converted to straight wires
     this.engine.getLinkFactories().registerFactory(new RightAngleLinkFactory());
+    this.engine.getLinkFactories().registerFactory(new CustomLinkFactory()); // Register custom link factory to enable context menu
     this.engine.getPortFactories().registerFactory(new BaseInputPortFactory());
     this.engine.getPortFactories().registerFactory(new BaseOutputPortFactory());
     this.engine
@@ -129,6 +114,7 @@ class Editor {
       .getActionEventBus()
       .registerAction(new DeleteItemsAction({ keyCodes: [46, 8] }));
   }
+
   /**
    * Main entry point to get Editor object, since constructor is private.
    * @returns instance of Editor object
@@ -142,132 +128,58 @@ class Editor {
   }
 
   public static getForComponentInstance() {
-    // Editor is used as a singleton across the whole application.
-
     if (!Editor.instanceComponent) {
       Editor.instanceComponent = new Editor();
     }
     return Editor.instanceComponent;
   }
 
+  public get activeModel() {
+    return this.projectManager.getActiveModel();
+  }
+
+  // Delegate Config Changes to AiManager (or general config if expanded)
+  public addOnConfigChange(callback: () => void): () => void {
+    return this.aiManager.addOnConfigChange(callback);
+  }
+
   /**
    * Deserialise the JSON object into model instance and open the project circuit.
    * @param jsonModel : JSON object conforming to the project structure
-   * Project Structure: {
-   *      "editor": {...},
-   *      "version": "3.0",
-   *      "package": {...},
-   *      "design": {...},
-   *      "dependencies": {...}
-   * }
    */
-  public loadProject(jsonModel: { editor: unknown; design: unknown; dependencies: Dependency; package: ProjectInfo }, filename: string = '') {
-    const model = new DiagramModel();
-    const editor = jsonModel.editor;
-    console.log('Loading project with model:', editor);
-
-    if (editor && typeof editor === 'object') {
-      console.log('Deserialising model with editor data:', editor);
-      model.deserializeModel(
-        {
-          offsetX: 0,
-          offsetY: 0,
-          zoom: 100,
-          gridSize: 20,
-          layers: [], // Required by interface, will be populated by self-healing if empty
-          id: '',
-          locked: false,
-          ...editor,
-        },
-        this.engine
-      );
-
-      const layerCount = model.getLayers().length;
-      console.log(`[Editor] Layers after deserialization: ${layerCount}`);
-
-      // FIX: Ensure we have layers if deserialization resulted in 0 layers
-      if (layerCount === 0) {
-        console.warn('[Editor] Model has 0 layers! Forcing default layers...');
-        const nodeLayer = new NodeLayerFactory().generateModel({});
-        const linkLayer = new LinkLayerFactory().generateModel({});
-        model.addLayer(linkLayer);
-        model.addLayer(nodeLayer);
-        console.log('[Editor] Default layers added. New count:', model.getLayers().length);
-      } else {
-        console.log('[Editor] Layers present, IDs:', model.getLayers().map(l => l.getID()));
+  public loadProject(jsonModel: { editor: unknown; design: unknown; dependencies: Dependency; package: ProjectInfo; aiConfig?: { apiKey: string, baseUrl: string, model: string } }, filename: string = '') {
+      // Load AI Config
+      if (jsonModel.aiConfig) {
+          this.setApiKey(jsonModel.aiConfig.apiKey);
+          this.setBaseUrl(jsonModel.aiConfig.baseUrl);
+          this.setAiModel(jsonModel.aiConfig.model);
       }
-      this.activeModel = model;
-      this.projectInfo = jsonModel.package;
-      if (this.projectInfo.name === '' && filename !== '') {
-        this.projectInfo.name = filename;
-      }
-      console.log('Loaded project info:', this.projectInfo);
-      // Set the current project name to the name of
-      this.engine.setModel(model);
-      this.engine.repaintCanvas();
-      this.onModelChangeListeners.forEach(cb => cb(model));
-    } else {
-      console.warn('Editor data is undefined or invalid, initializing empty project');
-      // Initialize with empty model when editor is missing
-      this.activeModel = model;
-      this.projectInfo = jsonModel.package || {
-        name: filename || 'Untitled',
-        version: '1.0.0',
-        description: '',
-        author: '',
-        image: '',
-      };
-      this.engine.setModel(model);
-      this.engine.repaintCanvas();
-      this.onModelChangeListeners.forEach(cb => cb(model));
-    }
+      this.projectManager.loadProject(jsonModel, filename);
   }
 
   public get projectInfoData(): ProjectInfo {
-    return this.projectInfo;
+    return this.projectManager.getProjectInfo();
   }
 
   /**
    * Load an empty instance of DiagramModel as the current project.
    */
   public clearProject(): void {
-    this.activeModel = new DiagramModel();
-    this.projectInfo = {
-      name: '',
-      version: '',
-      description: '',
-      author: '',
-      image: '',
-    };
-    this.engine.setModel(this.activeModel);
-    this.onModelChangeListeners.forEach(cb => cb(this.activeModel));
+    this.projectManager.clearProject();
+    this.navigationStack.clearStack();
+    this.aiManager.setConfig("", "", "");
   }
 
   public addOnModelChange(callback: (model: DiagramModel) => void): () => void {
-    this.onModelChangeListeners.push(callback);
-    // Call it immediately for current model
-    callback(this.activeModel);
-
-    // Return unregister function
-    return () => {
-      this.onModelChangeListeners = this.onModelChangeListeners.filter(cb => cb !== callback);
-    };
+    return this.projectManager.addOnModelChange(callback);
   }
 
   /**
    * Serialise the model data and also VisualCircuit data as required by backend.
-   * Project Structure: {
-   *      "editor": {...},
-   *      "version": "3.0",
-   *      "package": {...},
-   *      "design": {...},
-   *      "dependencies": {...}
-   * }
    * @returns Serialised data of the project (model) and VisualCircuit (old) format data
    */
   public serialise() {
-    const data = convertToOld(this.activeModel, this.projectInfo);
-    return { editor: this.activeModel.serialize(), ...data };
+      return this.projectManager.serialise(this.aiManager.getConfig());
   }
 
   public async processBlock(
@@ -303,7 +215,6 @@ class Editor {
     } else if (nodeType === 'basic.aicode') {
       return 'AI Code';
     }
-
     return nodeType;
   }
 
@@ -315,7 +226,7 @@ class Editor {
     let indexTwo = 0;
     let valueOne: { indexOne: number; label: string; id: string }[] = [];
     let valueTwo: { indexTwo: number; label: string; id: string }[] = [];
-    this.activeModel.getNodes().forEach((node) => {
+    this.projectManager.getActiveModel().getNodes().forEach((node) => {
       if (node instanceof BaseModel) {
         var options = node.getOptions();
         var dataPorts = node.getPorts();
@@ -362,8 +273,8 @@ class Editor {
   public async editBlock(): Promise<Boolean> {
     try {
       // Create deep copies using lodash.cloneDeep
-      const activeModelCopy = cloneDeep(this.activeModel);
-      const projectInfoCopy = cloneDeep(this.projectInfo);
+      const activeModelCopy = cloneDeep(this.projectManager.getActiveModel());
+      const projectInfoCopy = cloneDeep(this.projectManager.getProjectInfo());
 
       // Push the deep copies onto the stack
       this.stackOfBlock.push({ model: activeModelCopy, info: projectInfoCopy });
@@ -376,7 +287,7 @@ class Editor {
       this.BlockData = data;
 
       // Process the block data
-      await this.processBlock(this.activeModel, data);
+      await this.processBlock(this.projectManager.getActiveModel(), data);
       console.log('Block editing completed successfully.');
       return true;
     } catch (error) {
@@ -389,22 +300,13 @@ class Editor {
   public retriveCircuit() {
     if (this.stackOfBlock.length) {
       const { model, info } = this.stackOfBlock.pop()!;
-      this.activeModel = model;
-      this.projectInfo = info;
-      this.engine.setModel(this.activeModel);
-      this.engine.repaintCanvas();
+      this.projectManager.setActiveModel(model);
+      this.projectManager.setProjectInfo(info);
     }
   }
 
-  /**
-   * Getter for Project Name
-   * @returns Project name
-   */
   public getName(): string {
-    if (this.projectInfo.name) {
-      this.currentProjectName = this.projectInfo.name;
-    }
-    return this.currentProjectName;
+    return this.projectManager.getName();
   }
 
   /**
@@ -417,106 +319,68 @@ class Editor {
     const block = await createBlock(name, this.blockCount);
 
     if (block) {
-      console.log(`Block created: ${block.getID()}`);
-
+      const activeModel = this.projectManager.getActiveModel();
       // Self-healing: Ensure layers exist
-      let nodeLayer = this.activeModel.getLayers().find(l => l instanceof NodeLayerModel);
+      let nodeLayer = activeModel.getLayers().find(l => l instanceof NodeLayerModel);
 
       if (!nodeLayer) {
-        console.warn('[Editor] No NodeLayer found! Creating one...');
-        nodeLayer = new NodeLayerFactory().generateModel({});
-        // Ensure we have at least 2 layers usually (Node and Link), but let's just make sure NodeLayer exists
-        if (this.activeModel.getLayers().length === 0) {
+        nodeLayer = new NodeLayerFactory().generateModel({}) as any;
+        if (activeModel.getLayers().length === 0) {
           const linkLayer = new LinkLayerFactory().generateModel({});
-          this.activeModel.addLayer(linkLayer);
-          this.activeModel.addLayer(nodeLayer);
+          activeModel.addLayer(linkLayer as any);
+          activeModel.addLayer(nodeLayer as any);
         } else {
-          this.activeModel.addLayer(nodeLayer);
+          activeModel.addLayer(nodeLayer as any);
         }
-        console.log('[Editor] Self-healing complete. NodeLayer added.');
       }
 
-      // Get a default position and set it as blocks position
-      // TODO: Better way would be to get an empty position dynamically or track mouse's current position.
       block.setPosition(...getInitialPosition());
-
-      // Explicitly add to node layer
       if (nodeLayer instanceof NodeLayerModel) {
         nodeLayer.addModel(block);
-        console.log(`[Editor] Node added to layer ${nodeLayer.getID()}. Total nodes: ${Object.keys(this.activeModel.getNodes()).length}`);
-      } else {
-        console.error('[Editor] Failed to find or create a valid NodeLayer to add the block!');
       }
-
-      // Once the block is added, the page has to rendered again, this is done by repainting the canvas.
-      this.engine.repaintCanvas();
-      console.log(`Notifying ${this.onModelChangeListeners.length} listeners`);
-      this.onModelChangeListeners.forEach(cb => cb(this.activeModel));
-    } else {
-      console.warn(`Block creation failed for ${name}`);
+      this.projectManager.notifyListeners();
     }
   }
 
   public async addBlockWithAPI(name: string, data: any): Promise<void> {
     this.blockCount += 1;
     const block = await createBlockWithAPI(name, this.blockCount, data);
-
     if (block) {
-      // Self-healing: Ensure layers exist
-      if (this.activeModel.getLayers().length === 0) {
-        console.warn('[Editor] NO LAYERS in active model! Performing self-healing...');
-        const nodeLayer = new NodeLayerFactory().generateModel({});
-        const linkLayer = new LinkLayerFactory().generateModel({});
-        this.activeModel.addLayer(linkLayer);
-        this.activeModel.addLayer(nodeLayer);
-        console.log('[Editor] Self-healing complete. Layers added.');
+      const activeModel = this.projectManager.getActiveModel();
+      if (activeModel.getLayers().length === 0) {
+         const nodeLayer = new NodeLayerFactory().generateModel({});
+         const linkLayer = new LinkLayerFactory().generateModel({});
+         activeModel.addLayer(linkLayer as any);
+         activeModel.addLayer(nodeLayer as any);
       }
-
-      // Get a default position and set it as blocks position
-      // TODO: Better way would be to get an empty position dynamically or track mouse's current position.
       block.setPosition(...getInitialPosition());
-      this.activeModel.addNode(block);
-      // Once the block is added, the page has to rendered again, this is done by repainting the canvas.
-      this.engine.repaintCanvas();
-      this.onModelChangeListeners.forEach(cb => cb(this.activeModel));
+      activeModel.addNode(block);
+      this.projectManager.notifyListeners();
     }
   }
 
-
   public nullLinkNodes(type: string, name: string, blockID: string) {
-    // Get all nodes from the model
-    const nodes = this.activeModel.getNodes();
-
-    // Iterate over each node
+    const nodes = this.projectManager.getActiveModel().getNodes();
     for (const node of Object.values(nodes)) {
-      // Get all ports from the current node
       const ports = node.getPorts();
-
-      // Iterate over each port to check if the name matches the given port name
       for (const port of Object.values(ports)) {
         if (port.getOptions().label === name && node.getID() === blockID) {
           const link = new DefaultLinkModel();
           if (port.getType() == 'port.input') {
             link.setTargetPort(port);
-            this.activeModel.addLink(link);
+            this.projectManager.getActiveModel().addLink(link);
             return link.getID();
           } else if (port.getType() == 'port.output') {
             link.setSourcePort(port);
-            this.activeModel.addLink(link);
+            this.projectManager.getActiveModel().addLink(link);
             return link.getID();
           }
         }
       }
     }
-
-    // Return null if no matching port is found
     return '';
   }
 
-  /**
-   * Add the given type of block for composed.
-   * @param name : Name / type of the block to add to model.
-   */
   public async addComposedBlock(
     type: string,
     name: string,
@@ -527,199 +391,89 @@ class Editor {
     const block = await createComposedBlock(type, name);
     if (block) {
       block.setPosition(...getInitialPosition());
-      this.activeModel.addNode(block);
+      this.projectManager.getActiveModel().addNode(block);
       this.engine.repaintCanvas();
 
-      const link = this.activeModel.getLink(linkID);
-      if (!link) {
-        console.error('Link not found');
-        return;
+      const link = this.projectManager.getActiveModel().getLink(linkID);
+      if (link) {
+          const newPort = block.getPort();
+          if (newPort) {
+              if (type == 'basic.input') {
+                  link.setSourcePort(newPort);
+              } else if (type == 'basic.output') {
+                  link.setTargetPort(newPort);
+              }
+              this.engine.repaintCanvas();
+          }
       }
-
-      const newPort = block.getPort();
-      if (!newPort) {
-        console.error('New source port not found');
-        return;
-      }
-
-      if (type == 'basic.input') {
-        link.setSourcePort(newPort);
-      } else if (type == 'basic.output') {
-        link.setTargetPort(newPort);
-      }
-
-      this.engine.repaintCanvas();
     }
   }
-
-
 
   public async editSaveInfoProject(
     saveProjectInfo: ProjectInfo
   ): Promise<void> {
-    this.projectInfo = saveProjectInfo;
-    this.onModelChangeListeners.forEach(cb => cb(this.activeModel));
+    this.projectManager.setProjectInfo(saveProjectInfo);
+    this.projectManager.notifyListeners();
   }
 
-  /**
-   * Callback for the 'Edit Project Information' button in menu.
-   * Opens a dialog box and saves the data entered to projectInfo variable.
-   */
   public async editProjectInfo(): Promise<void> {
-    // Helper to open Project Info dialog box
-    createProjectInfoDialog({ isOpen: true, ...this.projectInfo })
+    createProjectInfoDialog({ isOpen: true, ...this.projectManager.getProjectInfo() })
       .then((data) => {
-        this.projectInfo = data;
+        this.projectManager.setProjectInfo(data);
       })
       .catch(() => {
         console.log('Project Info dialog closed');
       });
   }
 
-  /**
-   * Adds a project as a block to the current project
-   * @param jsonModel JSON object conforming to the project structure
-   * Project Structure: {
-   *      "editor": {...},
-   *      "version": "3.0",
-   *      "package": {...},
-   *      "design": {...},
-   *      "dependencies": {...}
-   * }
-   */
   public addAsBlock(jsonModel: { editor: Editor; design: unknown; dependencies: Dependency; package: ProjectInfo }, fileName: string = '') {
-    // Helper to convert JSON object to block.
-    const block = loadPackage(jsonModel);
-    // Get a default position and set it as blocks position
-    // TODO: Better way would be to get an empty position dynamically or track mouse's current position.
-    if (block) {
-      if (block.info.name === '' && fileName !== '') {
-        block.info.name = fileName;
-      }
-      block.setPosition(...getInitialPosition());
-      this.activeModel.addNode(block);
-      // Once the block is added, the page has to rendered again, this is done by repainting the canvas.
-      this.engine.repaintCanvas();
-    }
+      this.projectManager.addAsBlock(jsonModel, fileName);
   }
 
   public setAiModel(model: string) {
-    this.aiModel = model;
+    this.aiManager.setAiModel(model);
   }
 
   public getAiModel(): string {
-    return this.aiModel;
+    return this.aiManager.getAiModel();
   }
 
   public setApiKey(apiKey: string) {
-    this.apiKey = apiKey;
+    this.aiManager.setApiKey(apiKey);
   }
 
   public setBaseUrl(baseUrl: string) {
-    this.baseUrl = baseUrl;
+    this.aiManager.setBaseUrl(baseUrl);
   }
 
   public getApiKey(): string {
-    return this.apiKey;
+    return this.aiManager.getApiKey();
   }
 
   public getBaseUrl(): string {
-    return this.baseUrl;
+    return this.aiManager.getBaseUrl();
   }
 
-  /**
-   * Open a block as current project (model)
-   * @param node Block to be opened
-   */
   public openPackage(node: PackageBlockModel) {
-    // Store the current project (model), project info and the block asked to open in stack,
-    // so that it can be restored later.
-    this.stack.push({
-      model: this.activeModel,
-      info: this.projectInfo,
-      node: node,
-    });
-    // Create a new model and deserialise the block into it.
-    const model = new DiagramModel();
-    const editor = node.model;
-    if (editor) {
-      model.deserializeModel(
-        {
-          offsetX: 0,
-          offsetY: 0,
-          zoom: 100,
-          gridSize: 20,
-          layers: [],
-          id: '',
-          locked: false,
-          ...editor,
-        },
-        this.engine
-      );
-      this.activeModel = model;
-      this.projectInfo = node.info;
-      // Set the block as the current project (model)
-      this.engine.setModel(model);
-      // By default lock the project
-      this.setLock(true);
-    }
+      this.navigationStack.openPackage(node);
   }
 
-  /**
-   * Check whether currently any package block is opened.
-   * @returns True if there is a model in the stack.
-   */
   public showingPackage() {
-    return this.stack.length > 0;
+    return this.navigationStack.showingPackage();
   }
 
-  /**
-   * Get status of model lock
-   * @returns Whether the current project (model) is locked from any editing
-   */
   public locked(): boolean {
-    return this.activeModel.isLocked();
+    return this.projectManager.isLocked();
   }
 
-  /**
-   * Set the status of model lock
-   * @param lock True if project (model) has to be locked.
-   */
   public setLock(lock: boolean) {
-    this.activeModel.setLocked(lock);
+    this.projectManager.setLocked(lock);
   }
 
-  /**
-   * Go one level higher in the model stack.
-   * When back button is pressed while viewing/editing a model, the current project is changed to its
-   * parent model.
-   */
   public goToPreviousModel() {
-    // Check if there is anything in the stack
-    if (this.stack.length) {
-      // Since the model could have changed, get new data for backend.
-      const data = convertToOld(this.activeModel, this.projectInfo);
-      // Get the parent model, project info and the current block being modified from the stack
-      const { model, info, node } = this.stack.pop()!;
-      // Assign the modified data to the stored block object, as this is the one used in project.
-      node.design = data.design;
-      node.model = this.activeModel.serialize();
-      this.activeModel = model;
-      this.projectInfo = info;
-      // Change the current model to the model got from the stack.
-      this.engine.setModel(this.activeModel);
-
-      this.setLock(false);
-    }
+      this.navigationStack.goToPreviousModel();
   }
 
-
-
-
-  /**
-   * Delete a block node, if current model is not locked.
-   * @param node
-   */
   public removeNode(node: NodeModel) {
     if (!this.locked()) {
       node.remove();
@@ -727,30 +481,23 @@ class Editor {
     }
   }
 
-  /**
-  * Edit a block node, if current model is not locked.
-  * @param node
-  */
   public async editNode<T extends NodeModel>(node: T) {
     if (!this.locked()) {
       await editBlock(node);
-
       this.engine.repaintCanvas();
-      // return data;
     }
   }
 
-  /**
-   * Edit a AI block node, if current model is not locked.
-   * @param node
-   */
   public async editAINode<T extends NodeModel>(node: T) {
     if (!this.locked()) {
       let data: any = await editAIBlock(node);
-
       this.engine.repaintCanvas();
       return data;
     }
+  }
+
+  public async editAiSettings(): Promise<void> {
+      await this.aiManager.editAiSettings();
   }
 }
 

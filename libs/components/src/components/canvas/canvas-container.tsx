@@ -12,7 +12,7 @@ import './styles.scss';
 // const CanvasContainer: React.FC = (props) => {
 
 export const CanvasContainer = (props: { children: boolean | React.ReactChild | React.ReactFragment | React.ReactPortal | null | undefined; }): JSX.Element => {
-    return <div id='canvas-container'>{props.children}</div>;
+    return <div id='canvas-container' tabIndex={0} style={{ outline: 'none' }}>{props.children}</div>;
 }
 
 export default CanvasContainer;

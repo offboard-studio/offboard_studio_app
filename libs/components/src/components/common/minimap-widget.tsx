@@ -19,7 +19,7 @@ const MiniMapWidget: React.FC<MiniMapWidgetProps> = ({ editor }) => {
       const model = editor.activeModel;
       const nodesMap = model.getNodes();
       const nodeList = Object.values(nodesMap);
-      setNodes(nodeList);
+      setNodes(nodeList as any);
 
       // Calculate world bounding box
       let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
@@ -29,9 +29,9 @@ const MiniMapWidget: React.FC<MiniMapWidgetProps> = ({ editor }) => {
         minX = 0; minY = 0; maxX = 1000; maxY = 1000;
       } else {
         nodeList.forEach(node => {
-          const pos = node.getPosition();
-          const width = node.width || 150; // Approximations if not set
-          const height = node.height || 100;
+          const pos = (node as any).getPosition();
+          const width = (node as any).width || 150; // Approximations if not set
+          const height = (node as any).height || 100;
           minX = Math.min(minX, pos.x);
           minY = Math.min(minY, pos.y);
           maxX = Math.max(maxX, pos.x + width);
@@ -122,12 +122,12 @@ const MiniMapWidget: React.FC<MiniMapWidgetProps> = ({ editor }) => {
     >
       {/* Render Nodes as small dots */}
       {nodes.map(node => {
-        const pos = node.getPosition();
+        const pos = (node as any).getPosition();
         const nX = (pos.x - minBounds.x) / safeWidth;
         const nY = (pos.y - minBounds.y) / safeHeight;
         // Approximate size in %
-        const nW = (node.width || 150) / safeWidth;
-        const nH = (node.height || 100) / safeHeight;
+        const nW = ((node as any).width || 150) / safeWidth;
+        const nH = ((node as any).height || 100) / safeHeight;
 
         return (
           <div

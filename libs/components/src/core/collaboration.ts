@@ -16,6 +16,7 @@ class CollaborationManager {
   private userId: string;
   private editorUnsubscribe: (() => void) | null = null;
   private modelListenerDeregistrator: (() => void) | null = null;
+  private configUnsubscribe: (() => void) | null = null;
 
   private constructor(collaborationService: ICollaborationService) {
     this.editor = Editor.getInstance();
@@ -113,6 +114,12 @@ class CollaborationManager {
 
       this.modelListenerDeregistrator = () => handler.deregister();
     });
+
+    // Hook into config changes (AI settings etc)
+    this.configUnsubscribe = this.editor.addOnConfigChange(() => {
+        console.log('[CollaborationManager] Config change detected, syncing...');
+        this.syncLocalToRemote();
+    });
   }
 
   public stopCollaboration() {
@@ -127,6 +134,10 @@ class CollaborationManager {
     if (this.modelListenerDeregistrator) {
       this.modelListenerDeregistrator();
       this.modelListenerDeregistrator = null;
+    }
+    if (this.configUnsubscribe) {
+        this.configUnsubscribe();
+        this.configUnsubscribe = null;
     }
     this.currentProjectId = null;
   }

@@ -1,28 +1,91 @@
-import { doc, onSnapshot, setDoc, getDoc, Timestamp } from 'firebase/firestore';
+import { doc, onSnapshot, setDoc, getDoc, Timestamp, writeBatch, deleteField } from 'firebase/firestore';
 import { db } from './init';
 import { ICollaborationService } from '../../core/interfaces/collaboration.service.interface';
 
 export class FirebaseCollaborationService implements ICollaborationService {
+  
   startListening(projectId: string, onUpdate: (data: any) => void): () => void {
     const projectRef = doc(db, 'projects', projectId);
-    return onSnapshot(projectRef, (snapshot) => {
-      const data = snapshot.data();
-      if (data) {
-        onUpdate(data);
-      }
+    const contentRef = doc(db, 'projects', projectId, 'content', 'main');
+
+    let rootData: any = null;
+    let contentData: any = null;
+    let initialized = false;
+
+    // Helper to merge and value emit
+    const emitUpdate = () => {
+        if (!rootData) return; // Need at least root data
+        
+        const mergedData = {
+            ...rootData,
+            ...(contentData || {})
+        };
+        onUpdate(mergedData);
+    };
+
+    const unsubscribeRoot = onSnapshot(projectRef, (snapshot) => {
+        if (snapshot.exists()) {
+            rootData = snapshot.data();
+            emitUpdate();
+        }
     });
+
+    const unsubscribeContent = onSnapshot(contentRef, (snapshot) => {
+        if (snapshot.exists()) {
+            contentData = snapshot.data();
+            emitUpdate();
+        } else {
+             // Content might not exist for legacy projects, that's fine.
+            contentData = null;
+            // distinct check to trigger emit if we previously had content? 
+            // Reuse current rootData if we have it
+            if (rootData) emitUpdate(); 
+        }
+    });
+
+    return () => {
+        unsubscribeRoot();
+        unsubscribeContent();
+    };
   }
 
   async updateProject(projectId: string, data: any, userId: string): Promise<void> {
-    console.log(`[FirebaseService] Updating project ${projectId}, userId: ${userId}`);
+    // console.log(`[FirebaseService] Updating project ${projectId}, userId: ${userId}`);
     try {
       const projectRef = doc(db, 'projects', projectId);
-      await setDoc(projectRef, {
-        ...data,
-        updatedAt: Timestamp.now(),
-        updatedBy: userId
-      }, { merge: true });
-      console.log(`[FirebaseService] updateProject success for ${projectId}`);
+      const contentRef = doc(db, 'projects', projectId, 'content', 'main');
+      
+      const batch = writeBatch(db);
+
+      // Separate Heavy fields
+      const heavyFields = ['design', 'editor', 'dependencies'];
+      const rootUpdate: any = { updatedAt: Timestamp.now(), updatedBy: userId };
+      const contentUpdate: any = {};
+      let hasContentUpdate = false;
+
+      // Classify data keys
+      Object.keys(data).forEach(key => {
+          if (heavyFields.includes(key)) {
+              contentUpdate[key] = data[key];
+              hasContentUpdate = true;
+              // If we are writing heavy data to content, make sure to delete it from root (migration)
+              rootUpdate[key] = deleteField(); 
+          } else {
+              rootUpdate[key] = data[key];
+          }
+      });
+
+      // 1. Update Content (if needed)
+      if (hasContentUpdate) {
+          batch.set(contentRef, contentUpdate, { merge: true });
+      }
+
+      // 2. Update Root
+      batch.set(projectRef, rootUpdate, { merge: true });
+
+      await batch.commit();
+
+      // console.log(`[FirebaseService] updateProject success for ${projectId}`);
     } catch (error) {
       console.error(`[FirebaseService] updateProject failed for ${projectId}:`, error);
       throw error;
@@ -31,14 +94,27 @@ export class FirebaseCollaborationService implements ICollaborationService {
 
   async getProject(projectId: string): Promise<any> {
     const projectRef = doc(db, 'projects', projectId);
-    const snapshot = await getDoc(projectRef);
+    const contentRef = doc(db, 'projects', projectId, 'content', 'main');
 
-    if (!snapshot.exists()) {
+    // Parallel fetch
+    const [projectSnap, contentSnap] = await Promise.all([
+        getDoc(projectRef),
+        getDoc(contentRef)
+    ]);
+
+    if (!projectSnap.exists()) {
       console.warn('Project not found:', projectId);
       return null;
     }
 
-    const data = snapshot.data();
+    let data = projectSnap.data();
+
+    if (contentSnap.exists()) {
+        data = {
+            ...data,
+            ...contentSnap.data()
+        };
+    }
 
     // Ensure the data has the required editor structure
     if (!data.editor) {

@@ -21,6 +21,15 @@ import BasePort from '../../common/base-port';
 import { CodeBlockModel } from './code-model';
 import { unitConversion } from '../../../utils/tooltip/index';
 import './styles.scss';
+import CodeBlockCreatorAI from '../../../../code_block_creator';
+import loader from '@monaco-editor/loader';
+
+// CDN'den yükle
+loader.config({
+  paths: {
+    vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.52.2/min/vs',
+  },
+});
 
 /**
  * Interface for code block widget props
@@ -85,6 +94,49 @@ export class CodeBlockWidget extends React.Component<
       alwaysConsumeMouseWheel: false, // Allow the page to scroll when the mouse wheel is over the editor
     },
   };
+
+    handleEditorDidMount = (editor: any, monaco: any) => {
+    // Register Inline Completion Provider
+    monaco.languages.registerInlineCompletionsProvider('python', {
+        provideInlineCompletions: async (model: any, position: any, context: any, token: any) => {
+            // console.log('[CodeBlockWidget] Inline completion triggered at', position);
+            const text = model.getValue();
+            const editorInstance = Editor.getInstance();
+            const apiKey = editorInstance.getApiKey();
+            const baseUrl = editorInstance.getBaseUrl();
+            const aiModel = editorInstance.getAiModel();
+            
+            // console.log('[CodeBlockWidget] Settings:', { hasApiKey: !!apiKey, baseUrl, aiModel });
+
+            if (!apiKey) {
+                // console.warn('[CodeBlockWidget] No API key found. Skipping completion.');
+                return { items: [] };
+            }
+
+            const creator = new CodeBlockCreatorAI({}, undefined, apiKey, baseUrl, aiModel);
+            // console.log('[CodeBlockWidget] Requesting completion from CodeBlockCreatorAI...');
+            const completion = await creator.getInlineCompletion(text, position.lineNumber, position.column);
+            // console.log('[CodeBlockWidget] Completion received:', completion);
+            
+            if (!completion) {
+                return { items: [] };
+            }
+
+            return {
+                items: [{
+                    insertText: completion,
+                    range: new monaco.Range(
+                        position.lineNumber,
+                        position.column,
+                        position.lineNumber,
+                        position.column
+                    )
+                }]
+            };
+        },
+        freeInlineCompletions: (completions: any) => {}
+    });
+  }
 
   /**
    * Handler for context menu
@@ -165,6 +217,7 @@ export class CodeBlockWidget extends React.Component<
                     defaultValue={this.state.code}
                     onChange={this.handleInput}
                     theme="vs-dark"
+                    onMount={this.handleEditorDidMount}
                   />
                 </div>
 
