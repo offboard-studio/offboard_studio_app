@@ -48,10 +48,12 @@ import CloseIcon from '@mui/icons-material/Close';
 
 import DownloadingIcon from '@mui/icons-material/Downloading';
 import SettingsIcon from '@mui/icons-material/Settings';
+import TerminalIcon from '@mui/icons-material/Terminal';
 
 import { Button } from '@mui/material';
 import BoardUserButton from '@components/components/board/user';
 import { AiOptionBlockDialog, AiInterfaceOptionBlockDialog } from '@components/components/dialogs/ai-option-block-dialog';
+import { DeploymentDialog } from '@components/components/dialogs/deployment-dialog';
 import { DownloadRounded, FileDownload, SettingsEthernet } from '@mui/icons-material';
 import { textFile2DataURL } from '@components/core/utils';
 import { PROJECT_FILE_EXTENSION } from '@components/core/constants';
@@ -92,6 +94,7 @@ export const BoardPage = (): JSX.Element => {
   const [tabIndex, setTabIndex] = useState(0);
   const [tabIndexBoard, setTabIndexBoard] = useState(false);
   const [aiOptionBlockDialog, setAiOptionBlockDialog] = useState(false);
+  const [deploymentOpen, setDeploymentOpen] = useState(false);
 
   // Collaboration State
   const [collabOpen, setCollabOpen] = useState(false);
@@ -358,6 +361,16 @@ export const BoardPage = (): JSX.Element => {
             AI Config
           </Button>
 
+
+          <Button
+            color="inherit"
+            onClick={() => setDeploymentOpen(true)}
+            startIcon={<TerminalIcon />}
+            sx={{ textTransform: 'none', px: 2 }}
+          >
+            Deploy
+          </Button>
+
           <div style={{ flex: 1 }} />
           <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', pr: 2 }}>
             <Tooltip title="Build project">
@@ -483,6 +496,13 @@ export const BoardPage = (): JSX.Element => {
           onClose={() => {
             setTabIndexBoard(false);
           }}
+        />
+
+
+      {deploymentOpen && (
+        <DeploymentDialog
+          open={deploymentOpen}
+          onClose={() => setDeploymentOpen(false)}
         />
       )}
 
