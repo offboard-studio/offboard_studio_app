@@ -18,13 +18,26 @@ export default class CodeBlockCreatorAI {
   ) {
     this.codeBlockModel = codeBlockModel;
     this.model = model;
-    this.openai = new OpenAI({
-      baseURL: baseUrl || 'http://localhost:11434/v1',
-      defaultHeaders: {
+    
+    const isLocal = !apiKey || apiKey === 'ollama';
+    const finalBaseUrl = baseUrl || (isLocal ? 'http://localhost:11434/v1' : 'https://openrouter.ai/api/v1');
+    const finalApiKey = apiKey || 'ollama';
+    
+    // Additional headers for OpenRouter
+    const defaultHeaders: Record<string, string> = {
         'Content-Type': 'application/json',
         Accept: 'application/json',
-      },
-      apiKey: apiKey || 'ollama',
+    };
+    
+    if (!isLocal) {
+        defaultHeaders['HTTP-Referer'] = 'https://github.com/JdeRobot/VisualCircuit'; // Optional, for including your app on openrouter.ai rankings.
+        defaultHeaders['X-Title'] = 'VisualCircuit'; // Optional. Shows in rankings on openrouter.ai.
+    }
+
+    this.openai = new OpenAI({
+      baseURL: finalBaseUrl,
+      defaultHeaders: defaultHeaders,
+      apiKey: finalApiKey,
       dangerouslyAllowBrowser: true,
     });
   }
@@ -266,5 +279,66 @@ export default class CodeBlockCreatorAI {
 
     console.log(code);
     return code;
+  }
+
+  /**
+   * Generates inline code completion.
+   * @param {string} code The current code in the editor.
+   * @param {number} line The current line number (1-based).
+   * @param {number} column The current column number (1-based).
+   * @returns {Promise<string>} The suggested code completion.
+   */
+  public async getInlineCompletion(code: string, line: number, column: number): Promise<string> {
+    const lines = code.split('\n');
+    const prefix = lines.slice(0, line - 1).join('\n') + '\n' + lines[line - 1].slice(0, column - 1);
+    const suffix = lines[line - 1].slice(column - 1) + '\n' + lines.slice(line).join('\n');
+
+    try {
+        const response = await this.openai.chat.completions.create({
+            messages: [
+                { 
+                    role: 'system', 
+                    content: `You are a Python code completion assistant. Provide only the code to complete the current line or block. Do not include markdown code blocks or explanations.
+                    Context:
+                    ${this.SYSTEM_PROMPT_CODE_BLOCK}
+                    ` 
+                },
+                { 
+                    role: 'user', 
+                    content: `Complete the following Python code.
+                    Code before cursor:
+                    ${prefix}
+                    
+                    Code after cursor:
+                    ${suffix}
+                    
+                    Only return the text that should be inserted at the cursor position.
+                    ` 
+                },
+            ],
+            model: this.model || "google/gemini-2.0-flash-exp:free",
+            stop: ["\n\n", "```"],
+            temperature: 0.1,
+            max_tokens: 50
+        });
+
+        const completion = response?.choices?.[0]?.message?.content || '';
+        // Clean up markdown (backticks, wrapping)
+        let clean = completion.replace(/```python/g, '').replace(/```/g, '');
+        
+        // Strip leading/trailing whitespace which might be inserted by the model
+        // clean = clean.trim(); 
+        
+        // Actually, for inline completion, we might need leading spaces? 
+        // But usually models return just the code. 
+        // Let's at least remove valid markdown wrappers if they exist.
+        // And remove lines that are just backticks
+        clean = clean.replace(/^`+|`+$/g, '');
+        
+        return clean;
+    } catch (error) {
+        console.error("Error fetching inline completion:", error);
+        return "";
+    }
   }
 }

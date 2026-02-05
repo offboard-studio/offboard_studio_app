@@ -1,0 +1,2922 @@
+{
+  "editor": {
+    "id": "77367e8d-c9df-490f-8338-5bcb7458d0bd",
+    "offsetX": 163,
+    "offsetY": 97,
+    "zoom": 100,
+    "gridSize": 0,
+    "layers": [
+      {
+        "id": "3067e0d1-05ee-4a9a-8dec-765a79290a78",
+        "type": "diagram-links",
+        "isSvg": true,
+        "transformed": true,
+        "models": {
+          "0127319e-87ef-44f7-ae6b-f4add8a2c547": {
+            "id": "0127319e-87ef-44f7-ae6b-f4add8a2c547",
+            "type": "default",
+            "selected": false,
+            "source": "a82132be-ade5-42fc-8a05-a4dd97696837",
+            "sourcePort": "ac668e61-9bd9-4558-a57b-083209b0963d",
+            "target": "db3f1977-576f-48d6-abf8-fca134e4493d",
+            "targetPort": "06bf88db-46a3-4a1d-81eb-61df7cb9afcd",
+            "points": [
+              {
+                "id": "d24e5c11-cff6-497e-bccf-acd812951b3b",
+                "type": "point",
+                "x": 600,
+                "y": 200
+              },
+              {
+                "id": "a72bdd3b-9a1c-4e37-8419-3b74cefea1a8",
+                "type": "point",
+                "x": 650,
+                "y": 200
+              }
+            ],
+            "labels": [],
+            "width": 3,
+            "color": "gray",
+            "curvyness": 50,
+            "selectedColor": "rgb(0,192,255)"
+          },
+          "21aaba55-4542-46f8-9e08-f59fbcfd5712": {
+            "id": "21aaba55-4542-46f8-9e08-f59fbcfd5712",
+            "type": "default",
+            "selected": false,
+            "source": "db3f1977-576f-48d6-abf8-fca134e4493d",
+            "sourcePort": "2db14c38-9ba3-4b8c-9e5b-7b0c24e6e13c",
+            "target": "574ff3fe-1124-425a-b87d-d3d557df6000",
+            "targetPort": "ede6a51b-9149-46cf-b3d5-44a86d6aeee7",
+            "points": [
+              {
+                "id": "76da2b36-ee25-45d4-a1a5-b984fca55543",
+                "type": "point",
+                "x": 900,
+                "y": 220
+              },
+              {
+                "id": "c49f0f73-f3f8-4be0-ba3d-bf4b120a82d9",
+                "type": "point",
+                "x": 950,
+                "y": 220
+              }
+            ],
+            "labels": [],
+            "width": 3,
+            "color": "gray",
+            "curvyness": 50,
+            "selectedColor": "rgb(0,192,255)"
+          },
+          "9afeb00b-82f6-45f7-90af-b9c05b885826": {
+            "id": "9afeb00b-82f6-45f7-90af-b9c05b885826",
+            "type": "default",
+            "selected": false,
+            "source": "574ff3fe-1124-425a-b87d-d3d557df6000",
+            "sourcePort": "3dc284c5-d50a-4a33-a7d2-28feb856be0f",
+            "target": "d18c658b-2b76-4903-8012-fe237a56b4a2",
+            "targetPort": "a87e7f2c-491a-4d1c-af68-6b1cab834552",
+            "points": [
+              {
+                "id": "91aaf216-eb5d-480b-81e0-739c7e381433",
+                "type": "point",
+                "x": 1200,
+                "y": 240
+              },
+              {
+                "id": "8ceafc0f-6307-4621-8713-2287177473d5",
+                "type": "point",
+                "x": 1250,
+                "y": 240
+              }
+            ],
+            "labels": [],
+            "width": 3,
+            "color": "gray",
+            "curvyness": 50,
+            "selectedColor": "rgb(0,192,255)"
+          }
+        }
+      },
+      {
+        "id": "d1848fd8-6ce5-4619-a49b-a1057260c3c1",
+        "type": "diagram-nodes",
+        "isSvg": false,
+        "transformed": true,
+        "models": {
+          "a82132be-ade5-42fc-8a05-a4dd97696837": {
+            "id": "a82132be-ade5-42fc-8a05-a4dd97696837",
+            "type": "block.package",
+            "selected": false,
+            "x": 400,
+            "y": 150,
+            "ports": [
+              {
+                "id": "ac668e61-9bd9-4558-a57b-083209b0963d",
+                "type": "port.output",
+                "x": 513,
+                "y": 166,
+                "name": "543b7305-acfc-4bfa-bc03-2c0eb34762c2",
+                "alignment": "right",
+                "parentNode": "a82132be-ade5-42fc-8a05-a4dd97696837",
+                "links": [
+                  "0127319e-87ef-44f7-ae6b-f4add8a2c547"
+                ],
+                "in": false,
+                "label": "joint_states",
+                "hideLabel": false
+              },
+              {
+                "id": "d045d7ec-2b9b-41ff-9b64-dea24b9e7586",
+                "type": "port.parameter",
+                "x": 457,
+                "y": 120,
+                "name": "cb17a99a-e5c1-46e9-b518-7cd46ac0eee7",
+                "alignment": "top",
+                "parentNode": "a82132be-ade5-42fc-8a05-a4dd97696837",
+                "links": [],
+                "in": true,
+                "label": "joint_names",
+                "hideLabel": false
+              },
+              {
+                "id": "c639a4dd-66c4-4037-96af-d9f17598125a",
+                "type": "port.parameter",
+                "x": 557,
+                "y": 120,
+                "name": "d9b296ce-9ed7-47f3-9496-87e3fdbcdfa9",
+                "alignment": "top",
+                "parentNode": "a82132be-ade5-42fc-8a05-a4dd97696837",
+                "links": [],
+                "in": true,
+                "label": "topic_name",
+                "hideLabel": false
+              }
+            ],
+            "data": {},
+            "model": {
+              "id": "e316ca7d-1c49-41ee-b8bb-f24911e6f1bf",
+              "locked": false,
+              "offsetX": 0,
+              "offsetY": 0,
+              "zoom": 100,
+              "gridSize": 0,
+              "layers": [
+                {
+                  "id": "23728715-fd0f-44b2-8cfe-a5509c8402c7",
+                  "type": "diagram-links",
+                  "isSvg": true,
+                  "transformed": true,
+                  "models": {
+                    "825e42d2-939b-4e46-96e4-08d9c6f86828": {
+                      "id": "825e42d2-939b-4e46-96e4-08d9c6f86828",
+                      "type": "default",
+                      "selected": false,
+                      "source": "740e651d-1d5c-476d-b61d-b013ce0f8ee5",
+                      "sourcePort": "c6cfa06f-d0c2-40ca-be5a-3734eaab56b1",
+                      "target": "7845258e-25f2-4511-9d2e-5a91a6389d1c",
+                      "targetPort": "a4f9d5ec-88eb-4630-a979-9e65b6a8861d",
+                      "points": [
+                        {
+                          "id": "d022936b-2f82-47d2-b721-f9e5c968db37",
+                          "type": "point",
+                          "x": 920,
+                          "y": 350
+                        },
+                        {
+                          "id": "fcb6b3f4-2a3e-46c9-a356-322b30b76b04",
+                          "type": "point",
+                          "x": 1181,
+                          "y": 319
+                        }
+                      ],
+                      "labels": [],
+                      "width": 3,
+                      "color": "gray",
+                      "curvyness": 50,
+                      "selectedColor": "rgb(0,192,255)"
+                    },
+                    "44125a30-4a44-4bf2-8874-2359bdd99e7d": {
+                      "id": "44125a30-4a44-4bf2-8874-2359bdd99e7d",
+                      "type": "default",
+                      "selected": false,
+                      "source": "5cbcae87-801d-48b0-b823-79d6191d443d",
+                      "sourcePort": "2848cebc-46f5-420f-b1b6-0d1ef5b036b2",
+                      "target": "740e651d-1d5c-476d-b61d-b013ce0f8ee5",
+                      "targetPort": "6389519e-18b4-4a63-836e-cfc1911d2911",
+                      "points": [
+                        {
+                          "id": "60d918c2-cece-4246-8f15-44a255875113",
+                          "type": "point",
+                          "x": 703,
+                          "y": 220
+                        },
+                        {
+                          "id": "3b87a108-ac8b-41bf-8c03-8b6d57a1da11",
+                          "type": "point",
+                          "x": 700,
+                          "y": 260
+                        }
+                      ],
+                      "labels": [],
+                      "width": 3,
+                      "color": "gray",
+                      "curvyness": 50,
+                      "selectedColor": "rgb(0,192,255)"
+                    },
+                    "2cd9f4fd-2cb8-4550-9053-5926050a5808": {
+                      "id": "2cd9f4fd-2cb8-4550-9053-5926050a5808",
+                      "type": "default",
+                      "selected": false,
+                      "source": "6f55d4c8-7f47-415a-8208-abf8f58283de",
+                      "sourcePort": "e0b8b980-17bd-42cf-94c5-6352213d068a",
+                      "target": "740e651d-1d5c-476d-b61d-b013ce0f8ee5",
+                      "targetPort": "eb43159e-e7fa-4ba7-b82d-6017bbfe2572",
+                      "points": [
+                        {
+                          "id": "22864ac3-d6f0-46d7-8e29-05fd296002ed",
+                          "type": "point",
+                          "x": 903,
+                          "y": 220
+                        },
+                        {
+                          "id": "3515847d-1e10-45e0-9ef4-f8b3fe8eb3e7",
+                          "type": "point",
+                          "x": 800,
+                          "y": 260
+                        }
+                      ],
+                      "labels": [],
+                      "width": 3,
+                      "color": "gray",
+                      "curvyness": 50,
+                      "selectedColor": "rgb(0,192,255)"
+                    }
+                  }
+                },
+                {
+                  "id": "c52015a5-d51b-42dd-8afc-22329fed0ba8",
+                  "type": "diagram-nodes",
+                  "isSvg": false,
+                  "transformed": true,
+                  "models": {
+                    "740e651d-1d5c-476d-b61d-b013ce0f8ee5": {
+                      "id": "740e651d-1d5c-476d-b61d-b013ce0f8ee5",
+                      "type": "basic.code",
+                      "selected": false,
+                      "x": 488,
+                      "y": 200,
+                      "ports": [
+                        {
+                          "id": "c6cfa06f-d0c2-40ca-be5a-3734eaab56b1",
+                          "type": "port.output",
+                          "x": 900,
+                          "y": 350,
+                          "name": "joint_states",
+                          "alignment": "right",
+                          "parentNode": "aceb3610-ed17-4a3a-bbe5-032b38f97b83",
+                          "links": [],
+                          "in": false,
+                          "label": "joint_states",
+                          "hideLabel": false
+                        },
+                        {
+                          "id": "6389519e-18b4-4a63-836e-cfc1911d2911",
+                          "type": "port.parameter",
+                          "x": 700,
+                          "y": 280,
+                          "name": "joint_names",
+                          "alignment": "top",
+                          "parentNode": "7ab9aaf9-9073-40ff-b9e1-69c8851dc76b",
+                          "links": [],
+                          "in": true,
+                          "label": "joint_names",
+                          "hideLabel": false
+                        },
+                        {
+                          "id": "eb43159e-e7fa-4ba7-b82d-6017bbfe2572",
+                          "type": "port.parameter",
+                          "x": 800,
+                          "y": 280,
+                          "name": "topic_name",
+                          "alignment": "top",
+                          "parentNode": "8c12fc45-0c6f-4c58-846f-1e1502548031",
+                          "links": [],
+                          "in": true,
+                          "label": "topic_name",
+                          "hideLabel": false
+                        }
+                      ],
+                      "data": {
+                        "code": "import rclpy\nfrom rclpy.node import Node\nfrom sensor_msgs.msg import JointState\n\nclass JointStateSubscriber(Node):\n    def __init__(self, joint_names, topic_name):\n        super().__init__('joint_state_subscriber')\n        self.joint_names = joint_names\n        self.subscription = self.create_subscription(\n            JointState,\n            topic_name,\n            self.listener_callback,\n            10)\n        self.joint_states = None\n        \n    def listener_callback(self, msg):\n        self.joint_states = msg\n\ndef main(inputs, outputs, parameters, synchronise):\n    rclpy.init()\n    joint_state_subscriber = JointStateSubscriber(\n        parameters['joint_names'],\n        parameters['topic_name'])\n    \n    while rclpy.ok():\n        rclpy.spin_once(joint_state_subscriber, timeout_sec=0.1)\n        if joint_state_subscriber.joint_states is not None:\n            outputs['joint_states'] = joint_state_subscriber.joint_states\n            break\n    \n    joint_state_subscriber.destroy_node()\n    rclpy.shutdown()",
+                        "frequency": "30",
+                        "params": [
+                          {
+                            "name": "joint_names"
+                          },
+                          {
+                            "name": "topic_name"
+                          }
+                        ],
+                        "ports": {
+                          "in": [],
+                          "out": [
+                            {
+                              "name": "joint_states"
+                            }
+                          ]
+                        },
+                        "size": {
+                          "width": "700px",
+                          "height": "500px"
+                        }
+                      }
+                    },
+                    "7845258e-25f2-4511-9d2e-5a91a6389d1c": {
+                      "id": "7845258e-25f2-4511-9d2e-5a91a6389d1c",
+                      "type": "basic.output",
+                      "selected": false,
+                      "x": 1200,
+                      "y": 300,
+                      "ports": [
+                        {
+                          "id": "a4f9d5ec-88eb-4630-a979-9e65b6a8861d",
+                          "type": "port.input",
+                          "x": 1201,
+                          "y": 319,
+                          "name": "output-in",
+                          "alignment": "left",
+                          "parentNode": "7989dd9e-dbd0-4c79-a821-6dbf2cc8a678",
+                          "links": [],
+                          "in": true,
+                          "label": "output-in",
+                          "hideLabel": true
+                        }
+                      ],
+                      "data": {
+                        "name": "joint_states"
+                      }
+                    },
+                    "5cbcae87-801d-48b0-b823-79d6191d443d": {
+                      "id": "5cbcae87-801d-48b0-b823-79d6191d443d",
+                      "type": "basic.constant",
+                      "selected": false,
+                      "x": 650,
+                      "y": 100,
+                      "ports": [
+                        {
+                          "id": "2848cebc-46f5-420f-b1b6-0d1ef5b036b2",
+                          "type": "port.output",
+                          "x": 703,
+                          "y": 200,
+                          "name": "constant-out",
+                          "alignment": "bottom",
+                          "parentNode": "cbb151e5-2f2e-4ee6-9f3f-16df3f01d475",
+                          "links": [],
+                          "in": false,
+                          "label": "joint_names",
+                          "hideLabel": true
+                        }
+                      ],
+                      "data": {
+                        "name": "joint_names",
+                        "value": "100",
+                        "local": true
+                      }
+                    },
+                    "6f55d4c8-7f47-415a-8208-abf8f58283de": {
+                      "id": "6f55d4c8-7f47-415a-8208-abf8f58283de",
+                      "type": "basic.constant",
+                      "selected": false,
+                      "x": 850,
+                      "y": 100,
+                      "ports": [
+                        {
+                          "id": "e0b8b980-17bd-42cf-94c5-6352213d068a",
+                          "type": "port.output",
+                          "x": 903,
+                          "y": 200,
+                          "name": "constant-out",
+                          "alignment": "bottom",
+                          "parentNode": "dce9e60f-ae3c-41b8-bac6-dc0bb7b94384",
+                          "links": [],
+                          "in": false,
+                          "label": "topic_name",
+                          "hideLabel": true
+                        }
+                      ],
+                      "data": {
+                        "name": "topic_name",
+                        "value": "100",
+                        "local": true
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "info": {
+              "name": "Joint State Subscriber",
+              "version": "2.0.0",
+              "description": "Subscribes to joint states from ROS2 topics",
+              "author": "AI Generated",
+              "image": ""
+            },
+            "design": {
+              "board": "Python3-Noetic",
+              "graph": {
+                "blocks": [
+                  {
+                    "id": "6bb88fac-d0f3-421a-9222-88e8209c6e37",
+                    "type": "basic.code",
+                    "data": {
+                      "code": "import rclpy\nfrom rclpy.node import Node\nfrom sensor_msgs.msg import JointState\n\nclass JointStateSubscriber(Node):\n    def __init__(self, joint_names, topic_name):\n        super().__init__('joint_state_subscriber')\n        self.joint_names = joint_names\n        self.subscription = self.create_subscription(\n            JointState,\n            topic_name,\n            self.listener_callback,\n            10)\n        self.joint_states = None\n        \n    def listener_callback(self, msg):\n        self.joint_states = msg\n\ndef main(inputs, outputs, parameters, synchronise):\n    rclpy.init()\n    joint_state_subscriber = JointStateSubscriber(\n        parameters['joint_names'],\n        parameters['topic_name'])\n    \n    while rclpy.ok():\n        rclpy.spin_once(joint_state_subscriber, timeout_sec=0.1)\n        if joint_state_subscriber.joint_states is not None:\n            outputs['joint_states'] = joint_state_subscriber.joint_states\n            break\n    \n    joint_state_subscriber.destroy_node()\n    rclpy.shutdown()",
+                      "frequency": "30",
+                      "params": [
+                        {
+                          "name": "joint_names"
+                        },
+                        {
+                          "name": "topic_name"
+                        }
+                      ],
+                      "ports": {
+                        "in": [],
+                        "out": [
+                          {
+                            "name": "joint_states"
+                          }
+                        ]
+                      },
+                      "size": {
+                        "width": "700px",
+                        "height": "500px"
+                      }
+                    },
+                    "position": {
+                      "x": 600,
+                      "y": 250
+                    }
+                  },
+                  {
+                    "id": "e996854b-338d-459b-996b-51a7d16ecd3f",
+                    "type": "basic.output",
+                    "data": {
+                      "name": "joint_states"
+                    },
+                    "position": {
+                      "x": 900,
+                      "y": 300
+                    }
+                  },
+                  {
+                    "id": "f781017d-9578-4946-bac6-558a062bad4f",
+                    "type": "basic.constant",
+                    "data": {
+                      "name": "joint_names",
+                      "value": "100",
+                      "local": true
+                    },
+                    "position": {
+                      "x": 650,
+                      "y": 100
+                    }
+                  },
+                  {
+                    "id": "17f59e43-49ba-4142-a8bc-fe56d387596a",
+                    "type": "basic.constant",
+                    "data": {
+                      "name": "topic_name",
+                      "value": "100",
+                      "local": true
+                    },
+                    "position": {
+                      "x": 850,
+                      "y": 100
+                    }
+                  }
+                ],
+                "wires": []
+              }
+            },
+            "dependencies": {}
+          },
+          "db3f1977-576f-48d6-abf8-fca134e4493d": {
+            "id": "db3f1977-576f-48d6-abf8-fca134e4493d",
+            "type": "block.package",
+            "selected": false,
+            "x": 700,
+            "y": 150,
+            "ports": [
+              {
+                "id": "06bf88db-46a3-4a1d-81eb-61df7cb9afcd",
+                "type": "port.input",
+                "x": 701,
+                "y": 166.0,
+                "name": "a933d65e-76c9-44bd-a509-636e685e505f",
+                "alignment": "left",
+                "parentNode": "db3f1977-576f-48d6-abf8-fca134e4493d",
+                "links": [
+                  "0127319e-87ef-44f7-ae6b-f4add8a2c547"
+                ],
+                "in": true,
+                "label": "joint_states",
+                "hideLabel": false
+              },
+              {
+                "id": "4d732fa6-7ac6-4cd2-be77-b4abe22188d5",
+                "type": "port.input",
+                "x": 701,
+                "y": 207.5,
+                "name": "37787630-b2c4-4138-b434-0ba007eb830b",
+                "alignment": "left",
+                "parentNode": "db3f1977-576f-48d6-abf8-fca134e4493d",
+                "links": [],
+                "in": true,
+                "label": "target_position",
+                "hideLabel": false
+              },
+              {
+                "id": "2db14c38-9ba3-4b8c-9e5b-7b0c24e6e13c",
+                "type": "port.output",
+                "x": 813,
+                "y": 208,
+                "name": "1b813334-9329-478b-a26d-8e76f3094817",
+                "alignment": "right",
+                "parentNode": "db3f1977-576f-48d6-abf8-fca134e4493d",
+                "links": [
+                  "21aaba55-4542-46f8-9e08-f59fbcfd5712"
+                ],
+                "in": false,
+                "label": "joint_angles",
+                "hideLabel": false
+              },
+              {
+                "id": "986fde74-4284-484f-97e4-515d54bb9fb0",
+                "type": "port.parameter",
+                "x": 757,
+                "y": 120,
+                "name": "aa9800f6-1040-4ed7-8343-5681c7ce4804",
+                "alignment": "top",
+                "parentNode": "db3f1977-576f-48d6-abf8-fca134e4493d",
+                "links": [],
+                "in": true,
+                "label": "link_lengths",
+                "hideLabel": false
+              },
+              {
+                "id": "c76aacf1-8227-46f0-9740-4217ce1cb124",
+                "type": "port.parameter",
+                "x": 857,
+                "y": 120,
+                "name": "debdf45c-df1d-4193-a0ae-39504804c85a",
+                "alignment": "top",
+                "parentNode": "db3f1977-576f-48d6-abf8-fca134e4493d",
+                "links": [],
+                "in": true,
+                "label": "max_iterations",
+                "hideLabel": false
+              },
+              {
+                "id": "86ca7068-7d22-4e78-bf74-9ec33dcd34ca",
+                "type": "port.parameter",
+                "x": 957,
+                "y": 120,
+                "name": "5eb0de47-24c1-4444-9800-bd0f8bbbe6bd",
+                "alignment": "top",
+                "parentNode": "db3f1977-576f-48d6-abf8-fca134e4493d",
+                "links": [],
+                "in": true,
+                "label": "tolerance",
+                "hideLabel": false
+              }
+            ],
+            "data": {},
+            "model": {
+              "id": "ab3ab670-5b1a-471b-bc89-7672a1c230c0",
+              "locked": false,
+              "offsetX": 0,
+              "offsetY": 0,
+              "zoom": 100,
+              "gridSize": 0,
+              "layers": [
+                {
+                  "id": "0a14e737-d1ab-4098-ba94-59feb84ae429",
+                  "type": "diagram-links",
+                  "isSvg": true,
+                  "transformed": true,
+                  "models": {
+                    "b7205b87-5848-4450-a59a-0ecb2de5cc3f": {
+                      "id": "b7205b87-5848-4450-a59a-0ecb2de5cc3f",
+                      "type": "default",
+                      "selected": false,
+                      "source": "040e380e-ab02-4b5e-80fc-9cba01db0f12",
+                      "sourcePort": "bf2e589d-dac4-4f34-9b92-3029d5bb7cce",
+                      "target": "d943f8df-a96a-4f72-9e5f-9b2d7821cbed",
+                      "targetPort": "06465ced-13e4-4b07-9483-cd07d1542a22",
+                      "points": [
+                        {
+                          "id": "88883f5f-fe5c-4467-b7ec-112714596197",
+                          "type": "point",
+                          "x": 306,
+                          "y": 319
+                        },
+                        {
+                          "id": "23cdd004-64e4-485f-8e0a-c777c9cefa85",
+                          "type": "point",
+                          "x": 480,
+                          "y": 350
+                        }
+                      ],
+                      "labels": [],
+                      "width": 3,
+                      "color": "gray",
+                      "curvyness": 50,
+                      "selectedColor": "rgb(0,192,255)"
+                    },
+                    "443fea3f-59ee-40b2-8eb9-e544c6f7a529": {
+                      "id": "443fea3f-59ee-40b2-8eb9-e544c6f7a529",
+                      "type": "default",
+                      "selected": false,
+                      "source": "b2a6a33a-0434-4ca2-8c97-d2de19e58f84",
+                      "sourcePort": "fd55d9e2-ad7e-40c4-bb9f-a3b6e8a189c0",
+                      "target": "d943f8df-a96a-4f72-9e5f-9b2d7821cbed",
+                      "targetPort": "d5396524-9d03-487c-9934-c378523aaa48",
+                      "points": [
+                        {
+                          "id": "72557151-df6e-4cfd-9b43-c40eafc1e692",
+                          "type": "point",
+                          "x": 306,
+                          "y": 469
+                        },
+                        {
+                          "id": "e4a0315c-a0b8-4f16-abf6-95c45e0660d5",
+                          "type": "point",
+                          "x": 480,
+                          "y": 400
+                        }
+                      ],
+                      "labels": [],
+                      "width": 3,
+                      "color": "gray",
+                      "curvyness": 50,
+                      "selectedColor": "rgb(0,192,255)"
+                    },
+                    "3353006b-1ad8-4971-b40a-7a0d3136eb2a": {
+                      "id": "3353006b-1ad8-4971-b40a-7a0d3136eb2a",
+                      "type": "default",
+                      "selected": false,
+                      "source": "d943f8df-a96a-4f72-9e5f-9b2d7821cbed",
+                      "sourcePort": "76fd1114-e056-4346-a5b8-b0bfeb425e6f",
+                      "target": "059fdb35-16c9-4b14-b558-f90c933f5909",
+                      "targetPort": "062cca9f-16a1-4b07-9f5d-72dbcc2daf7d",
+                      "points": [
+                        {
+                          "id": "0d5b8344-ee6d-4fdc-a0b7-c29e52e51171",
+                          "type": "point",
+                          "x": 920,
+                          "y": 350
+                        },
+                        {
+                          "id": "20954128-aaad-4354-8ec7-b2e22754e683",
+                          "type": "point",
+                          "x": 1181,
+                          "y": 319
+                        }
+                      ],
+                      "labels": [],
+                      "width": 3,
+                      "color": "gray",
+                      "curvyness": 50,
+                      "selectedColor": "rgb(0,192,255)"
+                    },
+                    "f1dbe30e-423c-4ff3-a1b3-e0ef5423be01": {
+                      "id": "f1dbe30e-423c-4ff3-a1b3-e0ef5423be01",
+                      "type": "default",
+                      "selected": false,
+                      "source": "8bc2c9b3-e237-43d1-8dbe-c342df061373",
+                      "sourcePort": "47e026dc-d565-4122-97b6-3d14668587a3",
+                      "target": "d943f8df-a96a-4f72-9e5f-9b2d7821cbed",
+                      "targetPort": "c6328b13-1ede-4f63-9967-c5a7b06be3b7",
+                      "points": [
+                        {
+                          "id": "fa1c4246-f32a-4e80-981e-e8ff8d3f2183",
+                          "type": "point",
+                          "x": 703,
+                          "y": 220
+                        },
+                        {
+                          "id": "a8beef0e-6735-473b-b713-0f4ffb34575a",
+                          "type": "point",
+                          "x": 700,
+                          "y": 260
+                        }
+                      ],
+                      "labels": [],
+                      "width": 3,
+                      "color": "gray",
+                      "curvyness": 50,
+                      "selectedColor": "rgb(0,192,255)"
+                    },
+                    "b09612f0-d577-4dca-945d-c703f7b512ea": {
+                      "id": "b09612f0-d577-4dca-945d-c703f7b512ea",
+                      "type": "default",
+                      "selected": false,
+                      "source": "fde342f0-7151-456f-a37f-52a208d77c02",
+                      "sourcePort": "3497ea27-48e8-4fea-97f0-c5a6188e358e",
+                      "target": "d943f8df-a96a-4f72-9e5f-9b2d7821cbed",
+                      "targetPort": "10ecc928-cef8-42b2-9722-debe114917d8",
+                      "points": [
+                        {
+                          "id": "c1b3970a-600e-434b-ba10-2dd39421fcc9",
+                          "type": "point",
+                          "x": 903,
+                          "y": 220
+                        },
+                        {
+                          "id": "b1bd9443-ad02-4105-b258-27e6b1e158d1",
+                          "type": "point",
+                          "x": 800,
+                          "y": 260
+                        }
+                      ],
+                      "labels": [],
+                      "width": 3,
+                      "color": "gray",
+                      "curvyness": 50,
+                      "selectedColor": "rgb(0,192,255)"
+                    },
+                    "36010b80-a7e5-4ebb-8dc7-a2472d5f79ea": {
+                      "id": "36010b80-a7e5-4ebb-8dc7-a2472d5f79ea",
+                      "type": "default",
+                      "selected": false,
+                      "source": "9056d360-1b1b-4bd1-95e8-e0d11cf6940f",
+                      "sourcePort": "241b80c0-f93b-4172-9fc3-88f2017c9183",
+                      "target": "d943f8df-a96a-4f72-9e5f-9b2d7821cbed",
+                      "targetPort": "5b350ac7-7eeb-43fa-bb2b-fa62c6772665",
+                      "points": [
+                        {
+                          "id": "921edf79-8451-423d-915b-5b4c5530bb06",
+                          "type": "point",
+                          "x": 1103,
+                          "y": 220
+                        },
+                        {
+                          "id": "b77c41a4-3144-4d3e-9aab-d3f4d4854d5a",
+                          "type": "point",
+                          "x": 900,
+                          "y": 260
+                        }
+                      ],
+                      "labels": [],
+                      "width": 3,
+                      "color": "gray",
+                      "curvyness": 50,
+                      "selectedColor": "rgb(0,192,255)"
+                    }
+                  }
+                },
+                {
+                  "id": "22138c1b-37fb-41b4-8ec7-44ab9833b3ec",
+                  "type": "diagram-nodes",
+                  "isSvg": false,
+                  "transformed": true,
+                  "models": {
+                    "040e380e-ab02-4b5e-80fc-9cba01db0f12": {
+                      "id": "040e380e-ab02-4b5e-80fc-9cba01db0f12",
+                      "type": "basic.input",
+                      "selected": false,
+                      "x": 200,
+                      "y": 300,
+                      "ports": [
+                        {
+                          "id": "bf2e589d-dac4-4f34-9b92-3029d5bb7cce",
+                          "type": "port.output",
+                          "x": 286,
+                          "y": 319,
+                          "name": "input-out",
+                          "alignment": "right",
+                          "parentNode": "723942fa-6611-4a0f-953e-8664f42b5c5d",
+                          "links": [],
+                          "in": false,
+                          "label": "joint_states",
+                          "hideLabel": true
+                        }
+                      ],
+                      "data": {
+                        "name": "joint_states"
+                      }
+                    },
+                    "b2a6a33a-0434-4ca2-8c97-d2de19e58f84": {
+                      "id": "b2a6a33a-0434-4ca2-8c97-d2de19e58f84",
+                      "type": "basic.input",
+                      "selected": false,
+                      "x": 200,
+                      "y": 450,
+                      "ports": [
+                        {
+                          "id": "fd55d9e2-ad7e-40c4-bb9f-a3b6e8a189c0",
+                          "type": "port.output",
+                          "x": 286,
+                          "y": 469,
+                          "name": "input-out",
+                          "alignment": "right",
+                          "parentNode": "0b49f066-d45c-4c4d-b532-c34f600f3b63",
+                          "links": [],
+                          "in": false,
+                          "label": "target_position",
+                          "hideLabel": true
+                        }
+                      ],
+                      "data": {
+                        "name": "target_position"
+                      }
+                    },
+                    "d943f8df-a96a-4f72-9e5f-9b2d7821cbed": {
+                      "id": "d943f8df-a96a-4f72-9e5f-9b2d7821cbed",
+                      "type": "basic.code",
+                      "selected": false,
+                      "x": 488,
+                      "y": 200,
+                      "ports": [
+                        {
+                          "id": "06465ced-13e4-4b07-9483-cd07d1542a22",
+                          "type": "port.input",
+                          "x": 500,
+                          "y": 350,
+                          "name": "joint_states",
+                          "alignment": "left",
+                          "parentNode": "70904ea6-4c37-41f3-b91f-6808fd2f0588",
+                          "links": [],
+                          "in": true,
+                          "label": "joint_states",
+                          "hideLabel": false
+                        },
+                        {
+                          "id": "d5396524-9d03-487c-9934-c378523aaa48",
+                          "type": "port.input",
+                          "x": 500,
+                          "y": 400,
+                          "name": "target_position",
+                          "alignment": "left",
+                          "parentNode": "08378111-040a-4f31-ac56-7d50e931b59c",
+                          "links": [],
+                          "in": true,
+                          "label": "target_position",
+                          "hideLabel": false
+                        },
+                        {
+                          "id": "76fd1114-e056-4346-a5b8-b0bfeb425e6f",
+                          "type": "port.output",
+                          "x": 900,
+                          "y": 350,
+                          "name": "joint_angles",
+                          "alignment": "right",
+                          "parentNode": "b38931c2-d3cb-4844-9fa8-08f789da8ded",
+                          "links": [],
+                          "in": false,
+                          "label": "joint_angles",
+                          "hideLabel": false
+                        },
+                        {
+                          "id": "c6328b13-1ede-4f63-9967-c5a7b06be3b7",
+                          "type": "port.parameter",
+                          "x": 700,
+                          "y": 280,
+                          "name": "link_lengths",
+                          "alignment": "top",
+                          "parentNode": "68d78381-9f8e-46c5-b842-e05b4e9447e6",
+                          "links": [],
+                          "in": true,
+                          "label": "link_lengths",
+                          "hideLabel": false
+                        },
+                        {
+                          "id": "10ecc928-cef8-42b2-9722-debe114917d8",
+                          "type": "port.parameter",
+                          "x": 800,
+                          "y": 280,
+                          "name": "max_iterations",
+                          "alignment": "top",
+                          "parentNode": "c1da3cca-5735-4be6-8791-34e8aacedcc6",
+                          "links": [],
+                          "in": true,
+                          "label": "max_iterations",
+                          "hideLabel": false
+                        },
+                        {
+                          "id": "5b350ac7-7eeb-43fa-bb2b-fa62c6772665",
+                          "type": "port.parameter",
+                          "x": 900,
+                          "y": 280,
+                          "name": "tolerance",
+                          "alignment": "top",
+                          "parentNode": "103944c3-507f-4313-96c2-14a1057d1871",
+                          "links": [],
+                          "in": true,
+                          "label": "tolerance",
+                          "hideLabel": false
+                        }
+                      ],
+                      "data": {
+                        "code": "import numpy as np\n\ndef compute_inverse_kinematics(link_lengths, target_position, max_iterations=1000, tolerance=1e-6):\n    # Simplified inverse kinematics for RRR arm\n    x, y, z = target_position\n    l1, l2, l3 = link_lengths\n    \n    # Compute wrist position\n    wrist_x = x - l3 * np.cos(np.pi/2)  # Assuming last joint is perpendicular\n    wrist_y = y - l3 * np.sin(np.pi/2)\n    wrist_z = z\n    \n    # Compute joint angles using geometric approach\n    r = np.sqrt(wrist_x**2 + wrist_y**2 + wrist_z**2)\n    \n    if r > (l1 + l2):\n        raise ValueError(\"Target position out of reach\")\n    \n    # Angle for first joint (theta1)\n    theta1 = np.arctan2(wrist_y, wrist_x)\n    \n    # Distance in xy-plane\n    r_xy = np.sqrt(wrist_x**2 + wrist_y**2)\n    \n    # Angle for second joint (theta2)\n    cos_theta3 = (r_xy**2 + wrist_z**2 - l1**2 - l2**2) / (2 * l1 * l2)\n    theta3 = np.arccos(np.clip(cos_theta3, -1, 1))\n    \n    # Angle for third joint (theta2)\n    alpha = np.arctan2(wrist_z, r_xy)\n    beta = np.arccos((l1**2 + r**2 - l2**2) / (2 * l1 * r))\n    theta2 = alpha + beta\n    \n    return np.array([theta1, theta2, theta3])\n\ndef main(inputs, outputs, parameters, synchronise):\n    joint_states = inputs['joint_states']\n    target_position = inputs['target_position']\n    \n    try:\n        joint_angles = compute_inverse_kinematics(\n            parameters['link_lengths'],\n            target_position,\n            parameters['max_iterations'],\n            parameters['tolerance'])\n        outputs['joint_angles'] = joint_angles.tolist()\n    except ValueError as e:\n        outputs['joint_angles'] = None\n        raise RuntimeError(f\"IK Solver Error: {str(e)}\")",
+                        "frequency": "30",
+                        "params": [
+                          {
+                            "name": "link_lengths"
+                          },
+                          {
+                            "name": "max_iterations"
+                          },
+                          {
+                            "name": "tolerance"
+                          }
+                        ],
+                        "ports": {
+                          "in": [
+                            {
+                              "name": "joint_states"
+                            },
+                            {
+                              "name": "target_position"
+                            }
+                          ],
+                          "out": [
+                            {
+                              "name": "joint_angles"
+                            }
+                          ]
+                        },
+                        "size": {
+                          "width": "700px",
+                          "height": "500px"
+                        }
+                      }
+                    },
+                    "059fdb35-16c9-4b14-b558-f90c933f5909": {
+                      "id": "059fdb35-16c9-4b14-b558-f90c933f5909",
+                      "type": "basic.output",
+                      "selected": false,
+                      "x": 1200,
+                      "y": 300,
+                      "ports": [
+                        {
+                          "id": "062cca9f-16a1-4b07-9f5d-72dbcc2daf7d",
+                          "type": "port.input",
+                          "x": 1201,
+                          "y": 319,
+                          "name": "output-in",
+                          "alignment": "left",
+                          "parentNode": "2119fc2f-d87b-459b-a69c-972c71cf8ac7",
+                          "links": [],
+                          "in": true,
+                          "label": "output-in",
+                          "hideLabel": true
+                        }
+                      ],
+                      "data": {
+                        "name": "joint_angles"
+                      }
+                    },
+                    "8bc2c9b3-e237-43d1-8dbe-c342df061373": {
+                      "id": "8bc2c9b3-e237-43d1-8dbe-c342df061373",
+                      "type": "basic.constant",
+                      "selected": false,
+                      "x": 650,
+                      "y": 100,
+                      "ports": [
+                        {
+                          "id": "47e026dc-d565-4122-97b6-3d14668587a3",
+                          "type": "port.output",
+                          "x": 703,
+                          "y": 200,
+                          "name": "constant-out",
+                          "alignment": "bottom",
+                          "parentNode": "e46db699-185c-4b74-8300-37f6bce542ed",
+                          "links": [],
+                          "in": false,
+                          "label": "link_lengths",
+                          "hideLabel": true
+                        }
+                      ],
+                      "data": {
+                        "name": "link_lengths",
+                        "value": "100",
+                        "local": true
+                      }
+                    },
+                    "fde342f0-7151-456f-a37f-52a208d77c02": {
+                      "id": "fde342f0-7151-456f-a37f-52a208d77c02",
+                      "type": "basic.constant",
+                      "selected": false,
+                      "x": 850,
+                      "y": 100,
+                      "ports": [
+                        {
+                          "id": "3497ea27-48e8-4fea-97f0-c5a6188e358e",
+                          "type": "port.output",
+                          "x": 903,
+                          "y": 200,
+                          "name": "constant-out",
+                          "alignment": "bottom",
+                          "parentNode": "c1b84101-7514-46c2-b9ac-9db87d53ae6b",
+                          "links": [],
+                          "in": false,
+                          "label": "max_iterations",
+                          "hideLabel": true
+                        }
+                      ],
+                      "data": {
+                        "name": "max_iterations",
+                        "value": "100",
+                        "local": true
+                      }
+                    },
+                    "9056d360-1b1b-4bd1-95e8-e0d11cf6940f": {
+                      "id": "9056d360-1b1b-4bd1-95e8-e0d11cf6940f",
+                      "type": "basic.constant",
+                      "selected": false,
+                      "x": 1050,
+                      "y": 100,
+                      "ports": [
+                        {
+                          "id": "241b80c0-f93b-4172-9fc3-88f2017c9183",
+                          "type": "port.output",
+                          "x": 1103,
+                          "y": 200,
+                          "name": "constant-out",
+                          "alignment": "bottom",
+                          "parentNode": "8646ff36-39da-45e0-a3a7-9d47fc65937b",
+                          "links": [],
+                          "in": false,
+                          "label": "tolerance",
+                          "hideLabel": true
+                        }
+                      ],
+                      "data": {
+                        "name": "tolerance",
+                        "value": "100",
+                        "local": true
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "info": {
+              "name": "Inverse Kinematics Solver",
+              "version": "2.0.0",
+              "description": "Computes inverse kinematics for RRR robot arm",
+              "author": "AI Generated",
+              "image": ""
+            },
+            "design": {
+              "board": "Python3-Noetic",
+              "graph": {
+                "blocks": [
+                  {
+                    "id": "8b7e09ed-98d1-4a91-8bb2-f52366eb4743",
+                    "type": "basic.input",
+                    "data": {
+                      "name": "joint_states"
+                    },
+                    "position": {
+                      "x": 300,
+                      "y": 300
+                    }
+                  },
+                  {
+                    "id": "71b633b6-86ff-4c1f-a0e4-69539dd0c799",
+                    "type": "basic.input",
+                    "data": {
+                      "name": "target_position"
+                    },
+                    "position": {
+                      "x": 300,
+                      "y": 400
+                    }
+                  },
+                  {
+                    "id": "a4a4a832-ea5a-4665-a08f-9ef4a2fcfb22",
+                    "type": "basic.code",
+                    "data": {
+                      "code": "import numpy as np\n\ndef compute_inverse_kinematics(link_lengths, target_position, max_iterations=1000, tolerance=1e-6):\n    # Simplified inverse kinematics for RRR arm\n    x, y, z = target_position\n    l1, l2, l3 = link_lengths\n    \n    # Compute wrist position\n    wrist_x = x - l3 * np.cos(np.pi/2)  # Assuming last joint is perpendicular\n    wrist_y = y - l3 * np.sin(np.pi/2)\n    wrist_z = z\n    \n    # Compute joint angles using geometric approach\n    r = np.sqrt(wrist_x**2 + wrist_y**2 + wrist_z**2)\n    \n    if r > (l1 + l2):\n        raise ValueError(\"Target position out of reach\")\n    \n    # Angle for first joint (theta1)\n    theta1 = np.arctan2(wrist_y, wrist_x)\n    \n    # Distance in xy-plane\n    r_xy = np.sqrt(wrist_x**2 + wrist_y**2)\n    \n    # Angle for second joint (theta2)\n    cos_theta3 = (r_xy**2 + wrist_z**2 - l1**2 - l2**2) / (2 * l1 * l2)\n    theta3 = np.arccos(np.clip(cos_theta3, -1, 1))\n    \n    # Angle for third joint (theta2)\n    alpha = np.arctan2(wrist_z, r_xy)\n    beta = np.arccos((l1**2 + r**2 - l2**2) / (2 * l1 * r))\n    theta2 = alpha + beta\n    \n    return np.array([theta1, theta2, theta3])\n\ndef main(inputs, outputs, parameters, synchronise):\n    joint_states = inputs['joint_states']\n    target_position = inputs['target_position']\n    \n    try:\n        joint_angles = compute_inverse_kinematics(\n            parameters['link_lengths'],\n            target_position,\n            parameters['max_iterations'],\n            parameters['tolerance'])\n        outputs['joint_angles'] = joint_angles.tolist()\n    except ValueError as e:\n        outputs['joint_angles'] = None\n        raise RuntimeError(f\"IK Solver Error: {str(e)}\")",
+                      "frequency": "30",
+                      "params": [
+                        {
+                          "name": "link_lengths"
+                        },
+                        {
+                          "name": "max_iterations"
+                        },
+                        {
+                          "name": "tolerance"
+                        }
+                      ],
+                      "ports": {
+                        "in": [
+                          {
+                            "name": "joint_states"
+                          },
+                          {
+                            "name": "target_position"
+                          }
+                        ],
+                        "out": [
+                          {
+                            "name": "joint_angles"
+                          }
+                        ]
+                      },
+                      "size": {
+                        "width": "700px",
+                        "height": "500px"
+                      }
+                    },
+                    "position": {
+                      "x": 600,
+                      "y": 250
+                    }
+                  },
+                  {
+                    "id": "825c269e-d9d8-427a-8f26-ddbbb25283ca",
+                    "type": "basic.output",
+                    "data": {
+                      "name": "joint_angles"
+                    },
+                    "position": {
+                      "x": 900,
+                      "y": 300
+                    }
+                  },
+                  {
+                    "id": "084cade7-b375-4f09-8ba6-15b049fa5a30",
+                    "type": "basic.constant",
+                    "data": {
+                      "name": "link_lengths",
+                      "value": "100",
+                      "local": true
+                    },
+                    "position": {
+                      "x": 650,
+                      "y": 100
+                    }
+                  },
+                  {
+                    "id": "fb42f650-8c15-4823-8d74-42802b19493d",
+                    "type": "basic.constant",
+                    "data": {
+                      "name": "max_iterations",
+                      "value": "100",
+                      "local": true
+                    },
+                    "position": {
+                      "x": 850,
+                      "y": 100
+                    }
+                  },
+                  {
+                    "id": "1c0e3352-c7f5-4a22-a715-456186f68a75",
+                    "type": "basic.constant",
+                    "data": {
+                      "name": "tolerance",
+                      "value": "100",
+                      "local": true
+                    },
+                    "position": {
+                      "x": 1050,
+                      "y": 100
+                    }
+                  }
+                ],
+                "wires": [
+                  {
+                    "source": {
+                      "block": "input_block_id",
+                      "port": "input-out",
+                      "name": "joint_states"
+                    },
+                    "target": {
+                      "block": "code_block_id",
+                      "port": "joint_states",
+                      "name": "joint_states"
+                    }
+                  },
+                  {
+                    "source": {
+                      "block": "code_block_id",
+                      "port": "joint_angles",
+                      "name": "joint_angles"
+                    },
+                    "target": {
+                      "block": "output_block_id",
+                      "port": "output-in",
+                      "name": "joint_angles"
+                    }
+                  }
+                ]
+              }
+            },
+            "dependencies": {}
+          },
+          "574ff3fe-1124-425a-b87d-d3d557df6000": {
+            "id": "574ff3fe-1124-425a-b87d-d3d557df6000",
+            "type": "block.package",
+            "selected": false,
+            "x": 1000,
+            "y": 150,
+            "ports": [
+              {
+                "id": "ede6a51b-9149-46cf-b3d5-44a86d6aeee7",
+                "type": "port.input",
+                "x": 1001,
+                "y": 166.0,
+                "name": "cbd354c2-c501-4240-83f9-f693ac289bae",
+                "alignment": "left",
+                "parentNode": "574ff3fe-1124-425a-b87d-d3d557df6000",
+                "links": [
+                  "21aaba55-4542-46f8-9e08-f59fbcfd5712"
+                ],
+                "in": true,
+                "label": "joint_angles",
+                "hideLabel": false
+              },
+              {
+                "id": "3dc284c5-d50a-4a33-a7d2-28feb856be0f",
+                "type": "port.output",
+                "x": 1113,
+                "y": 187,
+                "name": "4e8e14dd-2b42-43f2-8b75-09915ba1926f",
+                "alignment": "right",
+                "parentNode": "574ff3fe-1124-425a-b87d-d3d557df6000",
+                "links": [
+                  "9afeb00b-82f6-45f7-90af-b9c05b885826"
+                ],
+                "in": false,
+                "label": "trajectory",
+                "hideLabel": false
+              },
+              {
+                "id": "fc63ac83-8576-4210-87be-080952e75e56",
+                "type": "port.parameter",
+                "x": 1057,
+                "y": 120,
+                "name": "a54bc655-d63d-4c93-96b0-47c88c877c2b",
+                "alignment": "top",
+                "parentNode": "574ff3fe-1124-425a-b87d-d3d557df6000",
+                "links": [],
+                "in": true,
+                "label": "time_step",
+                "hideLabel": false
+              },
+              {
+                "id": "61ca292b-e006-4249-bbe0-aa2c863d4099",
+                "type": "port.parameter",
+                "x": 1157,
+                "y": 120,
+                "name": "7f13d8b0-283a-4356-bac6-91c214e81984",
+                "alignment": "top",
+                "parentNode": "574ff3fe-1124-425a-b87d-d3d557df6000",
+                "links": [],
+                "in": true,
+                "label": "total_time",
+                "hideLabel": false
+              },
+              {
+                "id": "8c97f2d5-9357-493e-997b-2f7ba7b6afe8",
+                "type": "port.parameter",
+                "x": 1257,
+                "y": 120,
+                "name": "e485fdb5-4acc-4e88-b14a-11de9b81e30c",
+                "alignment": "top",
+                "parentNode": "574ff3fe-1124-425a-b87d-d3d557df6000",
+                "links": [],
+                "in": true,
+                "label": "interpolation_method",
+                "hideLabel": false
+              }
+            ],
+            "data": {},
+            "model": {
+              "id": "dcf22183-b0df-4181-a44e-3c9ae807dff0",
+              "locked": false,
+              "offsetX": 0,
+              "offsetY": 0,
+              "zoom": 100,
+              "gridSize": 0,
+              "layers": [
+                {
+                  "id": "6ffdec49-b986-43d2-bd1a-3f24ba5e4d40",
+                  "type": "diagram-links",
+                  "isSvg": true,
+                  "transformed": true,
+                  "models": {
+                    "0d2d1427-a26b-4f3c-b45c-0dc9abbb09cc": {
+                      "id": "0d2d1427-a26b-4f3c-b45c-0dc9abbb09cc",
+                      "type": "default",
+                      "selected": false,
+                      "source": "835b585f-36f2-451c-80fb-099c29e56e90",
+                      "sourcePort": "13ec2ec8-0f29-4d59-8cd5-8aa37f7eb756",
+                      "target": "4e0d9f23-2a6e-4f6a-82ad-e12d79b73105",
+                      "targetPort": "1d2e0cdf-5e04-4954-a24e-a8dfbbfea8b6",
+                      "points": [
+                        {
+                          "id": "a5833ef5-5f31-40ef-8ec8-64ab22da78ed",
+                          "type": "point",
+                          "x": 306,
+                          "y": 319
+                        },
+                        {
+                          "id": "2e1f2955-e1d6-4c05-9ca3-ec0f70d8579b",
+                          "type": "point",
+                          "x": 480,
+                          "y": 350
+                        }
+                      ],
+                      "labels": [],
+                      "width": 3,
+                      "color": "gray",
+                      "curvyness": 50,
+                      "selectedColor": "rgb(0,192,255)"
+                    },
+                    "329cc1b7-0274-4722-99d8-1b67446b05cc": {
+                      "id": "329cc1b7-0274-4722-99d8-1b67446b05cc",
+                      "type": "default",
+                      "selected": false,
+                      "source": "4e0d9f23-2a6e-4f6a-82ad-e12d79b73105",
+                      "sourcePort": "9b31d772-a7f6-4d54-b6a7-10234cb86521",
+                      "target": "cfa61293-e808-4a52-98d6-b0b19c8a4267",
+                      "targetPort": "db483c18-64a1-4484-b3e2-f12d92aeab2a",
+                      "points": [
+                        {
+                          "id": "328c23cd-84bc-4868-8224-5d111e28a074",
+                          "type": "point",
+                          "x": 920,
+                          "y": 350
+                        },
+                        {
+                          "id": "29b95c7c-866c-402f-93ff-799445845965",
+                          "type": "point",
+                          "x": 1181,
+                          "y": 319
+                        }
+                      ],
+                      "labels": [],
+                      "width": 3,
+                      "color": "gray",
+                      "curvyness": 50,
+                      "selectedColor": "rgb(0,192,255)"
+                    },
+                    "2ef62472-3f0a-4478-9183-4ab60fd9e192": {
+                      "id": "2ef62472-3f0a-4478-9183-4ab60fd9e192",
+                      "type": "default",
+                      "selected": false,
+                      "source": "6ab23530-0802-46ab-9c7b-122a007e5a93",
+                      "sourcePort": "f3ce4145-8379-4e6f-9745-1f517fd807e5",
+                      "target": "4e0d9f23-2a6e-4f6a-82ad-e12d79b73105",
+                      "targetPort": "ba6a0e32-8f44-4bcd-81ca-e942e4a4d59c",
+                      "points": [
+                        {
+                          "id": "045cf3a7-f0ac-43e9-a8aa-5d293d75fcd0",
+                          "type": "point",
+                          "x": 703,
+                          "y": 220
+                        },
+                        {
+                          "id": "4b0ded6e-68fd-4b9b-a374-783fd07002a9",
+                          "type": "point",
+                          "x": 700,
+                          "y": 260
+                        }
+                      ],
+                      "labels": [],
+                      "width": 3,
+                      "color": "gray",
+                      "curvyness": 50,
+                      "selectedColor": "rgb(0,192,255)"
+                    },
+                    "e1f06461-cc53-454d-8a3c-731857515567": {
+                      "id": "e1f06461-cc53-454d-8a3c-731857515567",
+                      "type": "default",
+                      "selected": false,
+                      "source": "df8199a9-00fb-4700-b098-da4c7519bd97",
+                      "sourcePort": "d0306fca-022f-4704-9342-4c30b89e1033",
+                      "target": "4e0d9f23-2a6e-4f6a-82ad-e12d79b73105",
+                      "targetPort": "151110b9-2af2-47f4-bbaa-205033c933e3",
+                      "points": [
+                        {
+                          "id": "6549edb9-23bd-4ee9-816c-b9c1130747f1",
+                          "type": "point",
+                          "x": 903,
+                          "y": 220
+                        },
+                        {
+                          "id": "764f21a7-abbe-465e-9ac6-bc67f1863160",
+                          "type": "point",
+                          "x": 800,
+                          "y": 260
+                        }
+                      ],
+                      "labels": [],
+                      "width": 3,
+                      "color": "gray",
+                      "curvyness": 50,
+                      "selectedColor": "rgb(0,192,255)"
+                    },
+                    "acf7d319-de0b-4157-a3ed-fd12dd4a263c": {
+                      "id": "acf7d319-de0b-4157-a3ed-fd12dd4a263c",
+                      "type": "default",
+                      "selected": false,
+                      "source": "70415598-316d-4abe-9871-63e4ab59e384",
+                      "sourcePort": "4577d028-6ea4-4429-b286-d8e6c98df5e3",
+                      "target": "4e0d9f23-2a6e-4f6a-82ad-e12d79b73105",
+                      "targetPort": "b742cf09-a78e-4f22-9c83-5e97fdbfe370",
+                      "points": [
+                        {
+                          "id": "10e7cd07-8f9b-4b64-b00f-974591d960af",
+                          "type": "point",
+                          "x": 1103,
+                          "y": 220
+                        },
+                        {
+                          "id": "da0be5e1-84ee-424a-b751-6c5e88121ec8",
+                          "type": "point",
+                          "x": 900,
+                          "y": 260
+                        }
+                      ],
+                      "labels": [],
+                      "width": 3,
+                      "color": "gray",
+                      "curvyness": 50,
+                      "selectedColor": "rgb(0,192,255)"
+                    }
+                  }
+                },
+                {
+                  "id": "37bee83a-92cf-4c05-8fc8-a2993598284e",
+                  "type": "diagram-nodes",
+                  "isSvg": false,
+                  "transformed": true,
+                  "models": {
+                    "835b585f-36f2-451c-80fb-099c29e56e90": {
+                      "id": "835b585f-36f2-451c-80fb-099c29e56e90",
+                      "type": "basic.input",
+                      "selected": false,
+                      "x": 200,
+                      "y": 300,
+                      "ports": [
+                        {
+                          "id": "13ec2ec8-0f29-4d59-8cd5-8aa37f7eb756",
+                          "type": "port.output",
+                          "x": 286,
+                          "y": 319,
+                          "name": "input-out",
+                          "alignment": "right",
+                          "parentNode": "aae21b24-f69f-48c9-b3e9-fe732a4c861f",
+                          "links": [],
+                          "in": false,
+                          "label": "joint_angles",
+                          "hideLabel": true
+                        }
+                      ],
+                      "data": {
+                        "name": "joint_angles"
+                      }
+                    },
+                    "4e0d9f23-2a6e-4f6a-82ad-e12d79b73105": {
+                      "id": "4e0d9f23-2a6e-4f6a-82ad-e12d79b73105",
+                      "type": "basic.code",
+                      "selected": false,
+                      "x": 488,
+                      "y": 200,
+                      "ports": [
+                        {
+                          "id": "1d2e0cdf-5e04-4954-a24e-a8dfbbfea8b6",
+                          "type": "port.input",
+                          "x": 500,
+                          "y": 350,
+                          "name": "joint_angles",
+                          "alignment": "left",
+                          "parentNode": "9ad5d26e-d93e-45b6-bb74-38ab152f4afb",
+                          "links": [],
+                          "in": true,
+                          "label": "joint_angles",
+                          "hideLabel": false
+                        },
+                        {
+                          "id": "9b31d772-a7f6-4d54-b6a7-10234cb86521",
+                          "type": "port.output",
+                          "x": 900,
+                          "y": 350,
+                          "name": "trajectory",
+                          "alignment": "right",
+                          "parentNode": "fe05418e-8059-43b5-9a4d-9753266c2c84",
+                          "links": [],
+                          "in": false,
+                          "label": "trajectory",
+                          "hideLabel": false
+                        },
+                        {
+                          "id": "ba6a0e32-8f44-4bcd-81ca-e942e4a4d59c",
+                          "type": "port.parameter",
+                          "x": 700,
+                          "y": 280,
+                          "name": "time_step",
+                          "alignment": "top",
+                          "parentNode": "b6371003-77d6-4e20-8d5a-9ac15f2146fa",
+                          "links": [],
+                          "in": true,
+                          "label": "time_step",
+                          "hideLabel": false
+                        },
+                        {
+                          "id": "151110b9-2af2-47f4-bbaa-205033c933e3",
+                          "type": "port.parameter",
+                          "x": 800,
+                          "y": 280,
+                          "name": "total_time",
+                          "alignment": "top",
+                          "parentNode": "8176efe5-a9c9-4327-8cdd-b98f4e878df3",
+                          "links": [],
+                          "in": true,
+                          "label": "total_time",
+                          "hideLabel": false
+                        },
+                        {
+                          "id": "b742cf09-a78e-4f22-9c83-5e97fdbfe370",
+                          "type": "port.parameter",
+                          "x": 900,
+                          "y": 280,
+                          "name": "interpolation_method",
+                          "alignment": "top",
+                          "parentNode": "a9bfb064-0a3b-4a4d-bac0-93f68f3c4e8c",
+                          "links": [],
+                          "in": true,
+                          "label": "interpolation_method",
+                          "hideLabel": false
+                        }
+                      ],
+                      "data": {
+                        "code": "import numpy as np\n\ndef generate_trajectory(current_angles, target_angles, time_step, total_time, method='linear'):\n    num_steps = int(total_time / time_step)\n    trajectory = []\n    \n    for i in range(num_steps + 1):\n        t = i * time_step / total_time\n        \n        if method == 'linear':\n            angles = current_angles + t * (target_angles - current_angles)\n        elif method == 'cubic':\n            # Simple cubic interpolation\n            t2 = t**2\n            t3 = t**3\n            angles = current_angles + (3*t2 - 2*t3) * (target_angles - current_angles)\n        else:\n            raise ValueError(f\"Unknown interpolation method: {method}\")\n        \n        trajectory.append(angles)\n    \n    return np.array(trajectory)\n\ndef main(inputs, outputs, parameters, synchronise):\n    joint_angles = inputs['joint_angles']\n    \n    if joint_angles is None:\n        outputs['trajectory'] = None\n        return\n    \n    # Assume current angles are all zeros for simplicity\n    current_angles = np.zeros(len(joint_angles))\n    \n    trajectory = generate_trajectory(\n        current_angles,\n        np.array(joint_angles),\n        parameters['time_step'],\n        parameters['total_time'],\n        parameters['interpolation_method'])\n    \n    outputs['trajectory'] = trajectory.tolist()",
+                        "frequency": "30",
+                        "params": [
+                          {
+                            "name": "time_step"
+                          },
+                          {
+                            "name": "total_time"
+                          },
+                          {
+                            "name": "interpolation_method"
+                          }
+                        ],
+                        "ports": {
+                          "in": [
+                            {
+                              "name": "joint_angles"
+                            }
+                          ],
+                          "out": [
+                            {
+                              "name": "trajectory"
+                            }
+                          ]
+                        },
+                        "size": {
+                          "width": "700px",
+                          "height": "500px"
+                        }
+                      }
+                    },
+                    "cfa61293-e808-4a52-98d6-b0b19c8a4267": {
+                      "id": "cfa61293-e808-4a52-98d6-b0b19c8a4267",
+                      "type": "basic.output",
+                      "selected": false,
+                      "x": 1200,
+                      "y": 300,
+                      "ports": [
+                        {
+                          "id": "db483c18-64a1-4484-b3e2-f12d92aeab2a",
+                          "type": "port.input",
+                          "x": 1201,
+                          "y": 319,
+                          "name": "output-in",
+                          "alignment": "left",
+                          "parentNode": "f531edcf-3ce9-46e0-b461-bd4a64232197",
+                          "links": [],
+                          "in": true,
+                          "label": "output-in",
+                          "hideLabel": true
+                        }
+                      ],
+                      "data": {
+                        "name": "trajectory"
+                      }
+                    },
+                    "6ab23530-0802-46ab-9c7b-122a007e5a93": {
+                      "id": "6ab23530-0802-46ab-9c7b-122a007e5a93",
+                      "type": "basic.constant",
+                      "selected": false,
+                      "x": 650,
+                      "y": 100,
+                      "ports": [
+                        {
+                          "id": "f3ce4145-8379-4e6f-9745-1f517fd807e5",
+                          "type": "port.output",
+                          "x": 703,
+                          "y": 200,
+                          "name": "constant-out",
+                          "alignment": "bottom",
+                          "parentNode": "ae0ccb00-aea3-4926-bbec-c81c239c6950",
+                          "links": [],
+                          "in": false,
+                          "label": "time_step",
+                          "hideLabel": true
+                        }
+                      ],
+                      "data": {
+                        "name": "time_step",
+                        "value": "100",
+                        "local": true
+                      }
+                    },
+                    "df8199a9-00fb-4700-b098-da4c7519bd97": {
+                      "id": "df8199a9-00fb-4700-b098-da4c7519bd97",
+                      "type": "basic.constant",
+                      "selected": false,
+                      "x": 850,
+                      "y": 100,
+                      "ports": [
+                        {
+                          "id": "d0306fca-022f-4704-9342-4c30b89e1033",
+                          "type": "port.output",
+                          "x": 903,
+                          "y": 200,
+                          "name": "constant-out",
+                          "alignment": "bottom",
+                          "parentNode": "61438511-942c-4472-92ee-0c6fc491db52",
+                          "links": [],
+                          "in": false,
+                          "label": "total_time",
+                          "hideLabel": true
+                        }
+                      ],
+                      "data": {
+                        "name": "total_time",
+                        "value": "100",
+                        "local": true
+                      }
+                    },
+                    "70415598-316d-4abe-9871-63e4ab59e384": {
+                      "id": "70415598-316d-4abe-9871-63e4ab59e384",
+                      "type": "basic.constant",
+                      "selected": false,
+                      "x": 1050,
+                      "y": 100,
+                      "ports": [
+                        {
+                          "id": "4577d028-6ea4-4429-b286-d8e6c98df5e3",
+                          "type": "port.output",
+                          "x": 1103,
+                          "y": 200,
+                          "name": "constant-out",
+                          "alignment": "bottom",
+                          "parentNode": "63eb30a1-29ee-44e6-a7ed-5f58299a730f",
+                          "links": [],
+                          "in": false,
+                          "label": "interpolation_method",
+                          "hideLabel": true
+                        }
+                      ],
+                      "data": {
+                        "name": "interpolation_method",
+                        "value": "100",
+                        "local": true
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "info": {
+              "name": "Trajectory Planner",
+              "version": "2.0.0",
+              "description": "Generates smooth trajectory for robot arm movement",
+              "author": "AI Generated",
+              "image": ""
+            },
+            "design": {
+              "board": "Python3-Noetic",
+              "graph": {
+                "blocks": [
+                  {
+                    "id": "b0d66643-fe04-460e-a4ba-7980a087f9e4",
+                    "type": "basic.input",
+                    "data": {
+                      "name": "joint_angles"
+                    },
+                    "position": {
+                      "x": 300,
+                      "y": 300
+                    }
+                  },
+                  {
+                    "id": "4a1053d9-4532-4563-a93c-733089cdf14f",
+                    "type": "basic.code",
+                    "data": {
+                      "code": "import numpy as np\n\ndef generate_trajectory(current_angles, target_angles, time_step, total_time, method='linear'):\n    num_steps = int(total_time / time_step)\n    trajectory = []\n    \n    for i in range(num_steps + 1):\n        t = i * time_step / total_time\n        \n        if method == 'linear':\n            angles = current_angles + t * (target_angles - current_angles)\n        elif method == 'cubic':\n            # Simple cubic interpolation\n            t2 = t**2\n            t3 = t**3\n            angles = current_angles + (3*t2 - 2*t3) * (target_angles - current_angles)\n        else:\n            raise ValueError(f\"Unknown interpolation method: {method}\")\n        \n        trajectory.append(angles)\n    \n    return np.array(trajectory)\n\ndef main(inputs, outputs, parameters, synchronise):\n    joint_angles = inputs['joint_angles']\n    \n    if joint_angles is None:\n        outputs['trajectory'] = None\n        return\n    \n    # Assume current angles are all zeros for simplicity\n    current_angles = np.zeros(len(joint_angles))\n    \n    trajectory = generate_trajectory(\n        current_angles,\n        np.array(joint_angles),\n        parameters['time_step'],\n        parameters['total_time'],\n        parameters['interpolation_method'])\n    \n    outputs['trajectory'] = trajectory.tolist()",
+                      "frequency": "30",
+                      "params": [
+                        {
+                          "name": "time_step"
+                        },
+                        {
+                          "name": "total_time"
+                        },
+                        {
+                          "name": "interpolation_method"
+                        }
+                      ],
+                      "ports": {
+                        "in": [
+                          {
+                            "name": "joint_angles"
+                          }
+                        ],
+                        "out": [
+                          {
+                            "name": "trajectory"
+                          }
+                        ]
+                      },
+                      "size": {
+                        "width": "700px",
+                        "height": "500px"
+                      }
+                    },
+                    "position": {
+                      "x": 600,
+                      "y": 250
+                    }
+                  },
+                  {
+                    "id": "ecfc98e0-4853-4791-bbbd-355f7954f790",
+                    "type": "basic.output",
+                    "data": {
+                      "name": "trajectory"
+                    },
+                    "position": {
+                      "x": 900,
+                      "y": 300
+                    }
+                  },
+                  {
+                    "id": "b0c0e7a7-7e96-46c5-85f7-b1d815ee742d",
+                    "type": "basic.constant",
+                    "data": {
+                      "name": "time_step",
+                      "value": "100",
+                      "local": true
+                    },
+                    "position": {
+                      "x": 650,
+                      "y": 100
+                    }
+                  },
+                  {
+                    "id": "222a394a-33af-4956-af3b-6f71ad97af65",
+                    "type": "basic.constant",
+                    "data": {
+                      "name": "total_time",
+                      "value": "100",
+                      "local": true
+                    },
+                    "position": {
+                      "x": 850,
+                      "y": 100
+                    }
+                  },
+                  {
+                    "id": "f4035362-b929-4ec0-b722-7ffbdc989aa7",
+                    "type": "basic.constant",
+                    "data": {
+                      "name": "interpolation_method",
+                      "value": "100",
+                      "local": true
+                    },
+                    "position": {
+                      "x": 1050,
+                      "y": 100
+                    }
+                  }
+                ],
+                "wires": [
+                  {
+                    "source": {
+                      "block": "input_block_id",
+                      "port": "input-out",
+                      "name": "joint_angles"
+                    },
+                    "target": {
+                      "block": "code_block_id",
+                      "port": "joint_angles",
+                      "name": "joint_angles"
+                    }
+                  },
+                  {
+                    "source": {
+                      "block": "code_block_id",
+                      "port": "trajectory",
+                      "name": "trajectory"
+                    },
+                    "target": {
+                      "block": "output_block_id",
+                      "port": "output-in",
+                      "name": "trajectory"
+                    }
+                  }
+                ]
+              }
+            },
+            "dependencies": {}
+          },
+          "d18c658b-2b76-4903-8012-fe237a56b4a2": {
+            "id": "d18c658b-2b76-4903-8012-fe237a56b4a2",
+            "type": "block.package",
+            "selected": false,
+            "x": 1300,
+            "y": 150,
+            "ports": [
+              {
+                "id": "a87e7f2c-491a-4d1c-af68-6b1cab834552",
+                "type": "port.input",
+                "x": 1301,
+                "y": 166.0,
+                "name": "aa7774aa-4ca3-4749-91db-0525b95e539f",
+                "alignment": "left",
+                "parentNode": "d18c658b-2b76-4903-8012-fe237a56b4a2",
+                "links": [
+                  "9afeb00b-82f6-45f7-90af-b9c05b885826"
+                ],
+                "in": true,
+                "label": "trajectory",
+                "hideLabel": false
+              },
+              {
+                "id": "a3c25b64-d375-4df0-8d40-9ac1b2db4e11",
+                "type": "port.parameter",
+                "x": 1357,
+                "y": 120,
+                "name": "7f4f8141-57e4-4c05-aea3-34b66971e812",
+                "alignment": "top",
+                "parentNode": "d18c658b-2b76-4903-8012-fe237a56b4a2",
+                "links": [],
+                "in": true,
+                "label": "joint_names",
+                "hideLabel": false
+              },
+              {
+                "id": "c4948b7f-be5a-499f-8829-49a8a463f03f",
+                "type": "port.parameter",
+                "x": 1457,
+                "y": 120,
+                "name": "699bdfd7-5202-46fc-9df5-f150691b3deb",
+                "alignment": "top",
+                "parentNode": "d18c658b-2b76-4903-8012-fe237a56b4a2",
+                "links": [],
+                "in": true,
+                "label": "topic_name",
+                "hideLabel": false
+              },
+              {
+                "id": "d8de6745-1291-47b0-8e5d-043b7cb59fa3",
+                "type": "port.parameter",
+                "x": 1557,
+                "y": 120,
+                "name": "d7a94b30-c439-4eba-9a12-0bfa43ac8bfa",
+                "alignment": "top",
+                "parentNode": "d18c658b-2b76-4903-8012-fe237a56b4a2",
+                "links": [],
+                "in": true,
+                "label": "publish_rate",
+                "hideLabel": false
+              }
+            ],
+            "data": {},
+            "model": {
+              "id": "c0dd6208-3b7e-4e9a-8c41-413f82368acd",
+              "locked": false,
+              "offsetX": 0,
+              "offsetY": 0,
+              "zoom": 100,
+              "gridSize": 0,
+              "layers": [
+                {
+                  "id": "5f709d87-f6b9-4d62-a58d-5809b58034da",
+                  "type": "diagram-links",
+                  "isSvg": true,
+                  "transformed": true,
+                  "models": {
+                    "2e33dab8-b9a5-4ced-93a8-8ec8eefdbcb5": {
+                      "id": "2e33dab8-b9a5-4ced-93a8-8ec8eefdbcb5",
+                      "type": "default",
+                      "selected": false,
+                      "source": "14d191fc-20a4-417d-8604-2bda956ad130",
+                      "sourcePort": "c39aa722-dbfe-4cab-bfaa-2adf0da07d7c",
+                      "target": "274e015c-0569-4471-858a-a03648b87be9",
+                      "targetPort": "193d9da5-08bb-4a39-9f1d-1efc7c62f6be",
+                      "points": [
+                        {
+                          "id": "83cd46f2-71db-42a3-acc9-7d9f86621673",
+                          "type": "point",
+                          "x": 306,
+                          "y": 319
+                        },
+                        {
+                          "id": "6da6e595-fe3c-4340-a0b1-c70216f08575",
+                          "type": "point",
+                          "x": 480,
+                          "y": 350
+                        }
+                      ],
+                      "labels": [],
+                      "width": 3,
+                      "color": "gray",
+                      "curvyness": 50,
+                      "selectedColor": "rgb(0,192,255)"
+                    },
+                    "b8790245-5871-4eb2-984d-cbf113878ca4": {
+                      "id": "b8790245-5871-4eb2-984d-cbf113878ca4",
+                      "type": "default",
+                      "selected": false,
+                      "source": "05ffc324-f32d-4ce2-807d-e593e0797674",
+                      "sourcePort": "66a84256-b114-4de7-8cdb-99bb2210eb55",
+                      "target": "274e015c-0569-4471-858a-a03648b87be9",
+                      "targetPort": "872d2750-5190-4e60-a268-c44a58e1f7dc",
+                      "points": [
+                        {
+                          "id": "daccc756-5da9-4be1-befa-c4d562452264",
+                          "type": "point",
+                          "x": 703,
+                          "y": 220
+                        },
+                        {
+                          "id": "2588e8cc-44f2-45a6-b04e-2c26e77b55d5",
+                          "type": "point",
+                          "x": 700,
+                          "y": 260
+                        }
+                      ],
+                      "labels": [],
+                      "width": 3,
+                      "color": "gray",
+                      "curvyness": 50,
+                      "selectedColor": "rgb(0,192,255)"
+                    },
+                    "7db9ac00-3037-4d45-9be2-1877680f5cb7": {
+                      "id": "7db9ac00-3037-4d45-9be2-1877680f5cb7",
+                      "type": "default",
+                      "selected": false,
+                      "source": "a7b523e3-8547-4850-8d71-3fc74c42f728",
+                      "sourcePort": "48e38d3a-05c1-408e-89b3-370faec8a243",
+                      "target": "274e015c-0569-4471-858a-a03648b87be9",
+                      "targetPort": "8016db1b-1c9d-4474-9b0a-69dc26cfaab6",
+                      "points": [
+                        {
+                          "id": "b96f44c5-235e-405f-b34c-1dd85e86d7d6",
+                          "type": "point",
+                          "x": 903,
+                          "y": 220
+                        },
+                        {
+                          "id": "68289442-a012-485d-b79d-b536f56fbe75",
+                          "type": "point",
+                          "x": 800,
+                          "y": 260
+                        }
+                      ],
+                      "labels": [],
+                      "width": 3,
+                      "color": "gray",
+                      "curvyness": 50,
+                      "selectedColor": "rgb(0,192,255)"
+                    },
+                    "a071d10b-c4ea-42fa-b1d3-0632cc9a5a10": {
+                      "id": "a071d10b-c4ea-42fa-b1d3-0632cc9a5a10",
+                      "type": "default",
+                      "selected": false,
+                      "source": "672985fa-8314-4613-8670-3564ba8b11ba",
+                      "sourcePort": "ba4528bd-34a6-4c28-814b-d0ddeb50d0ce",
+                      "target": "274e015c-0569-4471-858a-a03648b87be9",
+                      "targetPort": "389c6a1d-7511-40c1-bf71-9a12c198f1ed",
+                      "points": [
+                        {
+                          "id": "fd30ac2e-e08d-4c31-9c0a-ddaf53704c7f",
+                          "type": "point",
+                          "x": 1103,
+                          "y": 220
+                        },
+                        {
+                          "id": "c5461a07-f02d-469d-b282-ddda91a34b8e",
+                          "type": "point",
+                          "x": 900,
+                          "y": 260
+                        }
+                      ],
+                      "labels": [],
+                      "width": 3,
+                      "color": "gray",
+                      "curvyness": 50,
+                      "selectedColor": "rgb(0,192,255)"
+                    }
+                  }
+                },
+                {
+                  "id": "a122abd1-1747-4e84-a860-02d131859715",
+                  "type": "diagram-nodes",
+                  "isSvg": false,
+                  "transformed": true,
+                  "models": {
+                    "14d191fc-20a4-417d-8604-2bda956ad130": {
+                      "id": "14d191fc-20a4-417d-8604-2bda956ad130",
+                      "type": "basic.input",
+                      "selected": false,
+                      "x": 200,
+                      "y": 300,
+                      "ports": [
+                        {
+                          "id": "c39aa722-dbfe-4cab-bfaa-2adf0da07d7c",
+                          "type": "port.output",
+                          "x": 286,
+                          "y": 319,
+                          "name": "input-out",
+                          "alignment": "right",
+                          "parentNode": "60f54122-8d7c-4127-9af7-b8ac2eaf369f",
+                          "links": [],
+                          "in": false,
+                          "label": "trajectory",
+                          "hideLabel": true
+                        }
+                      ],
+                      "data": {
+                        "name": "trajectory"
+                      }
+                    },
+                    "274e015c-0569-4471-858a-a03648b87be9": {
+                      "id": "274e015c-0569-4471-858a-a03648b87be9",
+                      "type": "basic.code",
+                      "selected": false,
+                      "x": 488,
+                      "y": 200,
+                      "ports": [
+                        {
+                          "id": "193d9da5-08bb-4a39-9f1d-1efc7c62f6be",
+                          "type": "port.input",
+                          "x": 500,
+                          "y": 350,
+                          "name": "trajectory",
+                          "alignment": "left",
+                          "parentNode": "c4cdb935-0fa9-4733-b803-fbb5ba3157df",
+                          "links": [],
+                          "in": true,
+                          "label": "trajectory",
+                          "hideLabel": false
+                        },
+                        {
+                          "id": "872d2750-5190-4e60-a268-c44a58e1f7dc",
+                          "type": "port.parameter",
+                          "x": 700,
+                          "y": 280,
+                          "name": "joint_names",
+                          "alignment": "top",
+                          "parentNode": "6629445f-ca74-4609-ac5a-e71c344ddc64",
+                          "links": [],
+                          "in": true,
+                          "label": "joint_names",
+                          "hideLabel": false
+                        },
+                        {
+                          "id": "8016db1b-1c9d-4474-9b0a-69dc26cfaab6",
+                          "type": "port.parameter",
+                          "x": 800,
+                          "y": 280,
+                          "name": "topic_name",
+                          "alignment": "top",
+                          "parentNode": "ce8feac4-a8e9-4d9c-8aa3-528a61f34f7f",
+                          "links": [],
+                          "in": true,
+                          "label": "topic_name",
+                          "hideLabel": false
+                        },
+                        {
+                          "id": "389c6a1d-7511-40c1-bf71-9a12c198f1ed",
+                          "type": "port.parameter",
+                          "x": 900,
+                          "y": 280,
+                          "name": "publish_rate",
+                          "alignment": "top",
+                          "parentNode": "9147f442-4dbc-4b8a-aadf-b53266416614",
+                          "links": [],
+                          "in": true,
+                          "label": "publish_rate",
+                          "hideLabel": false
+                        }
+                      ],
+                      "data": {
+                        "code": "import rclpy\nfrom rclpy.node import Node\nfrom trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint\nfrom builtin_interfaces.msg import Duration\n\nclass JointCommandPublisher(Node):\n    def __init__(self, joint_names, topic_name):\n        super().__init__('joint_command_publisher')\n        self.publisher = self.create_publisher(JointTrajectory, topic_name, 10)\n        self.joint_names = joint_names\n        \n    def publish_trajectory(self, trajectory, rate):\n        msg = JointTrajectory()\n        msg.joint_names = self.joint_names\n        \n        for i, angles in enumerate(trajectory):\n            point = JointTrajectoryPoint()\n            point.positions = angles\n            point.time_from_start = Duration(sec=i * rate)\n            msg.points.append(point)\n        \n        self.publisher.publish(msg)\n        self.get_logger().info('Published trajectory')\n\ndef main(inputs, outputs, parameters, synchronise):\n    trajectory = inputs['trajectory']\n    \n    if trajectory is None or len(trajectory) == 0:\n        return\n    \n    rclpy.init()\n    publisher = JointCommandPublisher(\n        parameters['joint_names'],\n        parameters['topic_name'])\n    \n    publisher.publish_trajectory(trajectory, 1.0/parameters['publish_rate'])\n    \n    publisher.destroy_node()\n    rclpy.shutdown()",
+                        "frequency": "30",
+                        "params": [
+                          {
+                            "name": "joint_names"
+                          },
+                          {
+                            "name": "topic_name"
+                          },
+                          {
+                            "name": "publish_rate"
+                          }
+                        ],
+                        "ports": {
+                          "in": [
+                            {
+                              "name": "trajectory"
+                            }
+                          ],
+                          "out": []
+                        },
+                        "size": {
+                          "width": "700px",
+                          "height": "500px"
+                        }
+                      }
+                    },
+                    "05ffc324-f32d-4ce2-807d-e593e0797674": {
+                      "id": "05ffc324-f32d-4ce2-807d-e593e0797674",
+                      "type": "basic.constant",
+                      "selected": false,
+                      "x": 650,
+                      "y": 100,
+                      "ports": [
+                        {
+                          "id": "66a84256-b114-4de7-8cdb-99bb2210eb55",
+                          "type": "port.output",
+                          "x": 703,
+                          "y": 200,
+                          "name": "constant-out",
+                          "alignment": "bottom",
+                          "parentNode": "1e6159a7-6f5e-4d5f-bea9-699474639970",
+                          "links": [],
+                          "in": false,
+                          "label": "joint_names",
+                          "hideLabel": true
+                        }
+                      ],
+                      "data": {
+                        "name": "joint_names",
+                        "value": "100",
+                        "local": true
+                      }
+                    },
+                    "a7b523e3-8547-4850-8d71-3fc74c42f728": {
+                      "id": "a7b523e3-8547-4850-8d71-3fc74c42f728",
+                      "type": "basic.constant",
+                      "selected": false,
+                      "x": 850,
+                      "y": 100,
+                      "ports": [
+                        {
+                          "id": "48e38d3a-05c1-408e-89b3-370faec8a243",
+                          "type": "port.output",
+                          "x": 903,
+                          "y": 200,
+                          "name": "constant-out",
+                          "alignment": "bottom",
+                          "parentNode": "a9a007e5-21b3-449c-8a67-1491778ba429",
+                          "links": [],
+                          "in": false,
+                          "label": "topic_name",
+                          "hideLabel": true
+                        }
+                      ],
+                      "data": {
+                        "name": "topic_name",
+                        "value": "100",
+                        "local": true
+                      }
+                    },
+                    "672985fa-8314-4613-8670-3564ba8b11ba": {
+                      "id": "672985fa-8314-4613-8670-3564ba8b11ba",
+                      "type": "basic.constant",
+                      "selected": false,
+                      "x": 1050,
+                      "y": 100,
+                      "ports": [
+                        {
+                          "id": "ba4528bd-34a6-4c28-814b-d0ddeb50d0ce",
+                          "type": "port.output",
+                          "x": 1103,
+                          "y": 200,
+                          "name": "constant-out",
+                          "alignment": "bottom",
+                          "parentNode": "20521051-412e-4320-8d5b-1f9f5fa8e5fb",
+                          "links": [],
+                          "in": false,
+                          "label": "publish_rate",
+                          "hideLabel": true
+                        }
+                      ],
+                      "data": {
+                        "name": "publish_rate",
+                        "value": "100",
+                        "local": true
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "info": {
+              "name": "Joint Command Publisher",
+              "version": "2.0.0",
+              "description": "Publishes joint commands to ROS2 topics",
+              "author": "AI Generated",
+              "image": ""
+            },
+            "design": {
+              "board": "Python3-Noetic",
+              "graph": {
+                "blocks": [
+                  {
+                    "id": "fc890711-f88d-4645-a1bb-df37054abb43",
+                    "type": "basic.input",
+                    "data": {
+                      "name": "trajectory"
+                    },
+                    "position": {
+                      "x": 300,
+                      "y": 300
+                    }
+                  },
+                  {
+                    "id": "4562ed96-1b01-4743-af79-b066482113ce",
+                    "type": "basic.code",
+                    "data": {
+                      "code": "import rclpy\nfrom rclpy.node import Node\nfrom trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint\nfrom builtin_interfaces.msg import Duration\n\nclass JointCommandPublisher(Node):\n    def __init__(self, joint_names, topic_name):\n        super().__init__('joint_command_publisher')\n        self.publisher = self.create_publisher(JointTrajectory, topic_name, 10)\n        self.joint_names = joint_names\n        \n    def publish_trajectory(self, trajectory, rate):\n        msg = JointTrajectory()\n        msg.joint_names = self.joint_names\n        \n        for i, angles in enumerate(trajectory):\n            point = JointTrajectoryPoint()\n            point.positions = angles\n            point.time_from_start = Duration(sec=i * rate)\n            msg.points.append(point)\n        \n        self.publisher.publish(msg)\n        self.get_logger().info('Published trajectory')\n\ndef main(inputs, outputs, parameters, synchronise):\n    trajectory = inputs['trajectory']\n    \n    if trajectory is None or len(trajectory) == 0:\n        return\n    \n    rclpy.init()\n    publisher = JointCommandPublisher(\n        parameters['joint_names'],\n        parameters['topic_name'])\n    \n    publisher.publish_trajectory(trajectory, 1.0/parameters['publish_rate'])\n    \n    publisher.destroy_node()\n    rclpy.shutdown()",
+                      "frequency": "30",
+                      "params": [
+                        {
+                          "name": "joint_names"
+                        },
+                        {
+                          "name": "topic_name"
+                        },
+                        {
+                          "name": "publish_rate"
+                        }
+                      ],
+                      "ports": {
+                        "in": [
+                          {
+                            "name": "trajectory"
+                          }
+                        ],
+                        "out": []
+                      },
+                      "size": {
+                        "width": "700px",
+                        "height": "500px"
+                      }
+                    },
+                    "position": {
+                      "x": 600,
+                      "y": 250
+                    }
+                  },
+                  {
+                    "id": "41fe3111-4834-4802-b6e4-1b6e8b1bb3fd",
+                    "type": "basic.constant",
+                    "data": {
+                      "name": "joint_names",
+                      "value": "100",
+                      "local": true
+                    },
+                    "position": {
+                      "x": 650,
+                      "y": 100
+                    }
+                  },
+                  {
+                    "id": "c1fd2fd2-0b05-4456-9647-cc29e43e085a",
+                    "type": "basic.constant",
+                    "data": {
+                      "name": "topic_name",
+                      "value": "100",
+                      "local": true
+                    },
+                    "position": {
+                      "x": 850,
+                      "y": 100
+                    }
+                  },
+                  {
+                    "id": "9954f449-2d4a-41bc-8bbc-90c51ae0be2c",
+                    "type": "basic.constant",
+                    "data": {
+                      "name": "publish_rate",
+                      "value": "100",
+                      "local": true
+                    },
+                    "position": {
+                      "x": 1050,
+                      "y": 100
+                    }
+                  }
+                ],
+                "wires": []
+              }
+            },
+            "dependencies": {}
+          }
+        }
+      }
+    ]
+  },
+  "design": {
+    "graph": {
+      "blocks": [
+        {
+          "id": "a82132be-ade5-42fc-8a05-a4dd97696837",
+          "type": "qLAqwerwXAkdg0lmoTCsjwuB-zT13948ipmXE0XfV6g=",
+          "position": {
+            "x": 400,
+            "y": 150
+          }
+        },
+        {
+          "id": "db3f1977-576f-48d6-abf8-fca134e4493d",
+          "type": "8hV6z6-WUIZT3tMPZ3INSG2vplbfQ7LOCRt613367z4=",
+          "position": {
+            "x": 700,
+            "y": 150
+          }
+        },
+        {
+          "id": "574ff3fe-1124-425a-b87d-d3d557df6000",
+          "type": "TOv67yvx8Rm8XOY1izAYtqkaEFDSzqD0-cTst-tUqq0=",
+          "position": {
+            "x": 1000,
+            "y": 150
+          }
+        },
+        {
+          "id": "d18c658b-2b76-4903-8012-fe237a56b4a2",
+          "type": "MW0KzHALAUEwIFiUwEChwQYnoRGBsrzrHuMOaMNTZck=",
+          "position": {
+            "x": 1300,
+            "y": 150
+          }
+        }
+      ],
+      "wires": [
+        {
+          "source": {
+            "block": "a82132be-ade5-42fc-8a05-a4dd97696837",
+            "port": "ac668e61-9bd9-4558-a57b-083209b0963d",
+            "name": "joint_states"
+          },
+          "target": {
+            "block": "db3f1977-576f-48d6-abf8-fca134e4493d",
+            "port": "06bf88db-46a3-4a1d-81eb-61df7cb9afcd",
+            "name": "joint_states"
+          }
+        },
+        {
+          "source": {
+            "block": "db3f1977-576f-48d6-abf8-fca134e4493d",
+            "port": "2db14c38-9ba3-4b8c-9e5b-7b0c24e6e13c",
+            "name": "joint_angles"
+          },
+          "target": {
+            "block": "574ff3fe-1124-425a-b87d-d3d557df6000",
+            "port": "ede6a51b-9149-46cf-b3d5-44a86d6aeee7",
+            "name": "joint_angles"
+          }
+        },
+        {
+          "source": {
+            "block": "574ff3fe-1124-425a-b87d-d3d557df6000",
+            "port": "3dc284c5-d50a-4a33-a7d2-28feb856be0f",
+            "name": "trajectory"
+          },
+          "target": {
+            "block": "d18c658b-2b76-4903-8012-fe237a56b4a2",
+            "port": "a87e7f2c-491a-4d1c-af68-6b1cab834552",
+            "name": "trajectory"
+          }
+        }
+      ]
+    },
+    "board": "Python3-Noetic"
+  },
+  "dependencies": {
+    "qLAqwerwXAkdg0lmoTCsjwuB-zT13948ipmXE0XfV6g=": {
+      "package": {
+        "name": "Joint State Subscriber",
+        "version": "2.0.0",
+        "description": "Subscribes to joint states from ROS2 topics",
+        "author": "AI Generated",
+        "image": ""
+      },
+      "design": {
+        "board": "Python3-Noetic",
+        "graph": {
+          "blocks": [
+            {
+              "id": "1a9740cd-8f27-468b-9f38-37d909b0ad49",
+              "type": "basic.code",
+              "data": {
+                "code": "import rclpy\nfrom rclpy.node import Node\nfrom sensor_msgs.msg import JointState\n\nclass JointStateSubscriber(Node):\n    def __init__(self, joint_names, topic_name):\n        super().__init__('joint_state_subscriber')\n        self.joint_names = joint_names\n        self.subscription = self.create_subscription(\n            JointState,\n            topic_name,\n            self.listener_callback,\n            10)\n        self.joint_states = None\n        \n    def listener_callback(self, msg):\n        self.joint_states = msg\n\ndef main(inputs, outputs, parameters, synchronise):\n    rclpy.init()\n    joint_state_subscriber = JointStateSubscriber(\n        parameters['joint_names'],\n        parameters['topic_name'])\n    \n    while rclpy.ok():\n        rclpy.spin_once(joint_state_subscriber, timeout_sec=0.1)\n        if joint_state_subscriber.joint_states is not None:\n            outputs['joint_states'] = joint_state_subscriber.joint_states\n            break\n    \n    joint_state_subscriber.destroy_node()\n    rclpy.shutdown()",
+                "frequency": "30",
+                "params": [
+                  {
+                    "name": "joint_names"
+                  },
+                  {
+                    "name": "topic_name"
+                  }
+                ],
+                "ports": {
+                  "in": [],
+                  "out": [
+                    {
+                      "name": "joint_states"
+                    }
+                  ]
+                },
+                "size": {
+                  "width": "700px",
+                  "height": "500px"
+                }
+              },
+              "position": {
+                "x": 600,
+                "y": 250
+              }
+            },
+            {
+              "id": "86caf249-ba87-415d-95ab-7fbdc82fa720",
+              "type": "basic.output",
+              "data": {
+                "name": "joint_states"
+              },
+              "position": {
+                "x": 900,
+                "y": 300
+              }
+            },
+            {
+              "id": "f424a7da-ff9c-4fda-afca-32196c46a6ae",
+              "type": "basic.constant",
+              "data": {
+                "name": "joint_names",
+                "value": "100",
+                "local": true
+              },
+              "position": {
+                "x": 650,
+                "y": 100
+              }
+            },
+            {
+              "id": "7b6c9a22-c671-434c-9560-3fbb7a0bbaa7",
+              "type": "basic.constant",
+              "data": {
+                "name": "topic_name",
+                "value": "100",
+                "local": true
+              },
+              "position": {
+                "x": 850,
+                "y": 100
+              }
+            }
+          ],
+          "wires": []
+        }
+      },
+      "dependencies": {}
+    },
+    "8hV6z6-WUIZT3tMPZ3INSG2vplbfQ7LOCRt613367z4=": {
+      "package": {
+        "name": "Inverse Kinematics Solver",
+        "version": "2.0.0",
+        "description": "Computes inverse kinematics for RRR robot arm",
+        "author": "AI Generated",
+        "image": ""
+      },
+      "design": {
+        "board": "Python3-Noetic",
+        "graph": {
+          "blocks": [
+            {
+              "id": "fd6634e4-3dd3-43b4-baaf-2b7986ebd883",
+              "type": "basic.input",
+              "data": {
+                "name": "joint_states"
+              },
+              "position": {
+                "x": 300,
+                "y": 300
+              }
+            },
+            {
+              "id": "d30eda0f-38e7-484c-a321-b9a91896ba00",
+              "type": "basic.input",
+              "data": {
+                "name": "target_position"
+              },
+              "position": {
+                "x": 300,
+                "y": 400
+              }
+            },
+            {
+              "id": "7d081b5e-4448-4d48-8ccb-f09304e179dc",
+              "type": "basic.code",
+              "data": {
+                "code": "import numpy as np\n\ndef compute_inverse_kinematics(link_lengths, target_position, max_iterations=1000, tolerance=1e-6):\n    # Simplified inverse kinematics for RRR arm\n    x, y, z = target_position\n    l1, l2, l3 = link_lengths\n    \n    # Compute wrist position\n    wrist_x = x - l3 * np.cos(np.pi/2)  # Assuming last joint is perpendicular\n    wrist_y = y - l3 * np.sin(np.pi/2)\n    wrist_z = z\n    \n    # Compute joint angles using geometric approach\n    r = np.sqrt(wrist_x**2 + wrist_y**2 + wrist_z**2)\n    \n    if r > (l1 + l2):\n        raise ValueError(\"Target position out of reach\")\n    \n    # Angle for first joint (theta1)\n    theta1 = np.arctan2(wrist_y, wrist_x)\n    \n    # Distance in xy-plane\n    r_xy = np.sqrt(wrist_x**2 + wrist_y**2)\n    \n    # Angle for second joint (theta2)\n    cos_theta3 = (r_xy**2 + wrist_z**2 - l1**2 - l2**2) / (2 * l1 * l2)\n    theta3 = np.arccos(np.clip(cos_theta3, -1, 1))\n    \n    # Angle for third joint (theta2)\n    alpha = np.arctan2(wrist_z, r_xy)\n    beta = np.arccos((l1**2 + r**2 - l2**2) / (2 * l1 * r))\n    theta2 = alpha + beta\n    \n    return np.array([theta1, theta2, theta3])\n\ndef main(inputs, outputs, parameters, synchronise):\n    joint_states = inputs['joint_states']\n    target_position = inputs['target_position']\n    \n    try:\n        joint_angles = compute_inverse_kinematics(\n            parameters['link_lengths'],\n            target_position,\n            parameters['max_iterations'],\n            parameters['tolerance'])\n        outputs['joint_angles'] = joint_angles.tolist()\n    except ValueError as e:\n        outputs['joint_angles'] = None\n        raise RuntimeError(f\"IK Solver Error: {str(e)}\")",
+                "frequency": "30",
+                "params": [
+                  {
+                    "name": "link_lengths"
+                  },
+                  {
+                    "name": "max_iterations"
+                  },
+                  {
+                    "name": "tolerance"
+                  }
+                ],
+                "ports": {
+                  "in": [
+                    {
+                      "name": "joint_states"
+                    },
+                    {
+                      "name": "target_position"
+                    }
+                  ],
+                  "out": [
+                    {
+                      "name": "joint_angles"
+                    }
+                  ]
+                },
+                "size": {
+                  "width": "700px",
+                  "height": "500px"
+                }
+              },
+              "position": {
+                "x": 600,
+                "y": 250
+              }
+            },
+            {
+              "id": "59ac3778-d3ae-4893-a761-16c18c2d792f",
+              "type": "basic.output",
+              "data": {
+                "name": "joint_angles"
+              },
+              "position": {
+                "x": 900,
+                "y": 300
+              }
+            },
+            {
+              "id": "fc3a5db3-7a9c-4b9f-b488-9192d4d6abe2",
+              "type": "basic.constant",
+              "data": {
+                "name": "link_lengths",
+                "value": "100",
+                "local": true
+              },
+              "position": {
+                "x": 650,
+                "y": 100
+              }
+            },
+            {
+              "id": "b1dee7e5-184b-4bc3-9554-52f42a1e103e",
+              "type": "basic.constant",
+              "data": {
+                "name": "max_iterations",
+                "value": "100",
+                "local": true
+              },
+              "position": {
+                "x": 850,
+                "y": 100
+              }
+            },
+            {
+              "id": "76c75b9d-265f-4ca7-9e97-e66b09eaff4e",
+              "type": "basic.constant",
+              "data": {
+                "name": "tolerance",
+                "value": "100",
+                "local": true
+              },
+              "position": {
+                "x": 1050,
+                "y": 100
+              }
+            }
+          ],
+          "wires": [
+            {
+              "source": {
+                "block": "input_block_id",
+                "port": "input-out",
+                "name": "joint_states"
+              },
+              "target": {
+                "block": "code_block_id",
+                "port": "joint_states",
+                "name": "joint_states"
+              }
+            },
+            {
+              "source": {
+                "block": "code_block_id",
+                "port": "joint_angles",
+                "name": "joint_angles"
+              },
+              "target": {
+                "block": "output_block_id",
+                "port": "output-in",
+                "name": "joint_angles"
+              }
+            }
+          ]
+        }
+      },
+      "dependencies": {}
+    },
+    "TOv67yvx8Rm8XOY1izAYtqkaEFDSzqD0-cTst-tUqq0=": {
+      "package": {
+        "name": "Trajectory Planner",
+        "version": "2.0.0",
+        "description": "Generates smooth trajectory for robot arm movement",
+        "author": "AI Generated",
+        "image": ""
+      },
+      "design": {
+        "board": "Python3-Noetic",
+        "graph": {
+          "blocks": [
+            {
+              "id": "8a333bb6-a984-4939-b5cc-a96b56c54978",
+              "type": "basic.input",
+              "data": {
+                "name": "joint_angles"
+              },
+              "position": {
+                "x": 300,
+                "y": 300
+              }
+            },
+            {
+              "id": "e828e4e6-ad3f-4cc2-aaba-4dd45a73e0c0",
+              "type": "basic.code",
+              "data": {
+                "code": "import numpy as np\n\ndef generate_trajectory(current_angles, target_angles, time_step, total_time, method='linear'):\n    num_steps = int(total_time / time_step)\n    trajectory = []\n    \n    for i in range(num_steps + 1):\n        t = i * time_step / total_time\n        \n        if method == 'linear':\n            angles = current_angles + t * (target_angles - current_angles)\n        elif method == 'cubic':\n            # Simple cubic interpolation\n            t2 = t**2\n            t3 = t**3\n            angles = current_angles + (3*t2 - 2*t3) * (target_angles - current_angles)\n        else:\n            raise ValueError(f\"Unknown interpolation method: {method}\")\n        \n        trajectory.append(angles)\n    \n    return np.array(trajectory)\n\ndef main(inputs, outputs, parameters, synchronise):\n    joint_angles = inputs['joint_angles']\n    \n    if joint_angles is None:\n        outputs['trajectory'] = None\n        return\n    \n    # Assume current angles are all zeros for simplicity\n    current_angles = np.zeros(len(joint_angles))\n    \n    trajectory = generate_trajectory(\n        current_angles,\n        np.array(joint_angles),\n        parameters['time_step'],\n        parameters['total_time'],\n        parameters['interpolation_method'])\n    \n    outputs['trajectory'] = trajectory.tolist()",
+                "frequency": "30",
+                "params": [
+                  {
+                    "name": "time_step"
+                  },
+                  {
+                    "name": "total_time"
+                  },
+                  {
+                    "name": "interpolation_method"
+                  }
+                ],
+                "ports": {
+                  "in": [
+                    {
+                      "name": "joint_angles"
+                    }
+                  ],
+                  "out": [
+                    {
+                      "name": "trajectory"
+                    }
+                  ]
+                },
+                "size": {
+                  "width": "700px",
+                  "height": "500px"
+                }
+              },
+              "position": {
+                "x": 600,
+                "y": 250
+              }
+            },
+            {
+              "id": "99b77fc0-b0c1-4b39-9a2a-cf588e4a1ddc",
+              "type": "basic.output",
+              "data": {
+                "name": "trajectory"
+              },
+              "position": {
+                "x": 900,
+                "y": 300
+              }
+            },
+            {
+              "id": "7a8cb157-acdb-422a-941c-7c65fac23c72",
+              "type": "basic.constant",
+              "data": {
+                "name": "time_step",
+                "value": "100",
+                "local": true
+              },
+              "position": {
+                "x": 650,
+                "y": 100
+              }
+            },
+            {
+              "id": "b971aa50-03d3-4e0f-801e-586321682494",
+              "type": "basic.constant",
+              "data": {
+                "name": "total_time",
+                "value": "100",
+                "local": true
+              },
+              "position": {
+                "x": 850,
+                "y": 100
+              }
+            },
+            {
+              "id": "ae94535b-a100-4653-bf09-41106657fd06",
+              "type": "basic.constant",
+              "data": {
+                "name": "interpolation_method",
+                "value": "100",
+                "local": true
+              },
+              "position": {
+                "x": 1050,
+                "y": 100
+              }
+            }
+          ],
+          "wires": [
+            {
+              "source": {
+                "block": "input_block_id",
+                "port": "input-out",
+                "name": "joint_angles"
+              },
+              "target": {
+                "block": "code_block_id",
+                "port": "joint_angles",
+                "name": "joint_angles"
+              }
+            },
+            {
+              "source": {
+                "block": "code_block_id",
+                "port": "trajectory",
+                "name": "trajectory"
+              },
+              "target": {
+                "block": "output_block_id",
+                "port": "output-in",
+                "name": "trajectory"
+              }
+            }
+          ]
+        }
+      },
+      "dependencies": {}
+    },
+    "MW0KzHALAUEwIFiUwEChwQYnoRGBsrzrHuMOaMNTZck=": {
+      "package": {
+        "name": "Joint Command Publisher",
+        "version": "2.0.0",
+        "description": "Publishes joint commands to ROS2 topics",
+        "author": "AI Generated",
+        "image": ""
+      },
+      "design": {
+        "board": "Python3-Noetic",
+        "graph": {
+          "blocks": [
+            {
+              "id": "6556cd9f-3556-400f-8160-8e91a3bf14a5",
+              "type": "basic.input",
+              "data": {
+                "name": "trajectory"
+              },
+              "position": {
+                "x": 300,
+                "y": 300
+              }
+            },
+            {
+              "id": "bcf9d1de-67b9-4ab4-b32a-5b667314b7a9",
+              "type": "basic.code",
+              "data": {
+                "code": "import rclpy\nfrom rclpy.node import Node\nfrom trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint\nfrom builtin_interfaces.msg import Duration\n\nclass JointCommandPublisher(Node):\n    def __init__(self, joint_names, topic_name):\n        super().__init__('joint_command_publisher')\n        self.publisher = self.create_publisher(JointTrajectory, topic_name, 10)\n        self.joint_names = joint_names\n        \n    def publish_trajectory(self, trajectory, rate):\n        msg = JointTrajectory()\n        msg.joint_names = self.joint_names\n        \n        for i, angles in enumerate(trajectory):\n            point = JointTrajectoryPoint()\n            point.positions = angles\n            point.time_from_start = Duration(sec=i * rate)\n            msg.points.append(point)\n        \n        self.publisher.publish(msg)\n        self.get_logger().info('Published trajectory')\n\ndef main(inputs, outputs, parameters, synchronise):\n    trajectory = inputs['trajectory']\n    \n    if trajectory is None or len(trajectory) == 0:\n        return\n    \n    rclpy.init()\n    publisher = JointCommandPublisher(\n        parameters['joint_names'],\n        parameters['topic_name'])\n    \n    publisher.publish_trajectory(trajectory, 1.0/parameters['publish_rate'])\n    \n    publisher.destroy_node()\n    rclpy.shutdown()",
+                "frequency": "30",
+                "params": [
+                  {
+                    "name": "joint_names"
+                  },
+                  {
+                    "name": "topic_name"
+                  },
+                  {
+                    "name": "publish_rate"
+                  }
+                ],
+                "ports": {
+                  "in": [
+                    {
+                      "name": "trajectory"
+                    }
+                  ],
+                  "out": []
+                },
+                "size": {
+                  "width": "700px",
+                  "height": "500px"
+                }
+              },
+              "position": {
+                "x": 600,
+                "y": 250
+              }
+            },
+            {
+              "id": "ad6b9789-eef0-4a4b-b1b7-f37e77cab115",
+              "type": "basic.constant",
+              "data": {
+                "name": "joint_names",
+                "value": "100",
+                "local": true
+              },
+              "position": {
+                "x": 650,
+                "y": 100
+              }
+            },
+            {
+              "id": "f2156e01-2bed-4d61-9285-bd844d62d822",
+              "type": "basic.constant",
+              "data": {
+                "name": "topic_name",
+                "value": "100",
+                "local": true
+              },
+              "position": {
+                "x": 850,
+                "y": 100
+              }
+            },
+            {
+              "id": "e83e633b-39a6-4b15-afa7-3e88f5823ed5",
+              "type": "basic.constant",
+              "data": {
+                "name": "publish_rate",
+                "value": "100",
+                "local": true
+              },
+              "position": {
+                "x": 1050,
+                "y": 100
+              }
+            }
+          ],
+          "wires": []
+        }
+      },
+      "dependencies": {}
+    }
+  },
+  "version": "3.0",
+  "package": {
+    "name": "",
+    "version": "",
+    "description": "",
+    "author": "",
+    "image": ""
+  }
+}

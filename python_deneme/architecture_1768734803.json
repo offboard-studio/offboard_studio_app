@@ -1,0 +1,1579 @@
+{
+  "editor": {
+    "id": "6f133262-8028-4d2b-bf72-b9f934316166",
+    "offsetX": 163,
+    "offsetY": 97,
+    "zoom": 100,
+    "gridSize": 0,
+    "layers": [
+      {
+        "id": "d79d8983-593c-4425-9624-a17f54d969b5",
+        "type": "diagram-links",
+        "isSvg": true,
+        "transformed": true,
+        "models": {
+          "fc9bae4f-de98-46f4-aee8-93421ac86bef": {
+            "id": "fc9bae4f-de98-46f4-aee8-93421ac86bef",
+            "type": "default",
+            "selected": false,
+            "source": "985cd094-260b-4f42-aca6-d99a1dd9c60a",
+            "sourcePort": "ea728ac1-4a0f-47bb-9024-a44a89b2125a",
+            "target": "5cb8c330-f001-4ee1-907e-c7a58fd38430",
+            "targetPort": "c734f2b7-b2d4-4865-adc6-f8276405e12f",
+            "points": [
+              {
+                "id": "aff343e3-753a-4308-b8b6-945325d1f724",
+                "type": "point",
+                "x": 600,
+                "y": 200
+              },
+              {
+                "id": "75371583-8ce2-4be5-9ad0-5e8699147c29",
+                "type": "point",
+                "x": 650,
+                "y": 200
+              }
+            ],
+            "labels": [],
+            "width": 3,
+            "color": "gray",
+            "curvyness": 50,
+            "selectedColor": "rgb(0,192,255)"
+          },
+          "5ef35a70-565a-483b-8b42-3fac00d96052": {
+            "id": "5ef35a70-565a-483b-8b42-3fac00d96052",
+            "type": "default",
+            "selected": false,
+            "source": "5cb8c330-f001-4ee1-907e-c7a58fd38430",
+            "sourcePort": "a5ecf69b-1d94-476c-98b5-277191558da1",
+            "target": "91df5456-3c93-47d9-aebb-4e8761b83e54",
+            "targetPort": "b6b9d55e-cf70-43d7-b8ad-1fdf5f110b48",
+            "points": [
+              {
+                "id": "0c4d6073-bfe2-465d-b152-36a42a28f79f",
+                "type": "point",
+                "x": 900,
+                "y": 220
+              },
+              {
+                "id": "c0517505-5ca2-40d4-8ebb-45c47eb665d7",
+                "type": "point",
+                "x": 950,
+                "y": 220
+              }
+            ],
+            "labels": [],
+            "width": 3,
+            "color": "gray",
+            "curvyness": 50,
+            "selectedColor": "rgb(0,192,255)"
+          }
+        }
+      },
+      {
+        "id": "193330f6-bee2-4a35-b60a-e7bb25a5b882",
+        "type": "diagram-nodes",
+        "isSvg": false,
+        "transformed": true,
+        "models": {
+          "985cd094-260b-4f42-aca6-d99a1dd9c60a": {
+            "id": "985cd094-260b-4f42-aca6-d99a1dd9c60a",
+            "type": "block.package",
+            "selected": false,
+            "x": 400,
+            "y": 150,
+            "ports": [
+              {
+                "id": "dc87799d-b0cb-42dc-a24a-d5b99236b0dc",
+                "type": "port.input",
+                "x": 401,
+                "y": 166.0,
+                "name": "b0c62fad-b558-4984-9aca-ef7e578cb360",
+                "alignment": "left",
+                "parentNode": "985cd094-260b-4f42-aca6-d99a1dd9c60a",
+                "links": [],
+                "in": true,
+                "label": "Enable",
+                "hideLabel": false
+              },
+              {
+                "id": "ea728ac1-4a0f-47bb-9024-a44a89b2125a",
+                "type": "port.output",
+                "x": 513,
+                "y": 187,
+                "name": "92e081e4-576f-4acc-b7f3-dde93b7e3d11",
+                "alignment": "right",
+                "parentNode": "985cd094-260b-4f42-aca6-d99a1dd9c60a",
+                "links": [
+                  "fc9bae4f-de98-46f4-aee8-93421ac86bef"
+                ],
+                "in": false,
+                "label": "JointStates",
+                "hideLabel": false
+              },
+              {
+                "id": "70bf229c-b18a-4537-8f80-0c6d4fdeae92",
+                "type": "port.parameter",
+                "x": 457,
+                "y": 120,
+                "name": "f8493bc3-c548-4b28-9667-341056d3956b",
+                "alignment": "top",
+                "parentNode": "985cd094-260b-4f42-aca6-d99a1dd9c60a",
+                "links": [],
+                "in": true,
+                "label": "JointNames",
+                "hideLabel": false
+              },
+              {
+                "id": "49399e99-3559-4b4b-8549-5fdeec944cfb",
+                "type": "port.parameter",
+                "x": 557,
+                "y": 120,
+                "name": "7cf56d0e-2253-45bc-a7ae-0ffd09eefaf5",
+                "alignment": "top",
+                "parentNode": "985cd094-260b-4f42-aca6-d99a1dd9c60a",
+                "links": [],
+                "in": true,
+                "label": "DefaultPositions",
+                "hideLabel": false
+              }
+            ],
+            "data": {},
+            "model": {
+              "id": "9b880620-702a-4b23-b014-2c73ace2e514",
+              "locked": false,
+              "offsetX": 0,
+              "offsetY": 0,
+              "zoom": 100,
+              "gridSize": 0,
+              "layers": [
+                {
+                  "id": "0d17593b-9725-41ac-923b-eb865917392e",
+                  "type": "diagram-links",
+                  "isSvg": true,
+                  "transformed": true,
+                  "models": {
+                    "50e3d4b5-3585-4b9b-a4b3-8a5c81a10003": {
+                      "id": "50e3d4b5-3585-4b9b-a4b3-8a5c81a10003",
+                      "type": "default",
+                      "selected": false,
+                      "source": "8c861b58-8364-4796-8889-6dbb2d82e0b6",
+                      "sourcePort": "47750e36-a459-4eca-8f35-697880a63d26",
+                      "target": "96558922-30d5-4e32-a73e-543217dd16d5",
+                      "targetPort": "832cb7f0-04ee-495b-a92f-26bb6479c442",
+                      "points": [
+                        {
+                          "id": "8113fcba-6899-4e58-8ef3-cd91a65f967a",
+                          "type": "point",
+                          "x": 306,
+                          "y": 319
+                        },
+                        {
+                          "id": "25df9769-b0b4-4e81-a7e1-3b4c2ae3f01e",
+                          "type": "point",
+                          "x": 480,
+                          "y": 350
+                        }
+                      ],
+                      "labels": [],
+                      "width": 3,
+                      "color": "gray",
+                      "curvyness": 50,
+                      "selectedColor": "rgb(0,192,255)"
+                    },
+                    "a78615f2-2474-4285-bd2b-c30e2ca10335": {
+                      "id": "a78615f2-2474-4285-bd2b-c30e2ca10335",
+                      "type": "default",
+                      "selected": false,
+                      "source": "96558922-30d5-4e32-a73e-543217dd16d5",
+                      "sourcePort": "f0d4ee40-0e18-4614-ab97-f6586d294ddb",
+                      "target": "db023ede-7df6-49d6-b2d9-dade1adac32f",
+                      "targetPort": "7ccd90a5-7fa5-41ec-8cd7-2db8324d8b76",
+                      "points": [
+                        {
+                          "id": "e25d126a-8dec-4e88-815e-1afba7590ffc",
+                          "type": "point",
+                          "x": 920,
+                          "y": 350
+                        },
+                        {
+                          "id": "e548d5d5-99b7-4584-87fa-6aa72fd59b49",
+                          "type": "point",
+                          "x": 1181,
+                          "y": 319
+                        }
+                      ],
+                      "labels": [],
+                      "width": 3,
+                      "color": "gray",
+                      "curvyness": 50,
+                      "selectedColor": "rgb(0,192,255)"
+                    },
+                    "a8d0a5d1-5fa5-4af2-8862-cd5fcf639b64": {
+                      "id": "a8d0a5d1-5fa5-4af2-8862-cd5fcf639b64",
+                      "type": "default",
+                      "selected": false,
+                      "source": "6acf3c70-2c1d-4b2e-8627-25e3908ead59",
+                      "sourcePort": "4840bd8b-183e-48ea-9baf-12012ee73e20",
+                      "target": "96558922-30d5-4e32-a73e-543217dd16d5",
+                      "targetPort": "fe5d2512-31c7-4768-9a7d-c8932091804c",
+                      "points": [
+                        {
+                          "id": "42d70dbf-ce1a-4b38-9bb7-87271cf95eb8",
+                          "type": "point",
+                          "x": 703,
+                          "y": 220
+                        },
+                        {
+                          "id": "9abf1661-e1df-43bf-997c-9f805de61e7e",
+                          "type": "point",
+                          "x": 700,
+                          "y": 260
+                        }
+                      ],
+                      "labels": [],
+                      "width": 3,
+                      "color": "gray",
+                      "curvyness": 50,
+                      "selectedColor": "rgb(0,192,255)"
+                    },
+                    "812b8071-86e8-4ded-aa08-04a03476a474": {
+                      "id": "812b8071-86e8-4ded-aa08-04a03476a474",
+                      "type": "default",
+                      "selected": false,
+                      "source": "a37e99bd-0045-4893-a819-7b6e73147833",
+                      "sourcePort": "4b690cb2-ff8a-4a0b-803a-177fcf8b0851",
+                      "target": "96558922-30d5-4e32-a73e-543217dd16d5",
+                      "targetPort": "14685759-51c6-47f7-960a-bdf6e7d4d61c",
+                      "points": [
+                        {
+                          "id": "a6c06776-01c6-40d1-ace3-96047cc0f620",
+                          "type": "point",
+                          "x": 903,
+                          "y": 220
+                        },
+                        {
+                          "id": "e3dac7bb-834b-41c2-a20d-1ede81651a5d",
+                          "type": "point",
+                          "x": 800,
+                          "y": 260
+                        }
+                      ],
+                      "labels": [],
+                      "width": 3,
+                      "color": "gray",
+                      "curvyness": 50,
+                      "selectedColor": "rgb(0,192,255)"
+                    }
+                  }
+                },
+                {
+                  "id": "6e63e6dc-e66e-42fa-8c96-c049db327e3a",
+                  "type": "diagram-nodes",
+                  "isSvg": false,
+                  "transformed": true,
+                  "models": {
+                    "8c861b58-8364-4796-8889-6dbb2d82e0b6": {
+                      "id": "8c861b58-8364-4796-8889-6dbb2d82e0b6",
+                      "type": "basic.input",
+                      "selected": false,
+                      "x": 200,
+                      "y": 300,
+                      "ports": [
+                        {
+                          "id": "47750e36-a459-4eca-8f35-697880a63d26",
+                          "type": "port.output",
+                          "x": 286,
+                          "y": 319,
+                          "name": "input-out",
+                          "alignment": "right",
+                          "parentNode": "74cc480d-bc99-42ff-9001-3e3e161a2cf9",
+                          "links": [],
+                          "in": false,
+                          "label": "Enable",
+                          "hideLabel": true
+                        }
+                      ],
+                      "data": {
+                        "name": "Enable"
+                      }
+                    },
+                    "96558922-30d5-4e32-a73e-543217dd16d5": {
+                      "id": "96558922-30d5-4e32-a73e-543217dd16d5",
+                      "type": "basic.code",
+                      "selected": false,
+                      "x": 488,
+                      "y": 200,
+                      "ports": [
+                        {
+                          "id": "832cb7f0-04ee-495b-a92f-26bb6479c442",
+                          "type": "port.input",
+                          "x": 500,
+                          "y": 350,
+                          "name": "Enable",
+                          "alignment": "left",
+                          "parentNode": "f77bfc5d-452d-42e5-b8a6-a32247c9a750",
+                          "links": [],
+                          "in": true,
+                          "label": "Enable",
+                          "hideLabel": false
+                        },
+                        {
+                          "id": "f0d4ee40-0e18-4614-ab97-f6586d294ddb",
+                          "type": "port.output",
+                          "x": 900,
+                          "y": 350,
+                          "name": "JointStates",
+                          "alignment": "right",
+                          "parentNode": "c00d9a51-3218-4bc9-8f6f-f6318bfdd9b2",
+                          "links": [],
+                          "in": false,
+                          "label": "JointStates",
+                          "hideLabel": false
+                        },
+                        {
+                          "id": "fe5d2512-31c7-4768-9a7d-c8932091804c",
+                          "type": "port.parameter",
+                          "x": 700,
+                          "y": 280,
+                          "name": "JointNames",
+                          "alignment": "top",
+                          "parentNode": "2c21ef4f-03b1-4845-98a3-1f055c9e1f02",
+                          "links": [],
+                          "in": true,
+                          "label": "JointNames",
+                          "hideLabel": false
+                        },
+                        {
+                          "id": "14685759-51c6-47f7-960a-bdf6e7d4d61c",
+                          "type": "port.parameter",
+                          "x": 800,
+                          "y": 280,
+                          "name": "DefaultPositions",
+                          "alignment": "top",
+                          "parentNode": "8ed93067-26e7-444e-a891-20e57921c740",
+                          "links": [],
+                          "in": true,
+                          "label": "DefaultPositions",
+                          "hideLabel": false
+                        }
+                      ],
+                      "data": {
+                        "code": "import numpy as np\nimport time\n\ndef main(inputs, outputs, parameters, synchronise):\n    joint_names = parameters.read_string(\"JointNames\").split(',')\n    default_pos = [float(x) for x in parameters.read_string(\"DefaultPositions\").split(',')]\n    \n    auto_enable = False\n    try:\n        enable = inputs.read_number('Enable')\n    except Exception:\n        auto_enable = True\n    \n    t = 0\n    while auto_enable or inputs.read_number('Enable'):\n        # Simple sinusoidal movement\n        positions = [pos + 0.5 * np.sin(t + i) for i, pos in enumerate(default_pos)]\n        \n        joint_state = {\n            'names': joint_names,\n            'positions': positions,\n            'velocities': [0.0] * len(joint_names),\n            'efforts': [0.0] * len(joint_names)\n        }\n        \n        outputs.share_data('JointStates', joint_state)\n        t += 0.1\n        time.sleep(0.1)\n        synchronise()",
+                        "frequency": "30",
+                        "params": [
+                          {
+                            "name": "JointNames"
+                          },
+                          {
+                            "name": "DefaultPositions"
+                          }
+                        ],
+                        "ports": {
+                          "in": [
+                            {
+                              "name": "Enable"
+                            }
+                          ],
+                          "out": [
+                            {
+                              "name": "JointStates"
+                            }
+                          ]
+                        },
+                        "size": {
+                          "width": "700px",
+                          "height": "500px"
+                        }
+                      }
+                    },
+                    "db023ede-7df6-49d6-b2d9-dade1adac32f": {
+                      "id": "db023ede-7df6-49d6-b2d9-dade1adac32f",
+                      "type": "basic.output",
+                      "selected": false,
+                      "x": 1200,
+                      "y": 300,
+                      "ports": [
+                        {
+                          "id": "7ccd90a5-7fa5-41ec-8cd7-2db8324d8b76",
+                          "type": "port.input",
+                          "x": 1201,
+                          "y": 319,
+                          "name": "output-in",
+                          "alignment": "left",
+                          "parentNode": "5b418aa9-801b-4318-b380-184282e7bfbc",
+                          "links": [],
+                          "in": true,
+                          "label": "output-in",
+                          "hideLabel": true
+                        }
+                      ],
+                      "data": {
+                        "name": "JointStates"
+                      }
+                    },
+                    "6acf3c70-2c1d-4b2e-8627-25e3908ead59": {
+                      "id": "6acf3c70-2c1d-4b2e-8627-25e3908ead59",
+                      "type": "basic.constant",
+                      "selected": false,
+                      "x": 650,
+                      "y": 100,
+                      "ports": [
+                        {
+                          "id": "4840bd8b-183e-48ea-9baf-12012ee73e20",
+                          "type": "port.output",
+                          "x": 703,
+                          "y": 200,
+                          "name": "constant-out",
+                          "alignment": "bottom",
+                          "parentNode": "bc2053a5-44ca-41df-9206-f29e068eaa0e",
+                          "links": [],
+                          "in": false,
+                          "label": "JointNames",
+                          "hideLabel": true
+                        }
+                      ],
+                      "data": {
+                        "name": "JointNames",
+                        "value": "100",
+                        "local": true
+                      }
+                    },
+                    "a37e99bd-0045-4893-a819-7b6e73147833": {
+                      "id": "a37e99bd-0045-4893-a819-7b6e73147833",
+                      "type": "basic.constant",
+                      "selected": false,
+                      "x": 850,
+                      "y": 100,
+                      "ports": [
+                        {
+                          "id": "4b690cb2-ff8a-4a0b-803a-177fcf8b0851",
+                          "type": "port.output",
+                          "x": 903,
+                          "y": 200,
+                          "name": "constant-out",
+                          "alignment": "bottom",
+                          "parentNode": "948cfedb-1259-4b52-85bc-34a867b26f44",
+                          "links": [],
+                          "in": false,
+                          "label": "DefaultPositions",
+                          "hideLabel": true
+                        }
+                      ],
+                      "data": {
+                        "name": "DefaultPositions",
+                        "value": "100",
+                        "local": true
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "info": {
+              "name": "Joint State Publisher",
+              "version": "2.0.0",
+              "description": "Publishes joint states for robot arm",
+              "author": "AI Generated",
+              "image": ""
+            },
+            "design": {
+              "board": "Python3-Noetic",
+              "graph": {
+                "blocks": [
+                  {
+                    "id": "bbad4acd-15f3-4999-bfb5-707252cd74e7",
+                    "type": "basic.input",
+                    "data": {
+                      "name": "Enable"
+                    },
+                    "position": {
+                      "x": 300,
+                      "y": 300
+                    }
+                  },
+                  {
+                    "id": "a337e7f5-9713-498e-8a00-09d7e3af65c1",
+                    "type": "basic.code",
+                    "data": {
+                      "code": "import numpy as np\nimport time\n\ndef main(inputs, outputs, parameters, synchronise):\n    joint_names = parameters.read_string(\"JointNames\").split(',')\n    default_pos = [float(x) for x in parameters.read_string(\"DefaultPositions\").split(',')]\n    \n    auto_enable = False\n    try:\n        enable = inputs.read_number('Enable')\n    except Exception:\n        auto_enable = True\n    \n    t = 0\n    while auto_enable or inputs.read_number('Enable'):\n        # Simple sinusoidal movement\n        positions = [pos + 0.5 * np.sin(t + i) for i, pos in enumerate(default_pos)]\n        \n        joint_state = {\n            'names': joint_names,\n            'positions': positions,\n            'velocities': [0.0] * len(joint_names),\n            'efforts': [0.0] * len(joint_names)\n        }\n        \n        outputs.share_data('JointStates', joint_state)\n        t += 0.1\n        time.sleep(0.1)\n        synchronise()",
+                      "frequency": "30",
+                      "params": [
+                        {
+                          "name": "JointNames"
+                        },
+                        {
+                          "name": "DefaultPositions"
+                        }
+                      ],
+                      "ports": {
+                        "in": [
+                          {
+                            "name": "Enable"
+                          }
+                        ],
+                        "out": [
+                          {
+                            "name": "JointStates"
+                          }
+                        ]
+                      },
+                      "size": {
+                        "width": "700px",
+                        "height": "500px"
+                      }
+                    },
+                    "position": {
+                      "x": 600,
+                      "y": 250
+                    }
+                  },
+                  {
+                    "id": "4cb92a58-ee8d-4c58-afb3-11053e0c00d4",
+                    "type": "basic.output",
+                    "data": {
+                      "name": "JointStates"
+                    },
+                    "position": {
+                      "x": 900,
+                      "y": 300
+                    }
+                  },
+                  {
+                    "id": "02321a4b-7d15-4f94-833e-8bf935ff7137",
+                    "type": "basic.constant",
+                    "data": {
+                      "name": "JointNames",
+                      "value": "100",
+                      "local": true
+                    },
+                    "position": {
+                      "x": 650,
+                      "y": 100
+                    }
+                  },
+                  {
+                    "id": "a4c1d444-f126-449d-89fa-81874020a922",
+                    "type": "basic.constant",
+                    "data": {
+                      "name": "DefaultPositions",
+                      "value": "100",
+                      "local": true
+                    },
+                    "position": {
+                      "x": 850,
+                      "y": 100
+                    }
+                  }
+                ],
+                "wires": [
+                  {
+                    "source": {
+                      "block": "input_block_id",
+                      "port": "input-out",
+                      "name": "Enable"
+                    },
+                    "target": {
+                      "block": "code_block_id",
+                      "port": "Enable",
+                      "name": "Enable"
+                    }
+                  },
+                  {
+                    "source": {
+                      "block": "code_block_id",
+                      "port": "JointStates",
+                      "name": "JointStates"
+                    },
+                    "target": {
+                      "block": "output_block_id",
+                      "port": "output-in",
+                      "name": "JointStates"
+                    }
+                  }
+                ]
+              }
+            },
+            "dependencies": {}
+          },
+          "5cb8c330-f001-4ee1-907e-c7a58fd38430": {
+            "id": "5cb8c330-f001-4ee1-907e-c7a58fd38430",
+            "type": "block.package",
+            "selected": false,
+            "x": 700,
+            "y": 150,
+            "ports": [
+              {
+                "id": "c734f2b7-b2d4-4865-adc6-f8276405e12f",
+                "type": "port.input",
+                "x": 701,
+                "y": 166.0,
+                "name": "cbf5b124-fe81-4557-b3f1-ac108730b657",
+                "alignment": "left",
+                "parentNode": "5cb8c330-f001-4ee1-907e-c7a58fd38430",
+                "links": [
+                  "fc9bae4f-de98-46f4-aee8-93421ac86bef"
+                ],
+                "in": true,
+                "label": "JointStates",
+                "hideLabel": false
+              },
+              {
+                "id": "a5ecf69b-1d94-476c-98b5-277191558da1",
+                "type": "port.output",
+                "x": 813,
+                "y": 187,
+                "name": "6e00fb5c-9924-4dce-ae33-25a6f3659f3d",
+                "alignment": "right",
+                "parentNode": "5cb8c330-f001-4ee1-907e-c7a58fd38430",
+                "links": [
+                  "5ef35a70-565a-483b-8b42-3fac00d96052"
+                ],
+                "in": false,
+                "label": "EndEffectorPose",
+                "hideLabel": false
+              },
+              {
+                "id": "ada8bea2-3c85-4e9f-8d5e-a198511f0cb8",
+                "type": "port.parameter",
+                "x": 757,
+                "y": 120,
+                "name": "3e8a7da3-6a3b-44d6-9f94-36a29f11294d",
+                "alignment": "top",
+                "parentNode": "5cb8c330-f001-4ee1-907e-c7a58fd38430",
+                "links": [],
+                "in": true,
+                "label": "LinkLengths",
+                "hideLabel": false
+              }
+            ],
+            "data": {},
+            "model": {
+              "id": "9ad3d3c4-60bb-42b2-a47f-a0a805b68ebf",
+              "locked": false,
+              "offsetX": 0,
+              "offsetY": 0,
+              "zoom": 100,
+              "gridSize": 0,
+              "layers": [
+                {
+                  "id": "e3ea09d8-786f-485a-8bee-410116e94076",
+                  "type": "diagram-links",
+                  "isSvg": true,
+                  "transformed": true,
+                  "models": {
+                    "e0970874-9a4d-4f93-8d39-353a46be2b43": {
+                      "id": "e0970874-9a4d-4f93-8d39-353a46be2b43",
+                      "type": "default",
+                      "selected": false,
+                      "source": "2e10d95c-e93f-48ad-8a88-d91df2753604",
+                      "sourcePort": "c527fa9d-0fad-412e-a45e-093ae0775e35",
+                      "target": "6498b248-eecf-4dce-8d14-88fb64c3111a",
+                      "targetPort": "6b18bab4-0a24-4366-9fd9-e6d15f1a91f6",
+                      "points": [
+                        {
+                          "id": "5a4c75a3-3837-450e-903d-a41f6887af4c",
+                          "type": "point",
+                          "x": 306,
+                          "y": 319
+                        },
+                        {
+                          "id": "e1992134-89ba-4b1c-b021-6b2f6d40312e",
+                          "type": "point",
+                          "x": 480,
+                          "y": 350
+                        }
+                      ],
+                      "labels": [],
+                      "width": 3,
+                      "color": "gray",
+                      "curvyness": 50,
+                      "selectedColor": "rgb(0,192,255)"
+                    },
+                    "9bed3b56-0601-4fcf-8d99-a7c8bb4d265f": {
+                      "id": "9bed3b56-0601-4fcf-8d99-a7c8bb4d265f",
+                      "type": "default",
+                      "selected": false,
+                      "source": "6498b248-eecf-4dce-8d14-88fb64c3111a",
+                      "sourcePort": "1f443d9b-a78b-4945-99dc-7119ce93974f",
+                      "target": "999884dc-14a8-4f49-998d-c80f7c382878",
+                      "targetPort": "8d010266-5e8d-4b41-9092-49629db9e1a9",
+                      "points": [
+                        {
+                          "id": "afdd0e67-c6f9-4cb1-b074-70a013901de0",
+                          "type": "point",
+                          "x": 920,
+                          "y": 350
+                        },
+                        {
+                          "id": "d7d3e61a-ce80-4375-b2c6-43f64389288c",
+                          "type": "point",
+                          "x": 1181,
+                          "y": 319
+                        }
+                      ],
+                      "labels": [],
+                      "width": 3,
+                      "color": "gray",
+                      "curvyness": 50,
+                      "selectedColor": "rgb(0,192,255)"
+                    },
+                    "ad4e38f5-ba72-4889-983a-178409009ae9": {
+                      "id": "ad4e38f5-ba72-4889-983a-178409009ae9",
+                      "type": "default",
+                      "selected": false,
+                      "source": "662d9e99-c54a-4f0d-8017-a51ea14a0947",
+                      "sourcePort": "0a851a54-9619-4ab4-8204-e6f9b6c4d8b8",
+                      "target": "6498b248-eecf-4dce-8d14-88fb64c3111a",
+                      "targetPort": "12453fcf-a5d3-418c-ab28-0df81ea2957b",
+                      "points": [
+                        {
+                          "id": "c0b5d64d-2bcf-401a-a612-dfdc321e1d4c",
+                          "type": "point",
+                          "x": 703,
+                          "y": 220
+                        },
+                        {
+                          "id": "9083c6ab-838d-45fa-817e-98a07dbf7fa3",
+                          "type": "point",
+                          "x": 700,
+                          "y": 260
+                        }
+                      ],
+                      "labels": [],
+                      "width": 3,
+                      "color": "gray",
+                      "curvyness": 50,
+                      "selectedColor": "rgb(0,192,255)"
+                    }
+                  }
+                },
+                {
+                  "id": "9cf4f5ff-e788-4798-8a93-4cf7040dd18b",
+                  "type": "diagram-nodes",
+                  "isSvg": false,
+                  "transformed": true,
+                  "models": {
+                    "2e10d95c-e93f-48ad-8a88-d91df2753604": {
+                      "id": "2e10d95c-e93f-48ad-8a88-d91df2753604",
+                      "type": "basic.input",
+                      "selected": false,
+                      "x": 200,
+                      "y": 300,
+                      "ports": [
+                        {
+                          "id": "c527fa9d-0fad-412e-a45e-093ae0775e35",
+                          "type": "port.output",
+                          "x": 286,
+                          "y": 319,
+                          "name": "input-out",
+                          "alignment": "right",
+                          "parentNode": "966740a0-de76-4dbf-be1e-c2eecc8c8cab",
+                          "links": [],
+                          "in": false,
+                          "label": "JointStates",
+                          "hideLabel": true
+                        }
+                      ],
+                      "data": {
+                        "name": "JointStates"
+                      }
+                    },
+                    "6498b248-eecf-4dce-8d14-88fb64c3111a": {
+                      "id": "6498b248-eecf-4dce-8d14-88fb64c3111a",
+                      "type": "basic.code",
+                      "selected": false,
+                      "x": 488,
+                      "y": 200,
+                      "ports": [
+                        {
+                          "id": "6b18bab4-0a24-4366-9fd9-e6d15f1a91f6",
+                          "type": "port.input",
+                          "x": 500,
+                          "y": 350,
+                          "name": "JointStates",
+                          "alignment": "left",
+                          "parentNode": "b2724d6f-fb78-493b-80f9-1b31d52f6619",
+                          "links": [],
+                          "in": true,
+                          "label": "JointStates",
+                          "hideLabel": false
+                        },
+                        {
+                          "id": "1f443d9b-a78b-4945-99dc-7119ce93974f",
+                          "type": "port.output",
+                          "x": 900,
+                          "y": 350,
+                          "name": "EndEffectorPose",
+                          "alignment": "right",
+                          "parentNode": "cb8c5c97-1dd6-4dba-bd83-2ba812d4205e",
+                          "links": [],
+                          "in": false,
+                          "label": "EndEffectorPose",
+                          "hideLabel": false
+                        },
+                        {
+                          "id": "12453fcf-a5d3-418c-ab28-0df81ea2957b",
+                          "type": "port.parameter",
+                          "x": 700,
+                          "y": 280,
+                          "name": "LinkLengths",
+                          "alignment": "top",
+                          "parentNode": "93d66fba-2ca2-40f5-bafa-f9464797f736",
+                          "links": [],
+                          "in": true,
+                          "label": "LinkLengths",
+                          "hideLabel": false
+                        }
+                      ],
+                      "data": {
+                        "code": "import numpy as np\n\ndef main(inputs, outputs, parameters, synchronise):\n    link_lengths = [float(x) for x in parameters.read_string(\"LinkLengths\").split(',')]\n    \n    while True:\n        joint_state = inputs.read_data(\"JointStates\")\n        if joint_state is None:\n            continue\n            \n        positions = joint_state['positions']\n        if len(positions) < 3:\n            continue\n            \n        # Forward kinematics for RRR arm\n        q1, q2, q3 = positions[:3]\n        L1, L2, L3 = link_lengths[:3]\n        \n        # Calculate end effector position\n        x = L1*np.cos(q1) + L2*np.cos(q1+q2) + L3*np.cos(q1+q2+q3)\n        y = L1*np.sin(q1) + L2*np.sin(q1+q2) + L3*np.sin(q1+q2+q3)\n        theta = q1 + q2 + q3\n        \n        pose = {'x': x, 'y': y, 'theta': theta}\n        outputs.share_data('EndEffectorPose', pose)\n        synchronise()",
+                        "frequency": "30",
+                        "params": [
+                          {
+                            "name": "LinkLengths"
+                          }
+                        ],
+                        "ports": {
+                          "in": [
+                            {
+                              "name": "JointStates"
+                            }
+                          ],
+                          "out": [
+                            {
+                              "name": "EndEffectorPose"
+                            }
+                          ]
+                        },
+                        "size": {
+                          "width": "700px",
+                          "height": "500px"
+                        }
+                      }
+                    },
+                    "999884dc-14a8-4f49-998d-c80f7c382878": {
+                      "id": "999884dc-14a8-4f49-998d-c80f7c382878",
+                      "type": "basic.output",
+                      "selected": false,
+                      "x": 1200,
+                      "y": 300,
+                      "ports": [
+                        {
+                          "id": "8d010266-5e8d-4b41-9092-49629db9e1a9",
+                          "type": "port.input",
+                          "x": 1201,
+                          "y": 319,
+                          "name": "output-in",
+                          "alignment": "left",
+                          "parentNode": "d6589333-82b9-4297-9f6f-86c1261f0b45",
+                          "links": [],
+                          "in": true,
+                          "label": "output-in",
+                          "hideLabel": true
+                        }
+                      ],
+                      "data": {
+                        "name": "EndEffectorPose"
+                      }
+                    },
+                    "662d9e99-c54a-4f0d-8017-a51ea14a0947": {
+                      "id": "662d9e99-c54a-4f0d-8017-a51ea14a0947",
+                      "type": "basic.constant",
+                      "selected": false,
+                      "x": 650,
+                      "y": 100,
+                      "ports": [
+                        {
+                          "id": "0a851a54-9619-4ab4-8204-e6f9b6c4d8b8",
+                          "type": "port.output",
+                          "x": 703,
+                          "y": 200,
+                          "name": "constant-out",
+                          "alignment": "bottom",
+                          "parentNode": "6672bb26-b3c8-4e29-aabf-10bc8128fe68",
+                          "links": [],
+                          "in": false,
+                          "label": "LinkLengths",
+                          "hideLabel": true
+                        }
+                      ],
+                      "data": {
+                        "name": "LinkLengths",
+                        "value": "100",
+                        "local": true
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "info": {
+              "name": "Forward Kinematics",
+              "version": "2.0.0",
+              "description": "Calculate forward kinematics for RRR arm",
+              "author": "AI Generated",
+              "image": ""
+            },
+            "design": {
+              "board": "Python3-Noetic",
+              "graph": {
+                "blocks": [
+                  {
+                    "id": "c435693c-1c59-4910-a53f-a547c0881a79",
+                    "type": "basic.input",
+                    "data": {
+                      "name": "JointStates"
+                    },
+                    "position": {
+                      "x": 300,
+                      "y": 300
+                    }
+                  },
+                  {
+                    "id": "c4f50386-3f9a-48d8-b5d0-aa7345672187",
+                    "type": "basic.code",
+                    "data": {
+                      "code": "import numpy as np\n\ndef main(inputs, outputs, parameters, synchronise):\n    link_lengths = [float(x) for x in parameters.read_string(\"LinkLengths\").split(',')]\n    \n    while True:\n        joint_state = inputs.read_data(\"JointStates\")\n        if joint_state is None:\n            continue\n            \n        positions = joint_state['positions']\n        if len(positions) < 3:\n            continue\n            \n        # Forward kinematics for RRR arm\n        q1, q2, q3 = positions[:3]\n        L1, L2, L3 = link_lengths[:3]\n        \n        # Calculate end effector position\n        x = L1*np.cos(q1) + L2*np.cos(q1+q2) + L3*np.cos(q1+q2+q3)\n        y = L1*np.sin(q1) + L2*np.sin(q1+q2) + L3*np.sin(q1+q2+q3)\n        theta = q1 + q2 + q3\n        \n        pose = {'x': x, 'y': y, 'theta': theta}\n        outputs.share_data('EndEffectorPose', pose)\n        synchronise()",
+                      "frequency": "30",
+                      "params": [
+                        {
+                          "name": "LinkLengths"
+                        }
+                      ],
+                      "ports": {
+                        "in": [
+                          {
+                            "name": "JointStates"
+                          }
+                        ],
+                        "out": [
+                          {
+                            "name": "EndEffectorPose"
+                          }
+                        ]
+                      },
+                      "size": {
+                        "width": "700px",
+                        "height": "500px"
+                      }
+                    },
+                    "position": {
+                      "x": 600,
+                      "y": 250
+                    }
+                  },
+                  {
+                    "id": "36450ac8-e04d-4680-8d54-469a1256057a",
+                    "type": "basic.output",
+                    "data": {
+                      "name": "EndEffectorPose"
+                    },
+                    "position": {
+                      "x": 900,
+                      "y": 300
+                    }
+                  },
+                  {
+                    "id": "eefc79f4-0483-441f-9370-f0f9330aea77",
+                    "type": "basic.constant",
+                    "data": {
+                      "name": "LinkLengths",
+                      "value": "100",
+                      "local": true
+                    },
+                    "position": {
+                      "x": 650,
+                      "y": 100
+                    }
+                  }
+                ],
+                "wires": [
+                  {
+                    "source": {
+                      "block": "input_block_id",
+                      "port": "input-out",
+                      "name": "JointStates"
+                    },
+                    "target": {
+                      "block": "code_block_id",
+                      "port": "JointStates",
+                      "name": "JointStates"
+                    }
+                  },
+                  {
+                    "source": {
+                      "block": "code_block_id",
+                      "port": "EndEffectorPose",
+                      "name": "EndEffectorPose"
+                    },
+                    "target": {
+                      "block": "output_block_id",
+                      "port": "output-in",
+                      "name": "EndEffectorPose"
+                    }
+                  }
+                ]
+              }
+            },
+            "dependencies": {}
+          },
+          "91df5456-3c93-47d9-aebb-4e8761b83e54": {
+            "id": "91df5456-3c93-47d9-aebb-4e8761b83e54",
+            "type": "block.package",
+            "selected": false,
+            "x": 1000,
+            "y": 150,
+            "ports": [
+              {
+                "id": "b6b9d55e-cf70-43d7-b8ad-1fdf5f110b48",
+                "type": "port.input",
+                "x": 1001,
+                "y": 166.0,
+                "name": "57a372b8-cbab-44e1-8fd8-5ffc8d3cd360",
+                "alignment": "left",
+                "parentNode": "91df5456-3c93-47d9-aebb-4e8761b83e54",
+                "links": [
+                  "5ef35a70-565a-483b-8b42-3fac00d96052"
+                ],
+                "in": true,
+                "label": "EndEffectorPose",
+                "hideLabel": false
+              }
+            ],
+            "data": {},
+            "model": {
+              "id": "dfaf715e-fd01-410b-be14-75fbd14fa014",
+              "locked": false,
+              "offsetX": 0,
+              "offsetY": 0,
+              "zoom": 100,
+              "gridSize": 0,
+              "layers": [
+                {
+                  "id": "8d5bb1f8-5b8e-4c72-a5a4-ad8d647ae7ad",
+                  "type": "diagram-links",
+                  "isSvg": true,
+                  "transformed": true,
+                  "models": {
+                    "fbfd3150-f0b0-4e76-9320-d6ab5b807fb3": {
+                      "id": "fbfd3150-f0b0-4e76-9320-d6ab5b807fb3",
+                      "type": "default",
+                      "selected": false,
+                      "source": "c96dec40-be79-4252-9ff6-68b54fa91c5c",
+                      "sourcePort": "301ec9f7-02e9-48ec-adb3-3e12a3142a76",
+                      "target": "9cfe7769-8624-4c79-a107-635cf89c74ed",
+                      "targetPort": "f30a02e1-76db-4c88-ad29-72c2b747497c",
+                      "points": [
+                        {
+                          "id": "776b82b0-8604-482d-af8e-7a2efbde2cc9",
+                          "type": "point",
+                          "x": 306,
+                          "y": 319
+                        },
+                        {
+                          "id": "e0e987c9-bf08-40a3-b0ef-0657fd0290a5",
+                          "type": "point",
+                          "x": 480,
+                          "y": 350
+                        }
+                      ],
+                      "labels": [],
+                      "width": 3,
+                      "color": "gray",
+                      "curvyness": 50,
+                      "selectedColor": "rgb(0,192,255)"
+                    }
+                  }
+                },
+                {
+                  "id": "7e0a5dbb-8b29-4f96-b3f1-35100749fc5b",
+                  "type": "diagram-nodes",
+                  "isSvg": false,
+                  "transformed": true,
+                  "models": {
+                    "c96dec40-be79-4252-9ff6-68b54fa91c5c": {
+                      "id": "c96dec40-be79-4252-9ff6-68b54fa91c5c",
+                      "type": "basic.input",
+                      "selected": false,
+                      "x": 200,
+                      "y": 300,
+                      "ports": [
+                        {
+                          "id": "301ec9f7-02e9-48ec-adb3-3e12a3142a76",
+                          "type": "port.output",
+                          "x": 286,
+                          "y": 319,
+                          "name": "input-out",
+                          "alignment": "right",
+                          "parentNode": "f3406e31-d44d-42a9-b90f-1ed2f9a8fca5",
+                          "links": [],
+                          "in": false,
+                          "label": "EndEffectorPose",
+                          "hideLabel": true
+                        }
+                      ],
+                      "data": {
+                        "name": "EndEffectorPose"
+                      }
+                    },
+                    "9cfe7769-8624-4c79-a107-635cf89c74ed": {
+                      "id": "9cfe7769-8624-4c79-a107-635cf89c74ed",
+                      "type": "basic.code",
+                      "selected": false,
+                      "x": 488,
+                      "y": 200,
+                      "ports": [
+                        {
+                          "id": "f30a02e1-76db-4c88-ad29-72c2b747497c",
+                          "type": "port.input",
+                          "x": 500,
+                          "y": 350,
+                          "name": "EndEffectorPose",
+                          "alignment": "left",
+                          "parentNode": "891975b6-6127-4e6c-8f11-54ab5bb022e7",
+                          "links": [],
+                          "in": true,
+                          "label": "EndEffectorPose",
+                          "hideLabel": false
+                        }
+                      ],
+                      "data": {
+                        "code": "import matplotlib.pyplot as plt\nimport numpy as np\n\ndef main(inputs, outputs, parameters, synchronise):\n    plt.ion()\n    fig, ax = plt.subplots()\n    \n    while True:\n        pose = inputs.read_data(\"EndEffectorPose\")\n        if pose is None:\n            continue\n            \n        ax.clear()\n        ax.set_xlim(-3, 3)\n        ax.set_ylim(-3, 3)\n        ax.grid(True)\n        \n        # Plot end effector position\n        ax.plot(pose['x'], pose['y'], 'ro', markersize=10, label='End Effector')\n        ax.arrow(pose['x'], pose['y'], 0.2*np.cos(pose['theta']), \n                0.2*np.sin(pose['theta']), head_width=0.05, head_length=0.05, fc='r', ec='r')\n        \n        ax.legend()\n        ax.set_title('Robot Arm End Effector Position')\n        plt.pause(0.01)\n        synchronise()",
+                        "frequency": "30",
+                        "params": [],
+                        "ports": {
+                          "in": [
+                            {
+                              "name": "EndEffectorPose"
+                            }
+                          ],
+                          "out": []
+                        },
+                        "size": {
+                          "width": "700px",
+                          "height": "500px"
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "info": {
+              "name": "Pose Visualizer",
+              "version": "2.0.0",
+              "description": "Visualize robot arm pose",
+              "author": "AI Generated",
+              "image": ""
+            },
+            "design": {
+              "board": "Python3-Noetic",
+              "graph": {
+                "blocks": [
+                  {
+                    "id": "f075432a-009e-4e51-b3d1-ff5678416972",
+                    "type": "basic.input",
+                    "data": {
+                      "name": "EndEffectorPose"
+                    },
+                    "position": {
+                      "x": 300,
+                      "y": 300
+                    }
+                  },
+                  {
+                    "id": "ff3e5ffe-c607-492a-821b-51b59b815069",
+                    "type": "basic.code",
+                    "data": {
+                      "code": "import matplotlib.pyplot as plt\nimport numpy as np\n\ndef main(inputs, outputs, parameters, synchronise):\n    plt.ion()\n    fig, ax = plt.subplots()\n    \n    while True:\n        pose = inputs.read_data(\"EndEffectorPose\")\n        if pose is None:\n            continue\n            \n        ax.clear()\n        ax.set_xlim(-3, 3)\n        ax.set_ylim(-3, 3)\n        ax.grid(True)\n        \n        # Plot end effector position\n        ax.plot(pose['x'], pose['y'], 'ro', markersize=10, label='End Effector')\n        ax.arrow(pose['x'], pose['y'], 0.2*np.cos(pose['theta']), \n                0.2*np.sin(pose['theta']), head_width=0.05, head_length=0.05, fc='r', ec='r')\n        \n        ax.legend()\n        ax.set_title('Robot Arm End Effector Position')\n        plt.pause(0.01)\n        synchronise()",
+                      "frequency": "30",
+                      "params": [],
+                      "ports": {
+                        "in": [
+                          {
+                            "name": "EndEffectorPose"
+                          }
+                        ],
+                        "out": []
+                      },
+                      "size": {
+                        "width": "700px",
+                        "height": "500px"
+                      }
+                    },
+                    "position": {
+                      "x": 600,
+                      "y": 250
+                    }
+                  }
+                ],
+                "wires": []
+              }
+            },
+            "dependencies": {}
+          }
+        }
+      }
+    ]
+  },
+  "design": {
+    "graph": {
+      "blocks": [
+        {
+          "id": "985cd094-260b-4f42-aca6-d99a1dd9c60a",
+          "type": "mgpGlwkHqDeKk2FYadEjOdWILOy3Bgqp7jcavXAt7xw=",
+          "position": {
+            "x": 400,
+            "y": 150
+          }
+        },
+        {
+          "id": "5cb8c330-f001-4ee1-907e-c7a58fd38430",
+          "type": "jVomlJDRM-n8hxuTwg1KmNb8D0I2iRZwr0-sXjyYe3I=",
+          "position": {
+            "x": 700,
+            "y": 150
+          }
+        },
+        {
+          "id": "91df5456-3c93-47d9-aebb-4e8761b83e54",
+          "type": "yZX15DSkY-PI8yeP4bamm8JC7ZM9pkqRCKXCvtT629g=",
+          "position": {
+            "x": 1000,
+            "y": 150
+          }
+        }
+      ],
+      "wires": [
+        {
+          "source": {
+            "block": "985cd094-260b-4f42-aca6-d99a1dd9c60a",
+            "port": "ea728ac1-4a0f-47bb-9024-a44a89b2125a",
+            "name": "JointStates"
+          },
+          "target": {
+            "block": "5cb8c330-f001-4ee1-907e-c7a58fd38430",
+            "port": "c734f2b7-b2d4-4865-adc6-f8276405e12f",
+            "name": "JointStates"
+          }
+        },
+        {
+          "source": {
+            "block": "5cb8c330-f001-4ee1-907e-c7a58fd38430",
+            "port": "a5ecf69b-1d94-476c-98b5-277191558da1",
+            "name": "EndEffectorPose"
+          },
+          "target": {
+            "block": "91df5456-3c93-47d9-aebb-4e8761b83e54",
+            "port": "b6b9d55e-cf70-43d7-b8ad-1fdf5f110b48",
+            "name": "EndEffectorPose"
+          }
+        }
+      ]
+    },
+    "board": "Python3-Noetic"
+  },
+  "dependencies": {
+    "mgpGlwkHqDeKk2FYadEjOdWILOy3Bgqp7jcavXAt7xw=": {
+      "package": {
+        "name": "Joint State Publisher",
+        "version": "2.0.0",
+        "description": "Publishes joint states for robot arm",
+        "author": "AI Generated",
+        "image": ""
+      },
+      "design": {
+        "board": "Python3-Noetic",
+        "graph": {
+          "blocks": [
+            {
+              "id": "576e8ab0-ae79-4d97-aa69-b504ad9202f1",
+              "type": "basic.input",
+              "data": {
+                "name": "Enable"
+              },
+              "position": {
+                "x": 300,
+                "y": 300
+              }
+            },
+            {
+              "id": "e04244c7-73e5-4492-b8d6-580d85ef6150",
+              "type": "basic.code",
+              "data": {
+                "code": "import numpy as np\nimport time\n\ndef main(inputs, outputs, parameters, synchronise):\n    joint_names = parameters.read_string(\"JointNames\").split(',')\n    default_pos = [float(x) for x in parameters.read_string(\"DefaultPositions\").split(',')]\n    \n    auto_enable = False\n    try:\n        enable = inputs.read_number('Enable')\n    except Exception:\n        auto_enable = True\n    \n    t = 0\n    while auto_enable or inputs.read_number('Enable'):\n        # Simple sinusoidal movement\n        positions = [pos + 0.5 * np.sin(t + i) for i, pos in enumerate(default_pos)]\n        \n        joint_state = {\n            'names': joint_names,\n            'positions': positions,\n            'velocities': [0.0] * len(joint_names),\n            'efforts': [0.0] * len(joint_names)\n        }\n        \n        outputs.share_data('JointStates', joint_state)\n        t += 0.1\n        time.sleep(0.1)\n        synchronise()",
+                "frequency": "30",
+                "params": [
+                  {
+                    "name": "JointNames"
+                  },
+                  {
+                    "name": "DefaultPositions"
+                  }
+                ],
+                "ports": {
+                  "in": [
+                    {
+                      "name": "Enable"
+                    }
+                  ],
+                  "out": [
+                    {
+                      "name": "JointStates"
+                    }
+                  ]
+                },
+                "size": {
+                  "width": "700px",
+                  "height": "500px"
+                }
+              },
+              "position": {
+                "x": 600,
+                "y": 250
+              }
+            },
+            {
+              "id": "cd333449-75ab-4778-b9ac-db1e9c66b8fa",
+              "type": "basic.output",
+              "data": {
+                "name": "JointStates"
+              },
+              "position": {
+                "x": 900,
+                "y": 300
+              }
+            },
+            {
+              "id": "6870c9a2-fd93-4a66-9f40-5ab95402c54d",
+              "type": "basic.constant",
+              "data": {
+                "name": "JointNames",
+                "value": "100",
+                "local": true
+              },
+              "position": {
+                "x": 650,
+                "y": 100
+              }
+            },
+            {
+              "id": "28e0f767-ad70-448b-89ac-97e26e4dd74a",
+              "type": "basic.constant",
+              "data": {
+                "name": "DefaultPositions",
+                "value": "100",
+                "local": true
+              },
+              "position": {
+                "x": 850,
+                "y": 100
+              }
+            }
+          ],
+          "wires": [
+            {
+              "source": {
+                "block": "input_block_id",
+                "port": "input-out",
+                "name": "Enable"
+              },
+              "target": {
+                "block": "code_block_id",
+                "port": "Enable",
+                "name": "Enable"
+              }
+            },
+            {
+              "source": {
+                "block": "code_block_id",
+                "port": "JointStates",
+                "name": "JointStates"
+              },
+              "target": {
+                "block": "output_block_id",
+                "port": "output-in",
+                "name": "JointStates"
+              }
+            }
+          ]
+        }
+      },
+      "dependencies": {}
+    },
+    "jVomlJDRM-n8hxuTwg1KmNb8D0I2iRZwr0-sXjyYe3I=": {
+      "package": {
+        "name": "Forward Kinematics",
+        "version": "2.0.0",
+        "description": "Calculate forward kinematics for RRR arm",
+        "author": "AI Generated",
+        "image": ""
+      },
+      "design": {
+        "board": "Python3-Noetic",
+        "graph": {
+          "blocks": [
+            {
+              "id": "f930c424-66fa-464c-9e7d-bc0be973e6ea",
+              "type": "basic.input",
+              "data": {
+                "name": "JointStates"
+              },
+              "position": {
+                "x": 300,
+                "y": 300
+              }
+            },
+            {
+              "id": "d005dae8-3752-41ac-9791-796e3f3f422f",
+              "type": "basic.code",
+              "data": {
+                "code": "import numpy as np\n\ndef main(inputs, outputs, parameters, synchronise):\n    link_lengths = [float(x) for x in parameters.read_string(\"LinkLengths\").split(',')]\n    \n    while True:\n        joint_state = inputs.read_data(\"JointStates\")\n        if joint_state is None:\n            continue\n            \n        positions = joint_state['positions']\n        if len(positions) < 3:\n            continue\n            \n        # Forward kinematics for RRR arm\n        q1, q2, q3 = positions[:3]\n        L1, L2, L3 = link_lengths[:3]\n        \n        # Calculate end effector position\n        x = L1*np.cos(q1) + L2*np.cos(q1+q2) + L3*np.cos(q1+q2+q3)\n        y = L1*np.sin(q1) + L2*np.sin(q1+q2) + L3*np.sin(q1+q2+q3)\n        theta = q1 + q2 + q3\n        \n        pose = {'x': x, 'y': y, 'theta': theta}\n        outputs.share_data('EndEffectorPose', pose)\n        synchronise()",
+                "frequency": "30",
+                "params": [
+                  {
+                    "name": "LinkLengths"
+                  }
+                ],
+                "ports": {
+                  "in": [
+                    {
+                      "name": "JointStates"
+                    }
+                  ],
+                  "out": [
+                    {
+                      "name": "EndEffectorPose"
+                    }
+                  ]
+                },
+                "size": {
+                  "width": "700px",
+                  "height": "500px"
+                }
+              },
+              "position": {
+                "x": 600,
+                "y": 250
+              }
+            },
+            {
+              "id": "8cf12302-a2d5-485c-b931-66b01d69b6ec",
+              "type": "basic.output",
+              "data": {
+                "name": "EndEffectorPose"
+              },
+              "position": {
+                "x": 900,
+                "y": 300
+              }
+            },
+            {
+              "id": "b9e49145-25d4-4839-abe6-2ec6fa650bb5",
+              "type": "basic.constant",
+              "data": {
+                "name": "LinkLengths",
+                "value": "100",
+                "local": true
+              },
+              "position": {
+                "x": 650,
+                "y": 100
+              }
+            }
+          ],
+          "wires": [
+            {
+              "source": {
+                "block": "input_block_id",
+                "port": "input-out",
+                "name": "JointStates"
+              },
+              "target": {
+                "block": "code_block_id",
+                "port": "JointStates",
+                "name": "JointStates"
+              }
+            },
+            {
+              "source": {
+                "block": "code_block_id",
+                "port": "EndEffectorPose",
+                "name": "EndEffectorPose"
+              },
+              "target": {
+                "block": "output_block_id",
+                "port": "output-in",
+                "name": "EndEffectorPose"
+              }
+            }
+          ]
+        }
+      },
+      "dependencies": {}
+    },
+    "yZX15DSkY-PI8yeP4bamm8JC7ZM9pkqRCKXCvtT629g=": {
+      "package": {
+        "name": "Pose Visualizer",
+        "version": "2.0.0",
+        "description": "Visualize robot arm pose",
+        "author": "AI Generated",
+        "image": ""
+      },
+      "design": {
+        "board": "Python3-Noetic",
+        "graph": {
+          "blocks": [
+            {
+              "id": "b5b13d3b-fdf9-4f3f-bc5c-aa26be82dd09",
+              "type": "basic.input",
+              "data": {
+                "name": "EndEffectorPose"
+              },
+              "position": {
+                "x": 300,
+                "y": 300
+              }
+            },
+            {
+              "id": "9cadaca2-9c6f-458b-9d65-0a63ab8ffb63",
+              "type": "basic.code",
+              "data": {
+                "code": "import matplotlib.pyplot as plt\nimport numpy as np\n\ndef main(inputs, outputs, parameters, synchronise):\n    plt.ion()\n    fig, ax = plt.subplots()\n    \n    while True:\n        pose = inputs.read_data(\"EndEffectorPose\")\n        if pose is None:\n            continue\n            \n        ax.clear()\n        ax.set_xlim(-3, 3)\n        ax.set_ylim(-3, 3)\n        ax.grid(True)\n        \n        # Plot end effector position\n        ax.plot(pose['x'], pose['y'], 'ro', markersize=10, label='End Effector')\n        ax.arrow(pose['x'], pose['y'], 0.2*np.cos(pose['theta']), \n                0.2*np.sin(pose['theta']), head_width=0.05, head_length=0.05, fc='r', ec='r')\n        \n        ax.legend()\n        ax.set_title('Robot Arm End Effector Position')\n        plt.pause(0.01)\n        synchronise()",
+                "frequency": "30",
+                "params": [],
+                "ports": {
+                  "in": [
+                    {
+                      "name": "EndEffectorPose"
+                    }
+                  ],
+                  "out": []
+                },
+                "size": {
+                  "width": "700px",
+                  "height": "500px"
+                }
+              },
+              "position": {
+                "x": 600,
+                "y": 250
+              }
+            }
+          ],
+          "wires": []
+        }
+      },
+      "dependencies": {}
+    }
+  },
+  "version": "3.0",
+  "package": {
+    "name": "",
+    "version": "",
+    "description": "",
+    "author": "",
+    "image": ""
+  }
+}

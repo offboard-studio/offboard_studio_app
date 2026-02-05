@@ -12,7 +12,7 @@ import { CodeBlockModelOptions } from '../blocks/basic/code/code-model';
  *          onReject: Will be called to indicate failure.
  *        }
  */
-const CodeBlockDialog = ({ isOpen, onResolve, onReject, inputs, outputs, params,aiDescription }: InstanceProps<CodeBlockModelOptions> & Partial<CodeBlockModelOptions>) => {
+const CodeBlockDialog = ({ isOpen, onResolve, onReject, inputs, outputs, params, aiDescription }: InstanceProps<CodeBlockModelOptions> & Partial<CodeBlockModelOptions>) => {
 
     // Comma separated list of inputs for the Code block
     const [inputPorts, setInputPorts] = useState((inputs || []).join(', ') || '');
@@ -22,7 +22,7 @@ const CodeBlockDialog = ({ isOpen, onResolve, onReject, inputs, outputs, params,
     const [parameters, setParameters] = useState((params || []).join(', ') || '');
     const [error, setError] = useState('');
 
-    const [descriptionVal, setDescriptionVal] = useState(aiDescription||'Code Block Description');
+    const [descriptionVal, setDescriptionVal] = useState(aiDescription || 'Code Block Description');
 
     /**
      * Callback for 'Ok' button of the dialog
@@ -38,17 +38,28 @@ const CodeBlockDialog = ({ isOpen, onResolve, onReject, inputs, outputs, params,
             const params = parameters.split(',').filter((port) => Boolean(port)).map((port) => port.trim());
             console.log(inputs, outputs, params);
             // Send data back indicating as success
-            onResolve({ inputs: inputs, outputs: outputs, params: params,aiDescription: aiDescription });
+            onResolve({ inputs: inputs, outputs: outputs, params: params, aiDescription: aiDescription });
         } else {
             setError('Code block needs atleast one Input or one Output')
         }
     }
 
     return (
-        <Dialog open={isOpen} aria-labelledby="form-dialog-title" fullWidth>
+        <Dialog
+            open={isOpen}
+            aria-labelledby="form-dialog-title"
+            fullWidth
+            PaperProps={{
+                sx: {
+                    bgcolor: '#111',
+                    color: '#fff',
+                    border: '1px solid rgba(255,255,255,0.05)'
+                }
+            }}
+        >
 
             <DialogContent>
-                <DialogContentText>
+                <DialogContentText sx={{ color: '#fff' }}>
                     Enter Description for Code Block
                 </DialogContentText>
                 <TextField
@@ -61,12 +72,19 @@ const CodeBlockDialog = ({ isOpen, onResolve, onReject, inputs, outputs, params,
                     error={Boolean(error)}
                     helperText={error}
                     fullWidth
+                    sx={{
+                        '& .MuiOutlinedInput-root': {
+                            color: '#fff',
+                            '& fieldset': { borderColor: 'rgba(255,255,255,0.23)' },
+                            '&:hover fieldset': { borderColor: '#BB86FC' },
+                            '&.Mui-focused fieldset': { borderColor: '#BB86FC' },
+                        }
+                    }}
                 />
-                <DialogContentText>
+                <DialogContentText sx={{ color: '#fff', mt: 2 }}>
                     Enter the input ports
                 </DialogContentText>
                 <TextField
-                    autoFocus
                     margin="dense"
                     type="text"
                     variant='outlined'
@@ -75,13 +93,20 @@ const CodeBlockDialog = ({ isOpen, onResolve, onReject, inputs, outputs, params,
                     error={Boolean(error)}
                     helperText={error}
                     fullWidth
+                    sx={{
+                        '& .MuiOutlinedInput-root': {
+                            color: '#fff',
+                            '& fieldset': { borderColor: 'rgba(255,255,255,0.23)' },
+                            '&:hover fieldset': { borderColor: '#BB86FC' },
+                            '&.Mui-focused fieldset': { borderColor: '#BB86FC' },
+                        }
+                    }}
                 />
 
-                <DialogContentText>
+                <DialogContentText sx={{ color: '#fff', mt: 2 }}>
                     Enter the output ports
                 </DialogContentText>
                 <TextField
-                    autoFocus
                     margin="dense"
                     type="text"
                     variant='outlined'
@@ -90,27 +115,42 @@ const CodeBlockDialog = ({ isOpen, onResolve, onReject, inputs, outputs, params,
                     error={Boolean(error)}
                     helperText={error}
                     fullWidth
+                    sx={{
+                        '& .MuiOutlinedInput-root': {
+                            color: '#fff',
+                            '& fieldset': { borderColor: 'rgba(255,255,255,0.23)' },
+                            '&:hover fieldset': { borderColor: '#BB86FC' },
+                            '&.Mui-focused fieldset': { borderColor: '#BB86FC' },
+                        }
+                    }}
                 />
 
-                <DialogContentText>
+                <DialogContentText sx={{ color: '#fff', mt: 2 }}>
                     Enter the parameters
                 </DialogContentText>
                 <TextField
-                    autoFocus
                     margin="dense"
                     type="text"
                     variant='outlined'
                     value={parameters}
                     onChange={(event) => setParameters(event.target.value)}
                     fullWidth
+                    sx={{
+                        '& .MuiOutlinedInput-root': {
+                            color: '#fff',
+                            '& fieldset': { borderColor: 'rgba(255,255,255,0.23)' },
+                            '&:hover fieldset': { borderColor: '#BB86FC' },
+                            '&.Mui-focused fieldset': { borderColor: '#BB86FC' },
+                        }
+                    }}
                 />
 
             </DialogContent>
             <DialogActions>
-                <Button onClick={() => onReject()}>
+                <Button onClick={() => onReject()} sx={{ color: '#aaa' }}>
                     Cancel
                 </Button>
-                <Button onClick={() => handleSubmit()}>
+                <Button onClick={() => handleSubmit()} sx={{ color: '#BB86FC' }}>
                     Ok
                 </Button>
             </DialogActions>

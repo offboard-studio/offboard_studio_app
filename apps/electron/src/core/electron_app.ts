@@ -51,25 +51,38 @@ export default class ElectronApp {
   private async validateDevServer(): Promise<void> {
     const url = resolveHtmlPath('index.html');
 
-    if (url.startsWith('http://')) {
+    if (url.startsWith('http://127.0.0.1') || url.startsWith('http://localhost')) {
       const net = require('net');
       const port = parseInt(process.env.PORT || '3001');
+      let isAlive = false;
+      let attempts = 0;
+      const maxAttempts = 20; // 20 attempts * 500ms = 10 seconds
 
-      const isAlive = await new Promise<boolean>((resolve) => {
-        const client = net.createConnection({ port }, () => {
-          client.end();
-          resolve(true);
+      console.log(`Checking if renderer is alive at 127.0.0.1:${port}...`);
+
+      while (!isAlive && attempts < maxAttempts) {
+        attempts++;
+        isAlive = await new Promise<boolean>((resolve) => {
+          const client = net.createConnection({ host: '127.0.0.1', port }, () => {
+            client.end();
+            resolve(true);
+          });
+          client.on('error', () => resolve(false));
+          setTimeout(() => resolve(false), 400); // Connection timeout
         });
-        client.on('error', () => resolve(false));
-      });
 
-      if (!isAlive) {
-        console.error(`❌ Vite dev server not running at port ${port}. Exiting Electron...`);
-        setTimeout(() => app.quit(), 500);
-        return;
+        if (!isAlive) {
+          console.log(`Attempt ${attempts}/${maxAttempts}: Renderer not ready yet...`);
+          await new Promise(r => setTimeout(r, 500));
+        }
       }
 
-      console.log(`✅ Vite dev server is alive at http://localhost:${port}`);
+      if (!isAlive) {
+        console.error(`❌ Vite dev server not running at 127.0.0.1:${port} after ${maxAttempts} attempts.`);
+        // Note: We don't quit immediately anymore to allow dev to see the error or for Vite to catch up
+      } else {
+        console.log(`✅ Vite dev server is alive at 127.0.0.1:${port}`);
+      }
     }
   }
 

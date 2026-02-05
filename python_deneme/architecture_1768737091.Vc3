@@ -1,0 +1,1525 @@
+{
+  "version": "3.0",
+  "editor": {
+    "id": "aaa7d377-43c0-4065-86d7-4ef1f64a0cfe",
+    "offsetX": 0,
+    "offsetY": 0,
+    "zoom": 100,
+    "layers": [
+      {
+        "id": "9f76f136-e7e8-4e85-8c25-66a2ff921d88",
+        "type": "diagram-links",
+        "isSvg": true,
+        "transformed": true,
+        "models": {
+          "84c2338d-ab25-471a-9009-649e25a49779": {
+            "id": "84c2338d-ab25-471a-9009-649e25a49779",
+            "type": "default",
+            "selected": false,
+            "source": "684849fb-675c-4339-89ef-bf1ae7e8c3cb",
+            "sourcePort": "34e9eff8-845a-406e-a095-71e714c6d21b",
+            "target": "8fd539ca-a5dd-4553-9be1-71c31e8ee9ac",
+            "targetPort": "875478ba-1525-4d6d-bb2c-d2507e8dd569",
+            "points": [],
+            "labels": [],
+            "width": 3,
+            "color": "gray"
+          }
+        }
+      },
+      {
+        "id": "c1fd0b7f-7e11-4a92-a69e-d1bbac436eb1",
+        "type": "diagram-nodes",
+        "isSvg": false,
+        "transformed": true,
+        "models": {
+          "684849fb-675c-4339-89ef-bf1ae7e8c3cb": {
+            "id": "684849fb-675c-4339-89ef-bf1ae7e8c3cb",
+            "type": "block.package",
+            "selected": false,
+            "x": 400,
+            "y": 150,
+            "ports": [
+              {
+                "id": "34e9eff8-845a-406e-a095-71e714c6d21b",
+                "type": "port.output",
+                "x": 513,
+                "y": 166,
+                "name": "fcab5018-cc58-4eff-a8ae-dc99a3d4888d",
+                "alignment": "right",
+                "parentNode": "684849fb-675c-4339-89ef-bf1ae7e8c3cb",
+                "links": [
+                  "84c2338d-ab25-471a-9009-649e25a49779"
+                ],
+                "in": false,
+                "label": "joint_states",
+                "hideLabel": false
+              },
+              {
+                "id": "84fb0a1c-9c12-40c8-a6c2-69b1eda9942e",
+                "type": "port.parameter",
+                "x": 450,
+                "y": 120,
+                "name": "4671faa0-76f9-4aa2-81d4-e1a82909a7ad",
+                "alignment": "top",
+                "parentNode": "684849fb-675c-4339-89ef-bf1ae7e8c3cb",
+                "links": [],
+                "in": true,
+                "label": "joint_names",
+                "hideLabel": false
+              },
+              {
+                "id": "bcfa66d9-4e94-4df3-9fb2-7e75e7f6b97f",
+                "type": "port.parameter",
+                "x": 530,
+                "y": 120,
+                "name": "5ebc2a17-6e2e-41ee-b825-f68e203605e6",
+                "alignment": "top",
+                "parentNode": "684849fb-675c-4339-89ef-bf1ae7e8c3cb",
+                "links": [],
+                "in": true,
+                "label": "publish_rate",
+                "hideLabel": false
+              }
+            ],
+            "data": {},
+            "model": {
+              "id": "24803b9f-8b64-46a4-87d9-b1b0854b188b",
+              "layers": [
+                {
+                  "id": "e68de915-db27-48c5-a5e2-076542043187",
+                  "type": "diagram-links",
+                  "isSvg": true,
+                  "transformed": true,
+                  "models": {
+                    "12cfe08b-356d-4848-b044-6a8289cc5841": {
+                      "id": "12cfe08b-356d-4848-b044-6a8289cc5841",
+                      "type": "default",
+                      "source": "27cc0c28-3191-41cc-9c56-357d8284b998",
+                      "sourcePort": "813f1a04-3462-457e-9d40-4d7d0f997cfb",
+                      "target": "ad35adab-f4cc-470f-a2c6-d939ee052e26",
+                      "targetPort": "bb26dc3f-667f-4aaf-a29b-470c73c8e417",
+                      "points": [
+                        {
+                          "id": "28bb6f98-b44e-4437-8212-918fa1ed9d31",
+                          "type": "point",
+                          "x": 0,
+                          "y": 0
+                        }
+                      ]
+                    },
+                    "ca1a1d3e-dd50-491d-992b-52842ed0d212": {
+                      "id": "ca1a1d3e-dd50-491d-992b-52842ed0d212",
+                      "type": "default",
+                      "source": "594e3fd3-b622-447f-9ecd-6d01d9b662fb",
+                      "sourcePort": "b2393003-0ef2-482d-886d-d18fa338ec95",
+                      "target": "27cc0c28-3191-41cc-9c56-357d8284b998",
+                      "targetPort": "6699d1a7-f76e-4924-97f9-e682e1cf27e2",
+                      "points": [
+                        {
+                          "id": "c5f7ced1-917e-457a-a162-7bfe0f05647c",
+                          "type": "point",
+                          "x": 0,
+                          "y": 0
+                        }
+                      ]
+                    },
+                    "7368b50c-bdc1-4a73-83dd-c16de5b08d40": {
+                      "id": "7368b50c-bdc1-4a73-83dd-c16de5b08d40",
+                      "type": "default",
+                      "source": "e0c2f80b-99dc-4457-bd41-a38c8696202d",
+                      "sourcePort": "cd177c46-bba4-4da4-8ca3-bc7b93d9541c",
+                      "target": "27cc0c28-3191-41cc-9c56-357d8284b998",
+                      "targetPort": "569fb596-4f4d-4deb-b424-50443ced5c3e",
+                      "points": [
+                        {
+                          "id": "22947bf7-7cdb-41f7-ae77-bb98a5757df6",
+                          "type": "point",
+                          "x": 0,
+                          "y": 0
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "id": "a7090e56-311b-453c-bb20-a1c9e58f1592",
+                  "type": "diagram-nodes",
+                  "isSvg": false,
+                  "transformed": true,
+                  "models": {
+                    "27cc0c28-3191-41cc-9c56-357d8284b998": {
+                      "id": "27cc0c28-3191-41cc-9c56-357d8284b998",
+                      "type": "basic.code",
+                      "x": 500,
+                      "y": 200,
+                      "ports": [
+                        {
+                          "id": "813f1a04-3462-457e-9d40-4d7d0f997cfb",
+                          "type": "port.output",
+                          "name": "joint_states",
+                          "label": "joint_states",
+                          "in": false,
+                          "x": 900,
+                          "y": 350
+                        },
+                        {
+                          "id": "6699d1a7-f76e-4924-97f9-e682e1cf27e2",
+                          "type": "port.parameter",
+                          "name": "joint_names",
+                          "label": "joint_names",
+                          "in": true,
+                          "x": 600,
+                          "y": 280
+                        },
+                        {
+                          "id": "569fb596-4f4d-4deb-b424-50443ced5c3e",
+                          "type": "port.parameter",
+                          "name": "publish_rate",
+                          "label": "publish_rate",
+                          "in": true,
+                          "x": 700,
+                          "y": 280
+                        }
+                      ],
+                      "data": {
+                        "code": "import rclpy\nfrom rclpy.node import Node\nfrom sensor_msgs.msg import JointState\nfrom math import sin\n\nclass JointStatePublisher(Node):\n    def __init__(self):\n        super().__init__('joint_state_publisher')\n        self.publisher = self.create_publisher(JointState, 'joint_states', 10)\n        self.declare_parameter('joint_names', ['joint1', 'joint2', 'joint3'])\n        self.declare_parameter('publish_rate', 30.0)\n        self.joint_names = self.get_parameter('joint_names').get_parameter_value().string_array_value\n        self.publish_rate = self.get_parameter('publish_rate').get_parameter_value().double_value\n        self.timer = self.create_timer(1.0 / self.publish_rate, self.publish_joint_states)\n        self.time = 0.0\n    \n    def publish_joint_states(self):\n        msg = JointState()\n        msg.header.stamp = self.get_clock().now().to_msg()\n        msg.name = self.joint_names\n        self.time += 0.1\n        msg.position = [sin(self.time), sin(self.time * 1.5), sin(self.time * 2.0)]\n        self.publisher.publish(msg)\n\ndef main(args=None):\n    rclpy.init(args=args)\n    node = JointStatePublisher()\n    rclpy.spin(node)\n    node.destroy_node()\n    rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()",
+                        "params": [
+                          {
+                            "name": "joint_names"
+                          },
+                          {
+                            "name": "publish_rate"
+                          }
+                        ],
+                        "ports": {
+                          "in": [],
+                          "out": [
+                            {
+                              "name": "joint_states"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "ad35adab-f4cc-470f-a2c6-d939ee052e26": {
+                      "id": "ad35adab-f4cc-470f-a2c6-d939ee052e26",
+                      "type": "basic.output",
+                      "x": 900,
+                      "y": 300,
+                      "ports": [
+                        {
+                          "id": "bb26dc3f-667f-4aaf-a29b-470c73c8e417",
+                          "type": "port.input",
+                          "x": 900,
+                          "y": 320,
+                          "name": "in",
+                          "label": "joint_states",
+                          "links": []
+                        }
+                      ],
+                      "data": {
+                        "name": "joint_states"
+                      }
+                    },
+                    "594e3fd3-b622-447f-9ecd-6d01d9b662fb": {
+                      "id": "594e3fd3-b622-447f-9ecd-6d01d9b662fb",
+                      "type": "basic.constant",
+                      "x": 500,
+                      "y": 100,
+                      "ports": [
+                        {
+                          "id": "b2393003-0ef2-482d-886d-d18fa338ec95",
+                          "type": "port.output",
+                          "name": "out",
+                          "label": "joint_names",
+                          "links": []
+                        }
+                      ],
+                      "data": {
+                        "name": "joint_names",
+                        "value": "10",
+                        "local": true
+                      }
+                    },
+                    "e0c2f80b-99dc-4457-bd41-a38c8696202d": {
+                      "id": "e0c2f80b-99dc-4457-bd41-a38c8696202d",
+                      "type": "basic.constant",
+                      "x": 700,
+                      "y": 100,
+                      "ports": [
+                        {
+                          "id": "cd177c46-bba4-4da4-8ca3-bc7b93d9541c",
+                          "type": "port.output",
+                          "name": "out",
+                          "label": "publish_rate",
+                          "links": []
+                        }
+                      ],
+                      "data": {
+                        "name": "publish_rate",
+                        "value": "10",
+                        "local": true
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "info": {
+              "name": "Joint State Publisher",
+              "description": "Publishes the joint states of the RRR robot arm.",
+              "version": "1.0.0"
+            },
+            "design": {
+              "board": "Python3-Noetic",
+              "graph": {
+                "blocks": [
+                  {
+                    "id": "27cc0c28-3191-41cc-9c56-357d8284b998",
+                    "type": "basic.code",
+                    "data": {
+                      "code": "import rclpy\nfrom rclpy.node import Node\nfrom sensor_msgs.msg import JointState\nfrom math import sin\n\nclass JointStatePublisher(Node):\n    def __init__(self):\n        super().__init__('joint_state_publisher')\n        self.publisher = self.create_publisher(JointState, 'joint_states', 10)\n        self.declare_parameter('joint_names', ['joint1', 'joint2', 'joint3'])\n        self.declare_parameter('publish_rate', 30.0)\n        self.joint_names = self.get_parameter('joint_names').get_parameter_value().string_array_value\n        self.publish_rate = self.get_parameter('publish_rate').get_parameter_value().double_value\n        self.timer = self.create_timer(1.0 / self.publish_rate, self.publish_joint_states)\n        self.time = 0.0\n    \n    def publish_joint_states(self):\n        msg = JointState()\n        msg.header.stamp = self.get_clock().now().to_msg()\n        msg.name = self.joint_names\n        self.time += 0.1\n        msg.position = [sin(self.time), sin(self.time * 1.5), sin(self.time * 2.0)]\n        self.publisher.publish(msg)\n\ndef main(args=None):\n    rclpy.init(args=args)\n    node = JointStatePublisher()\n    rclpy.spin(node)\n    node.destroy_node()\n    rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()",
+                      "params": [
+                        {
+                          "name": "joint_names"
+                        },
+                        {
+                          "name": "publish_rate"
+                        }
+                      ],
+                      "ports": {
+                        "in": [],
+                        "out": [
+                          {
+                            "name": "joint_states"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "id": "ad35adab-f4cc-470f-a2c6-d939ee052e26",
+                    "type": "basic.output",
+                    "data": {
+                      "name": "joint_states"
+                    }
+                  },
+                  {
+                    "id": "594e3fd3-b622-447f-9ecd-6d01d9b662fb",
+                    "type": "basic.constant",
+                    "data": {
+                      "name": "joint_names",
+                      "value": "10",
+                      "local": true
+                    }
+                  },
+                  {
+                    "id": "e0c2f80b-99dc-4457-bd41-a38c8696202d",
+                    "type": "basic.constant",
+                    "data": {
+                      "name": "publish_rate",
+                      "value": "10",
+                      "local": true
+                    }
+                  }
+                ],
+                "wires": []
+              }
+            }
+          },
+          "8fd539ca-a5dd-4553-9be1-71c31e8ee9ac": {
+            "id": "8fd539ca-a5dd-4553-9be1-71c31e8ee9ac",
+            "type": "block.package",
+            "selected": false,
+            "x": 750,
+            "y": 150,
+            "ports": [
+              {
+                "id": "875478ba-1525-4d6d-bb2c-d2507e8dd569",
+                "type": "port.input",
+                "x": 751,
+                "y": 166,
+                "name": "bc3261e1-baba-4ed1-9d87-8ad99a8f3357",
+                "alignment": "left",
+                "parentNode": "8fd539ca-a5dd-4553-9be1-71c31e8ee9ac",
+                "links": [
+                  "84c2338d-ab25-471a-9009-649e25a49779"
+                ],
+                "in": true,
+                "label": "joint_states",
+                "hideLabel": false
+              },
+              {
+                "id": "8e385fe3-fb2d-4884-8a19-2b72896f01de",
+                "type": "port.output",
+                "x": 863,
+                "y": 191,
+                "name": "4ad81257-77b4-4b6a-979a-9c3e84ff6534",
+                "alignment": "right",
+                "parentNode": "8fd539ca-a5dd-4553-9be1-71c31e8ee9ac",
+                "links": [],
+                "in": false,
+                "label": "tf",
+                "hideLabel": false
+              },
+              {
+                "id": "7929c8ba-4999-4989-9a14-06fae6bf8394",
+                "type": "port.parameter",
+                "x": 800,
+                "y": 120,
+                "name": "92d601c5-6770-4581-9e9d-96ad689dd5f1",
+                "alignment": "top",
+                "parentNode": "8fd539ca-a5dd-4553-9be1-71c31e8ee9ac",
+                "links": [],
+                "in": true,
+                "label": "robot_description",
+                "hideLabel": false
+              }
+            ],
+            "data": {},
+            "model": {
+              "id": "bbeadcf0-4765-447a-ba99-02295b032db1",
+              "layers": [
+                {
+                  "id": "16496446-6003-429d-b27e-3a5bcb648096",
+                  "type": "diagram-links",
+                  "isSvg": true,
+                  "transformed": true,
+                  "models": {
+                    "4e24ef5b-a77a-4866-81e7-62ec9a6192ac": {
+                      "id": "4e24ef5b-a77a-4866-81e7-62ec9a6192ac",
+                      "type": "default",
+                      "source": "0f9e2d4b-7537-46c0-9739-8c8518a498dd",
+                      "sourcePort": "a41fd786-2398-454e-aceb-c4f64aa6950f",
+                      "target": "e79dd5b1-9538-4b98-847b-41b38c07214a",
+                      "targetPort": "8803ebde-4652-47c4-9d57-d2dab819cfff",
+                      "points": [
+                        {
+                          "id": "0f2ef9d8-cb7c-4c75-9b86-f2788c113406",
+                          "type": "point",
+                          "x": 0,
+                          "y": 0
+                        }
+                      ]
+                    },
+                    "6873caa4-6c7f-4f00-82fd-6996ec723eec": {
+                      "id": "6873caa4-6c7f-4f00-82fd-6996ec723eec",
+                      "type": "default",
+                      "source": "e79dd5b1-9538-4b98-847b-41b38c07214a",
+                      "sourcePort": "619ecbcc-1319-4de1-9705-1c6c49ef8985",
+                      "target": "76bc57f0-be56-48c6-b860-b4e2892cabad",
+                      "targetPort": "02a59f9a-de79-4d73-ba49-a6eab8d407d7",
+                      "points": [
+                        {
+                          "id": "2b3a78d4-de84-4dec-82e5-69621202db88",
+                          "type": "point",
+                          "x": 0,
+                          "y": 0
+                        }
+                      ]
+                    },
+                    "0dd21e9a-fd37-457c-9792-ae048ef67c4e": {
+                      "id": "0dd21e9a-fd37-457c-9792-ae048ef67c4e",
+                      "type": "default",
+                      "source": "42278f4a-4199-4382-bc9b-fae0602fe0f4",
+                      "sourcePort": "2ce55195-53bb-4b52-96d6-94ec5d159eab",
+                      "target": "e79dd5b1-9538-4b98-847b-41b38c07214a",
+                      "targetPort": "18b0f811-b9f4-430f-9f5b-651606a8061c",
+                      "points": [
+                        {
+                          "id": "28da904b-530e-4e4f-b2ce-8d2dfb738463",
+                          "type": "point",
+                          "x": 0,
+                          "y": 0
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "id": "5df4d766-7c34-4cfc-a21d-1185ea604446",
+                  "type": "diagram-nodes",
+                  "isSvg": false,
+                  "transformed": true,
+                  "models": {
+                    "0f9e2d4b-7537-46c0-9739-8c8518a498dd": {
+                      "id": "0f9e2d4b-7537-46c0-9739-8c8518a498dd",
+                      "type": "basic.input",
+                      "x": 200,
+                      "y": 300,
+                      "ports": [
+                        {
+                          "id": "a41fd786-2398-454e-aceb-c4f64aa6950f",
+                          "type": "port.output",
+                          "x": 280,
+                          "y": 320,
+                          "name": "out",
+                          "label": "joint_states",
+                          "links": []
+                        }
+                      ],
+                      "data": {
+                        "name": "joint_states"
+                      }
+                    },
+                    "e79dd5b1-9538-4b98-847b-41b38c07214a": {
+                      "id": "e79dd5b1-9538-4b98-847b-41b38c07214a",
+                      "type": "basic.code",
+                      "x": 500,
+                      "y": 200,
+                      "ports": [
+                        {
+                          "id": "8803ebde-4652-47c4-9d57-d2dab819cfff",
+                          "type": "port.input",
+                          "name": "joint_states",
+                          "label": "joint_states",
+                          "in": true,
+                          "x": 500,
+                          "y": 350
+                        },
+                        {
+                          "id": "619ecbcc-1319-4de1-9705-1c6c49ef8985",
+                          "type": "port.output",
+                          "name": "tf",
+                          "label": "tf",
+                          "in": false,
+                          "x": 900,
+                          "y": 350
+                        },
+                        {
+                          "id": "18b0f811-b9f4-430f-9f5b-651606a8061c",
+                          "type": "port.parameter",
+                          "name": "robot_description",
+                          "label": "robot_description",
+                          "in": true,
+                          "x": 600,
+                          "y": 280
+                        }
+                      ],
+                      "data": {
+                        "code": "import rclpy\nfrom rclpy.node import Node\nfrom sensor_msgs.msg import JointState\nfrom tf2_ros import TransformBroadcaster\nfrom rclpy.qos import QoSProfile\n\nclass RobotStatePublisher(Node):\n    def __init__(self):\n        super().__init__('robot_state_publisher')\n        self.declare_parameter('robot_description', '')\n        self.robot_description = self.get_parameter('robot_description').get_parameter_value().string_value\n        self.joint_state_sub = self.create_subscription(\n            JointState, 'joint_states', self.joint_state_callback, QoSProfile(depth=10))\n        self.tf_broadcaster = TransformBroadcaster(self)\n    \n    def joint_state_callback(self, msg):\n        # In a real implementation, use robot_description to compute TF\n        # For simplicity, we publish dummy TFs here\n        from geometry_msgs.msg import TransformStamped\n        import math\n        \n        t = TransformStamped()\n        t.header.stamp = self.get_clock().now().to_msg()\n        t.header.frame_id = 'base_link'\n        t.child_frame_id = 'link1'\n        t.transform.translation.x = 0.0\n        t.transform.translation.y = 0.0\n        t.transform.translation.z = 0.0\n        t.transform.rotation.x = 0.0\n        t.transform.rotation.y = 0.0\n        t.transform.rotation.z = math.sin(msg.position[0])\n        t.transform.rotation.w = math.cos(msg.position[0])\n        self.tf_broadcaster.sendTransform(t)\n\ndef main(args=None):\n    rclpy.init(args=args)\n    node = RobotStatePublisher()\n    rclpy.spin(node)\n    node.destroy_node()\n    rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()",
+                        "params": [
+                          {
+                            "name": "robot_description"
+                          }
+                        ],
+                        "ports": {
+                          "in": [
+                            {
+                              "name": "joint_states"
+                            }
+                          ],
+                          "out": [
+                            {
+                              "name": "tf"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "76bc57f0-be56-48c6-b860-b4e2892cabad": {
+                      "id": "76bc57f0-be56-48c6-b860-b4e2892cabad",
+                      "type": "basic.output",
+                      "x": 900,
+                      "y": 300,
+                      "ports": [
+                        {
+                          "id": "02a59f9a-de79-4d73-ba49-a6eab8d407d7",
+                          "type": "port.input",
+                          "x": 900,
+                          "y": 320,
+                          "name": "in",
+                          "label": "tf",
+                          "links": []
+                        }
+                      ],
+                      "data": {
+                        "name": "tf"
+                      }
+                    },
+                    "42278f4a-4199-4382-bc9b-fae0602fe0f4": {
+                      "id": "42278f4a-4199-4382-bc9b-fae0602fe0f4",
+                      "type": "basic.constant",
+                      "x": 500,
+                      "y": 100,
+                      "ports": [
+                        {
+                          "id": "2ce55195-53bb-4b52-96d6-94ec5d159eab",
+                          "type": "port.output",
+                          "name": "out",
+                          "label": "robot_description",
+                          "links": []
+                        }
+                      ],
+                      "data": {
+                        "name": "robot_description",
+                        "value": "10",
+                        "local": true
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "info": {
+              "name": "Robot State Publisher",
+              "description": "Publishes the robot state (TF transformations) based on joint states.",
+              "version": "1.0.0"
+            },
+            "design": {
+              "board": "Python3-Noetic",
+              "graph": {
+                "blocks": [
+                  {
+                    "id": "0f9e2d4b-7537-46c0-9739-8c8518a498dd",
+                    "type": "basic.input",
+                    "data": {
+                      "name": "joint_states"
+                    }
+                  },
+                  {
+                    "id": "e79dd5b1-9538-4b98-847b-41b38c07214a",
+                    "type": "basic.code",
+                    "data": {
+                      "code": "import rclpy\nfrom rclpy.node import Node\nfrom sensor_msgs.msg import JointState\nfrom tf2_ros import TransformBroadcaster\nfrom rclpy.qos import QoSProfile\n\nclass RobotStatePublisher(Node):\n    def __init__(self):\n        super().__init__('robot_state_publisher')\n        self.declare_parameter('robot_description', '')\n        self.robot_description = self.get_parameter('robot_description').get_parameter_value().string_value\n        self.joint_state_sub = self.create_subscription(\n            JointState, 'joint_states', self.joint_state_callback, QoSProfile(depth=10))\n        self.tf_broadcaster = TransformBroadcaster(self)\n    \n    def joint_state_callback(self, msg):\n        # In a real implementation, use robot_description to compute TF\n        # For simplicity, we publish dummy TFs here\n        from geometry_msgs.msg import TransformStamped\n        import math\n        \n        t = TransformStamped()\n        t.header.stamp = self.get_clock().now().to_msg()\n        t.header.frame_id = 'base_link'\n        t.child_frame_id = 'link1'\n        t.transform.translation.x = 0.0\n        t.transform.translation.y = 0.0\n        t.transform.translation.z = 0.0\n        t.transform.rotation.x = 0.0\n        t.transform.rotation.y = 0.0\n        t.transform.rotation.z = math.sin(msg.position[0])\n        t.transform.rotation.w = math.cos(msg.position[0])\n        self.tf_broadcaster.sendTransform(t)\n\ndef main(args=None):\n    rclpy.init(args=args)\n    node = RobotStatePublisher()\n    rclpy.spin(node)\n    node.destroy_node()\n    rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()",
+                      "params": [
+                        {
+                          "name": "robot_description"
+                        }
+                      ],
+                      "ports": {
+                        "in": [
+                          {
+                            "name": "joint_states"
+                          }
+                        ],
+                        "out": [
+                          {
+                            "name": "tf"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "id": "76bc57f0-be56-48c6-b860-b4e2892cabad",
+                    "type": "basic.output",
+                    "data": {
+                      "name": "tf"
+                    }
+                  },
+                  {
+                    "id": "42278f4a-4199-4382-bc9b-fae0602fe0f4",
+                    "type": "basic.constant",
+                    "data": {
+                      "name": "robot_description",
+                      "value": "10",
+                      "local": true
+                    }
+                  }
+                ],
+                "wires": []
+              }
+            }
+          },
+          "47ed82c5-bc38-4e49-b6d7-fc5cd409192d": {
+            "id": "47ed82c5-bc38-4e49-b6d7-fc5cd409192d",
+            "type": "block.package",
+            "selected": false,
+            "x": 1100,
+            "y": 150,
+            "ports": [
+              {
+                "id": "bdf21012-bd57-4bf4-88de-a91e3b32ede2",
+                "type": "port.input",
+                "x": 1101,
+                "y": 166,
+                "name": "ab4100c8-69d4-48b8-9fdd-bbec72318622",
+                "alignment": "left",
+                "parentNode": "47ed82c5-bc38-4e49-b6d7-fc5cd409192d",
+                "links": [],
+                "in": true,
+                "label": "joint_states",
+                "hideLabel": false
+              },
+              {
+                "id": "200ef76c-03cf-4fe2-a47f-117630b5c9f5",
+                "type": "port.output",
+                "x": 1213,
+                "y": 191,
+                "name": "1d14cdae-9391-4758-8f00-08bbec6be618",
+                "alignment": "right",
+                "parentNode": "47ed82c5-bc38-4e49-b6d7-fc5cd409192d",
+                "links": [],
+                "in": false,
+                "label": "joint_commands",
+                "hideLabel": false
+              },
+              {
+                "id": "fbe2ebe4-a8b1-4712-8ed9-ec85b6e4ab5c",
+                "type": "port.parameter",
+                "x": 1150,
+                "y": 120,
+                "name": "69d28a46-31a6-43b5-8c7a-0b6c73ce5669",
+                "alignment": "top",
+                "parentNode": "47ed82c5-bc38-4e49-b6d7-fc5cd409192d",
+                "links": [],
+                "in": true,
+                "label": "control_rate",
+                "hideLabel": false
+              }
+            ],
+            "data": {},
+            "model": {
+              "id": "32dc92ee-c950-4ff5-a062-afcf7229e43b",
+              "layers": [
+                {
+                  "id": "8ccda378-ffe1-4fd6-a4e0-b9ff0a49480a",
+                  "type": "diagram-links",
+                  "isSvg": true,
+                  "transformed": true,
+                  "models": {
+                    "6db96864-6022-4f28-a424-ceb6484c96f0": {
+                      "id": "6db96864-6022-4f28-a424-ceb6484c96f0",
+                      "type": "default",
+                      "source": "08f4de46-2c2a-4388-8ce1-7a5027874f12",
+                      "sourcePort": "01040ccd-2bee-4385-b712-dd40e221756f",
+                      "target": "c4e669f7-e443-440a-be22-d48d266dba4f",
+                      "targetPort": "3b4f5464-a52c-4add-a43d-63c00a12d12e",
+                      "points": [
+                        {
+                          "id": "b2fd7490-28b0-42ce-a888-b858742a6bf8",
+                          "type": "point",
+                          "x": 0,
+                          "y": 0
+                        }
+                      ]
+                    },
+                    "219af593-4c56-4658-8d03-1572be3a7701": {
+                      "id": "219af593-4c56-4658-8d03-1572be3a7701",
+                      "type": "default",
+                      "source": "c4e669f7-e443-440a-be22-d48d266dba4f",
+                      "sourcePort": "3df7899c-4210-4eb2-9939-46ed1a2828d7",
+                      "target": "f98117ae-84a4-4adc-8b7f-687ca30a71bc",
+                      "targetPort": "b689ae91-e3e5-4e3f-8803-112e1d49ec39",
+                      "points": [
+                        {
+                          "id": "28be423f-d917-433e-8a29-8370a9e3621f",
+                          "type": "point",
+                          "x": 0,
+                          "y": 0
+                        }
+                      ]
+                    },
+                    "e61eebab-6052-4a6e-b8a2-4cd72ae7b18f": {
+                      "id": "e61eebab-6052-4a6e-b8a2-4cd72ae7b18f",
+                      "type": "default",
+                      "source": "0efeefb7-021d-4452-9456-4e4811af0953",
+                      "sourcePort": "c3ac1777-e271-4feb-a262-ee4c8aaf21b7",
+                      "target": "c4e669f7-e443-440a-be22-d48d266dba4f",
+                      "targetPort": "bc4912d6-ea5f-4487-94f7-2971b8c79fb5",
+                      "points": [
+                        {
+                          "id": "801e16b4-2175-4816-bf2d-63d3def0dd9a",
+                          "type": "point",
+                          "x": 0,
+                          "y": 0
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "id": "8d0def6d-9692-467a-b0b4-b8418b9d6eb5",
+                  "type": "diagram-nodes",
+                  "isSvg": false,
+                  "transformed": true,
+                  "models": {
+                    "08f4de46-2c2a-4388-8ce1-7a5027874f12": {
+                      "id": "08f4de46-2c2a-4388-8ce1-7a5027874f12",
+                      "type": "basic.input",
+                      "x": 200,
+                      "y": 300,
+                      "ports": [
+                        {
+                          "id": "01040ccd-2bee-4385-b712-dd40e221756f",
+                          "type": "port.output",
+                          "x": 280,
+                          "y": 320,
+                          "name": "out",
+                          "label": "joint_states",
+                          "links": []
+                        }
+                      ],
+                      "data": {
+                        "name": "joint_states"
+                      }
+                    },
+                    "c4e669f7-e443-440a-be22-d48d266dba4f": {
+                      "id": "c4e669f7-e443-440a-be22-d48d266dba4f",
+                      "type": "basic.code",
+                      "x": 500,
+                      "y": 200,
+                      "ports": [
+                        {
+                          "id": "3b4f5464-a52c-4add-a43d-63c00a12d12e",
+                          "type": "port.input",
+                          "name": "joint_states",
+                          "label": "joint_states",
+                          "in": true,
+                          "x": 500,
+                          "y": 350
+                        },
+                        {
+                          "id": "3df7899c-4210-4eb2-9939-46ed1a2828d7",
+                          "type": "port.output",
+                          "name": "joint_commands",
+                          "label": "joint_commands",
+                          "in": false,
+                          "x": 900,
+                          "y": 350
+                        },
+                        {
+                          "id": "bc4912d6-ea5f-4487-94f7-2971b8c79fb5",
+                          "type": "port.parameter",
+                          "name": "control_rate",
+                          "label": "control_rate",
+                          "in": true,
+                          "x": 600,
+                          "y": 280
+                        }
+                      ],
+                      "data": {
+                        "code": "import rclpy\nfrom rclpy.node import Node\nfrom sensor_msgs.msg import JointState\nfrom std_msgs.msg import Float64\nfrom rclpy.qos import QoSProfile\n\nclass ArmController(Node):\n    def __init__(self):\n        super().__init__('arm_controller')\n        self.declare_parameter('control_rate', 10.0)\n        self.control_rate = self.get_parameter('control_rate').get_parameter_value().double_value\n        self.joint_state_sub = self.create_subscription(\n            JointState, 'joint_states', self.joint_state_callback, QoSProfile(depth=10))\n        self.joint_cmd_pubs = [\n            self.create_publisher(Float64, f'joint{i}_command', 10) for i in range(1, 4)\n        ]\n        self.timer = self.create_timer(1.0 / self.control_rate, self.publish_commands)\n        self.current_positions = [0.0, 0.0, 0.0]\n    \n    def joint_state_callback(self, msg):\n        self.current_positions = msg.position\n    \n    def publish_commands(self):\n        # Simple PD control (dummy implementation)\n        for i, pub in enumerate(self.joint_cmd_pubs):\n            cmd = Float64()\n            cmd.data = self.current_positions[i] + 0.1  # Add small offset for demo\n            pub.publish(cmd)\n\ndef main(args=None):\n    rclpy.init(args=args)\n    node = ArmController()\n    rclpy.spin(node)\n    node.destroy_node()\n    rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()",
+                        "params": [
+                          {
+                            "name": "control_rate"
+                          }
+                        ],
+                        "ports": {
+                          "in": [
+                            {
+                              "name": "joint_states"
+                            }
+                          ],
+                          "out": [
+                            {
+                              "name": "joint_commands"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "f98117ae-84a4-4adc-8b7f-687ca30a71bc": {
+                      "id": "f98117ae-84a4-4adc-8b7f-687ca30a71bc",
+                      "type": "basic.output",
+                      "x": 900,
+                      "y": 300,
+                      "ports": [
+                        {
+                          "id": "b689ae91-e3e5-4e3f-8803-112e1d49ec39",
+                          "type": "port.input",
+                          "x": 900,
+                          "y": 320,
+                          "name": "in",
+                          "label": "joint_commands",
+                          "links": []
+                        }
+                      ],
+                      "data": {
+                        "name": "joint_commands"
+                      }
+                    },
+                    "0efeefb7-021d-4452-9456-4e4811af0953": {
+                      "id": "0efeefb7-021d-4452-9456-4e4811af0953",
+                      "type": "basic.constant",
+                      "x": 500,
+                      "y": 100,
+                      "ports": [
+                        {
+                          "id": "c3ac1777-e271-4feb-a262-ee4c8aaf21b7",
+                          "type": "port.output",
+                          "name": "out",
+                          "label": "control_rate",
+                          "links": []
+                        }
+                      ],
+                      "data": {
+                        "name": "control_rate",
+                        "value": "10",
+                        "local": true
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "info": {
+              "name": "Arm Controller",
+              "description": "Controls the RRR robot arm using joint commands.",
+              "version": "1.0.0"
+            },
+            "design": {
+              "board": "Python3-Noetic",
+              "graph": {
+                "blocks": [
+                  {
+                    "id": "08f4de46-2c2a-4388-8ce1-7a5027874f12",
+                    "type": "basic.input",
+                    "data": {
+                      "name": "joint_states"
+                    }
+                  },
+                  {
+                    "id": "c4e669f7-e443-440a-be22-d48d266dba4f",
+                    "type": "basic.code",
+                    "data": {
+                      "code": "import rclpy\nfrom rclpy.node import Node\nfrom sensor_msgs.msg import JointState\nfrom std_msgs.msg import Float64\nfrom rclpy.qos import QoSProfile\n\nclass ArmController(Node):\n    def __init__(self):\n        super().__init__('arm_controller')\n        self.declare_parameter('control_rate', 10.0)\n        self.control_rate = self.get_parameter('control_rate').get_parameter_value().double_value\n        self.joint_state_sub = self.create_subscription(\n            JointState, 'joint_states', self.joint_state_callback, QoSProfile(depth=10))\n        self.joint_cmd_pubs = [\n            self.create_publisher(Float64, f'joint{i}_command', 10) for i in range(1, 4)\n        ]\n        self.timer = self.create_timer(1.0 / self.control_rate, self.publish_commands)\n        self.current_positions = [0.0, 0.0, 0.0]\n    \n    def joint_state_callback(self, msg):\n        self.current_positions = msg.position\n    \n    def publish_commands(self):\n        # Simple PD control (dummy implementation)\n        for i, pub in enumerate(self.joint_cmd_pubs):\n            cmd = Float64()\n            cmd.data = self.current_positions[i] + 0.1  # Add small offset for demo\n            pub.publish(cmd)\n\ndef main(args=None):\n    rclpy.init(args=args)\n    node = ArmController()\n    rclpy.spin(node)\n    node.destroy_node()\n    rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()",
+                      "params": [
+                        {
+                          "name": "control_rate"
+                        }
+                      ],
+                      "ports": {
+                        "in": [
+                          {
+                            "name": "joint_states"
+                          }
+                        ],
+                        "out": [
+                          {
+                            "name": "joint_commands"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "id": "f98117ae-84a4-4adc-8b7f-687ca30a71bc",
+                    "type": "basic.output",
+                    "data": {
+                      "name": "joint_commands"
+                    }
+                  },
+                  {
+                    "id": "0efeefb7-021d-4452-9456-4e4811af0953",
+                    "type": "basic.constant",
+                    "data": {
+                      "name": "control_rate",
+                      "value": "10",
+                      "local": true
+                    }
+                  }
+                ],
+                "wires": []
+              }
+            }
+          },
+          "acfeb2a5-59a3-48e9-b7f1-704f7ca96d18": {
+            "id": "acfeb2a5-59a3-48e9-b7f1-704f7ca96d18",
+            "type": "block.package",
+            "selected": false,
+            "x": 1450,
+            "y": 150,
+            "ports": [
+              {
+                "id": "b6774854-dd74-4000-8901-3bfffec27741",
+                "type": "port.input",
+                "x": 1451,
+                "y": 166,
+                "name": "d3d4f848-f6ab-45cb-a871-32552d689499",
+                "alignment": "left",
+                "parentNode": "acfeb2a5-59a3-48e9-b7f1-704f7ca96d18",
+                "links": [],
+                "in": true,
+                "label": "joint_states",
+                "hideLabel": false
+              },
+              {
+                "id": "fd57d6d8-ea05-46f7-aeee-11a5a358ff90",
+                "type": "port.input",
+                "x": 1451,
+                "y": 206,
+                "name": "15d26cd1-d778-4455-98de-97aa1b6280e5",
+                "alignment": "left",
+                "parentNode": "acfeb2a5-59a3-48e9-b7f1-704f7ca96d18",
+                "links": [],
+                "in": true,
+                "label": "tf",
+                "hideLabel": false
+              },
+              {
+                "id": "52d280f9-b81c-4160-aca9-1069d4d7241b",
+                "type": "port.parameter",
+                "x": 1500,
+                "y": 120,
+                "name": "a88a1ce9-9d5c-4037-9f31-cf4be7977eef",
+                "alignment": "top",
+                "parentNode": "acfeb2a5-59a3-48e9-b7f1-704f7ca96d18",
+                "links": [],
+                "in": true,
+                "label": "rviz_config",
+                "hideLabel": false
+              }
+            ],
+            "data": {},
+            "model": {
+              "id": "80e74977-e346-45f8-8775-b9f4422ce78d",
+              "layers": [
+                {
+                  "id": "f3e3cf30-05c0-4a70-8c17-942129c42054",
+                  "type": "diagram-links",
+                  "isSvg": true,
+                  "transformed": true,
+                  "models": {
+                    "377fafff-533c-49a7-a52c-f8b24dc26f60": {
+                      "id": "377fafff-533c-49a7-a52c-f8b24dc26f60",
+                      "type": "default",
+                      "source": "10672615-99ba-4ca4-994b-564519045e49",
+                      "sourcePort": "595be6e2-f006-4d71-aaa8-842090379e4e",
+                      "target": "59581ab1-418d-49a7-9d16-6e319ba31bb3",
+                      "targetPort": "f280b264-9c7e-4953-8fc8-a2f1eebe97f8",
+                      "points": [
+                        {
+                          "id": "9e3fff45-f468-4481-aa04-9435e8d5d939",
+                          "type": "point",
+                          "x": 0,
+                          "y": 0
+                        }
+                      ]
+                    },
+                    "e8dfec6d-af36-4855-ba4d-7363fd356d87": {
+                      "id": "e8dfec6d-af36-4855-ba4d-7363fd356d87",
+                      "type": "default",
+                      "source": "30617eb4-4832-4a1e-9184-fd3b8959aa12",
+                      "sourcePort": "bec40ba0-f01f-4a72-9565-93aa8b9edce8",
+                      "target": "59581ab1-418d-49a7-9d16-6e319ba31bb3",
+                      "targetPort": "f69da4d0-b085-455b-86d3-e74647e426e1",
+                      "points": [
+                        {
+                          "id": "bd084539-dff6-4d23-8253-cc66f4e53782",
+                          "type": "point",
+                          "x": 0,
+                          "y": 0
+                        }
+                      ]
+                    },
+                    "20f97155-888d-4f38-8d67-7883c1c7f55c": {
+                      "id": "20f97155-888d-4f38-8d67-7883c1c7f55c",
+                      "type": "default",
+                      "source": "c25f46f6-3a85-4eb2-b891-655ee75a3182",
+                      "sourcePort": "ab4d5b36-26ac-4c2b-b6c4-cb0694c49210",
+                      "target": "59581ab1-418d-49a7-9d16-6e319ba31bb3",
+                      "targetPort": "31f19833-0264-41f0-987f-c09709d9ac3a",
+                      "points": [
+                        {
+                          "id": "ecfc355d-c345-42b7-8330-5f492081fc8a",
+                          "type": "point",
+                          "x": 0,
+                          "y": 0
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "id": "75072d16-2868-419e-8f10-1ba9790e4a88",
+                  "type": "diagram-nodes",
+                  "isSvg": false,
+                  "transformed": true,
+                  "models": {
+                    "10672615-99ba-4ca4-994b-564519045e49": {
+                      "id": "10672615-99ba-4ca4-994b-564519045e49",
+                      "type": "basic.input",
+                      "x": 200,
+                      "y": 300,
+                      "ports": [
+                        {
+                          "id": "595be6e2-f006-4d71-aaa8-842090379e4e",
+                          "type": "port.output",
+                          "x": 280,
+                          "y": 320,
+                          "name": "out",
+                          "label": "joint_states",
+                          "links": []
+                        }
+                      ],
+                      "data": {
+                        "name": "joint_states"
+                      }
+                    },
+                    "30617eb4-4832-4a1e-9184-fd3b8959aa12": {
+                      "id": "30617eb4-4832-4a1e-9184-fd3b8959aa12",
+                      "type": "basic.input",
+                      "x": 200,
+                      "y": 400,
+                      "ports": [
+                        {
+                          "id": "bec40ba0-f01f-4a72-9565-93aa8b9edce8",
+                          "type": "port.output",
+                          "x": 280,
+                          "y": 420,
+                          "name": "out",
+                          "label": "tf",
+                          "links": []
+                        }
+                      ],
+                      "data": {
+                        "name": "tf"
+                      }
+                    },
+                    "59581ab1-418d-49a7-9d16-6e319ba31bb3": {
+                      "id": "59581ab1-418d-49a7-9d16-6e319ba31bb3",
+                      "type": "basic.code",
+                      "x": 500,
+                      "y": 200,
+                      "ports": [
+                        {
+                          "id": "f280b264-9c7e-4953-8fc8-a2f1eebe97f8",
+                          "type": "port.input",
+                          "name": "joint_states",
+                          "label": "joint_states",
+                          "in": true,
+                          "x": 500,
+                          "y": 350
+                        },
+                        {
+                          "id": "f69da4d0-b085-455b-86d3-e74647e426e1",
+                          "type": "port.input",
+                          "name": "tf",
+                          "label": "tf",
+                          "in": true,
+                          "x": 500,
+                          "y": 400
+                        },
+                        {
+                          "id": "31f19833-0264-41f0-987f-c09709d9ac3a",
+                          "type": "port.parameter",
+                          "name": "rviz_config",
+                          "label": "rviz_config",
+                          "in": true,
+                          "x": 600,
+                          "y": 280
+                        }
+                      ],
+                      "data": {
+                        "code": "# This is a placeholder for RViz launch configuration\n# In practice, you would launch RViz with a config file\nimport subprocess\nimport rclpy\nfrom rclpy.node import Node\n\nclass RvizDisplay(Node):\n    def __init__(self):\n        super().__init__('rviz_display')\n        self.declare_parameter('rviz_config', 'rrr_arm.rviz')\n        self.rviz_config = self.get_parameter('rviz_config').get_parameter_value().string_value\n        self.launch_rviz()\n    \n    def launch_rviz(self):\n        # Launch RViz with the specified config\n        subprocess.Popen(['rviz2', '-d', self.rviz_config])\n\ndef main(args=None):\n    rclpy.init(args=args)\n    node = RvizDisplay()\n    rclpy.spin(node)\n    node.destroy_node()\n    rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()",
+                        "params": [
+                          {
+                            "name": "rviz_config"
+                          }
+                        ],
+                        "ports": {
+                          "in": [
+                            {
+                              "name": "joint_states"
+                            },
+                            {
+                              "name": "tf"
+                            }
+                          ],
+                          "out": []
+                        }
+                      }
+                    },
+                    "c25f46f6-3a85-4eb2-b891-655ee75a3182": {
+                      "id": "c25f46f6-3a85-4eb2-b891-655ee75a3182",
+                      "type": "basic.constant",
+                      "x": 500,
+                      "y": 100,
+                      "ports": [
+                        {
+                          "id": "ab4d5b36-26ac-4c2b-b6c4-cb0694c49210",
+                          "type": "port.output",
+                          "name": "out",
+                          "label": "rviz_config",
+                          "links": []
+                        }
+                      ],
+                      "data": {
+                        "name": "rviz_config",
+                        "value": "10",
+                        "local": true
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "info": {
+              "name": "RViz Display",
+              "description": "Visualizes the RRR robot arm in RViz.",
+              "version": "1.0.0"
+            },
+            "design": {
+              "board": "Python3-Noetic",
+              "graph": {
+                "blocks": [
+                  {
+                    "id": "10672615-99ba-4ca4-994b-564519045e49",
+                    "type": "basic.input",
+                    "data": {
+                      "name": "joint_states"
+                    }
+                  },
+                  {
+                    "id": "30617eb4-4832-4a1e-9184-fd3b8959aa12",
+                    "type": "basic.input",
+                    "data": {
+                      "name": "tf"
+                    }
+                  },
+                  {
+                    "id": "59581ab1-418d-49a7-9d16-6e319ba31bb3",
+                    "type": "basic.code",
+                    "data": {
+                      "code": "# This is a placeholder for RViz launch configuration\n# In practice, you would launch RViz with a config file\nimport subprocess\nimport rclpy\nfrom rclpy.node import Node\n\nclass RvizDisplay(Node):\n    def __init__(self):\n        super().__init__('rviz_display')\n        self.declare_parameter('rviz_config', 'rrr_arm.rviz')\n        self.rviz_config = self.get_parameter('rviz_config').get_parameter_value().string_value\n        self.launch_rviz()\n    \n    def launch_rviz(self):\n        # Launch RViz with the specified config\n        subprocess.Popen(['rviz2', '-d', self.rviz_config])\n\ndef main(args=None):\n    rclpy.init(args=args)\n    node = RvizDisplay()\n    rclpy.spin(node)\n    node.destroy_node()\n    rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()",
+                      "params": [
+                        {
+                          "name": "rviz_config"
+                        }
+                      ],
+                      "ports": {
+                        "in": [
+                          {
+                            "name": "joint_states"
+                          },
+                          {
+                            "name": "tf"
+                          }
+                        ],
+                        "out": []
+                      }
+                    }
+                  },
+                  {
+                    "id": "c25f46f6-3a85-4eb2-b891-655ee75a3182",
+                    "type": "basic.constant",
+                    "data": {
+                      "name": "rviz_config",
+                      "value": "10",
+                      "local": true
+                    }
+                  }
+                ],
+                "wires": []
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "design": {
+    "board": "Python3-Noetic",
+    "graph": {
+      "blocks": [
+        {
+          "id": "684849fb-675c-4339-89ef-bf1ae7e8c3cb",
+          "type": "IcalTC3M1p7KF1rZy0wBQquzDErw36iSM7hi5pef_A0=",
+          "data": {},
+          "position": {
+            "x": 400,
+            "y": 150
+          }
+        },
+        {
+          "id": "8fd539ca-a5dd-4553-9be1-71c31e8ee9ac",
+          "type": "N5xU14fBHLtdsr5Rz3Vl5BygccLWwlPGRLHLMZ0KLoM=",
+          "data": {},
+          "position": {
+            "x": 750,
+            "y": 150
+          }
+        },
+        {
+          "id": "47ed82c5-bc38-4e49-b6d7-fc5cd409192d",
+          "type": "UbSFTi_34EzOfrDou8R_AoG3BhY30kjKgoav92El9rM=",
+          "data": {},
+          "position": {
+            "x": 1100,
+            "y": 150
+          }
+        },
+        {
+          "id": "acfeb2a5-59a3-48e9-b7f1-704f7ca96d18",
+          "type": "ux0R9BvhTkDH6gpufxD37FQ7SGf5tfFgB8RMdF337yU=",
+          "data": {},
+          "position": {
+            "x": 1450,
+            "y": 150
+          }
+        }
+      ],
+      "wires": [
+        {
+          "source": {
+            "block": "684849fb-675c-4339-89ef-bf1ae7e8c3cb",
+            "port": "34e9eff8-845a-406e-a095-71e714c6d21b",
+            "name": "joint_states"
+          },
+          "target": {
+            "block": "8fd539ca-a5dd-4553-9be1-71c31e8ee9ac",
+            "port": "875478ba-1525-4d6d-bb2c-d2507e8dd569",
+            "name": "joint_states"
+          }
+        }
+      ]
+    }
+  },
+  "dependencies": {
+    "IcalTC3M1p7KF1rZy0wBQquzDErw36iSM7hi5pef_A0=": {
+      "package": {
+        "name": "Joint State Publisher",
+        "description": "Publishes the joint states of the RRR robot arm.",
+        "version": "1.0.0"
+      },
+      "design": {
+        "graph": {
+          "blocks": [
+            {
+              "id": "27cc0c28-3191-41cc-9c56-357d8284b998",
+              "type": "basic.code",
+              "data": {
+                "code": "import rclpy\nfrom rclpy.node import Node\nfrom sensor_msgs.msg import JointState\nfrom math import sin\n\nclass JointStatePublisher(Node):\n    def __init__(self):\n        super().__init__('joint_state_publisher')\n        self.publisher = self.create_publisher(JointState, 'joint_states', 10)\n        self.declare_parameter('joint_names', ['joint1', 'joint2', 'joint3'])\n        self.declare_parameter('publish_rate', 30.0)\n        self.joint_names = self.get_parameter('joint_names').get_parameter_value().string_array_value\n        self.publish_rate = self.get_parameter('publish_rate').get_parameter_value().double_value\n        self.timer = self.create_timer(1.0 / self.publish_rate, self.publish_joint_states)\n        self.time = 0.0\n    \n    def publish_joint_states(self):\n        msg = JointState()\n        msg.header.stamp = self.get_clock().now().to_msg()\n        msg.name = self.joint_names\n        self.time += 0.1\n        msg.position = [sin(self.time), sin(self.time * 1.5), sin(self.time * 2.0)]\n        self.publisher.publish(msg)\n\ndef main(args=None):\n    rclpy.init(args=args)\n    node = JointStatePublisher()\n    rclpy.spin(node)\n    node.destroy_node()\n    rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()",
+                "params": [
+                  {
+                    "name": "joint_names"
+                  },
+                  {
+                    "name": "publish_rate"
+                  }
+                ],
+                "ports": {
+                  "in": [],
+                  "out": [
+                    {
+                      "name": "joint_states"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "id": "ad35adab-f4cc-470f-a2c6-d939ee052e26",
+              "type": "basic.output",
+              "data": {
+                "name": "joint_states"
+              }
+            },
+            {
+              "id": "594e3fd3-b622-447f-9ecd-6d01d9b662fb",
+              "type": "basic.constant",
+              "data": {
+                "name": "joint_names",
+                "value": "10",
+                "local": true
+              }
+            },
+            {
+              "id": "e0c2f80b-99dc-4457-bd41-a38c8696202d",
+              "type": "basic.constant",
+              "data": {
+                "name": "publish_rate",
+                "value": "10",
+                "local": true
+              }
+            }
+          ],
+          "wires": []
+        }
+      },
+      "dependencies": {}
+    },
+    "N5xU14fBHLtdsr5Rz3Vl5BygccLWwlPGRLHLMZ0KLoM=": {
+      "package": {
+        "name": "Robot State Publisher",
+        "description": "Publishes the robot state (TF transformations) based on joint states.",
+        "version": "1.0.0"
+      },
+      "design": {
+        "graph": {
+          "blocks": [
+            {
+              "id": "0f9e2d4b-7537-46c0-9739-8c8518a498dd",
+              "type": "basic.input",
+              "data": {
+                "name": "joint_states"
+              }
+            },
+            {
+              "id": "e79dd5b1-9538-4b98-847b-41b38c07214a",
+              "type": "basic.code",
+              "data": {
+                "code": "import rclpy\nfrom rclpy.node import Node\nfrom sensor_msgs.msg import JointState\nfrom tf2_ros import TransformBroadcaster\nfrom rclpy.qos import QoSProfile\n\nclass RobotStatePublisher(Node):\n    def __init__(self):\n        super().__init__('robot_state_publisher')\n        self.declare_parameter('robot_description', '')\n        self.robot_description = self.get_parameter('robot_description').get_parameter_value().string_value\n        self.joint_state_sub = self.create_subscription(\n            JointState, 'joint_states', self.joint_state_callback, QoSProfile(depth=10))\n        self.tf_broadcaster = TransformBroadcaster(self)\n    \n    def joint_state_callback(self, msg):\n        # In a real implementation, use robot_description to compute TF\n        # For simplicity, we publish dummy TFs here\n        from geometry_msgs.msg import TransformStamped\n        import math\n        \n        t = TransformStamped()\n        t.header.stamp = self.get_clock().now().to_msg()\n        t.header.frame_id = 'base_link'\n        t.child_frame_id = 'link1'\n        t.transform.translation.x = 0.0\n        t.transform.translation.y = 0.0\n        t.transform.translation.z = 0.0\n        t.transform.rotation.x = 0.0\n        t.transform.rotation.y = 0.0\n        t.transform.rotation.z = math.sin(msg.position[0])\n        t.transform.rotation.w = math.cos(msg.position[0])\n        self.tf_broadcaster.sendTransform(t)\n\ndef main(args=None):\n    rclpy.init(args=args)\n    node = RobotStatePublisher()\n    rclpy.spin(node)\n    node.destroy_node()\n    rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()",
+                "params": [
+                  {
+                    "name": "robot_description"
+                  }
+                ],
+                "ports": {
+                  "in": [
+                    {
+                      "name": "joint_states"
+                    }
+                  ],
+                  "out": [
+                    {
+                      "name": "tf"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "id": "76bc57f0-be56-48c6-b860-b4e2892cabad",
+              "type": "basic.output",
+              "data": {
+                "name": "tf"
+              }
+            },
+            {
+              "id": "42278f4a-4199-4382-bc9b-fae0602fe0f4",
+              "type": "basic.constant",
+              "data": {
+                "name": "robot_description",
+                "value": "10",
+                "local": true
+              }
+            }
+          ],
+          "wires": []
+        }
+      },
+      "dependencies": {}
+    },
+    "UbSFTi_34EzOfrDou8R_AoG3BhY30kjKgoav92El9rM=": {
+      "package": {
+        "name": "Arm Controller",
+        "description": "Controls the RRR robot arm using joint commands.",
+        "version": "1.0.0"
+      },
+      "design": {
+        "graph": {
+          "blocks": [
+            {
+              "id": "08f4de46-2c2a-4388-8ce1-7a5027874f12",
+              "type": "basic.input",
+              "data": {
+                "name": "joint_states"
+              }
+            },
+            {
+              "id": "c4e669f7-e443-440a-be22-d48d266dba4f",
+              "type": "basic.code",
+              "data": {
+                "code": "import rclpy\nfrom rclpy.node import Node\nfrom sensor_msgs.msg import JointState\nfrom std_msgs.msg import Float64\nfrom rclpy.qos import QoSProfile\n\nclass ArmController(Node):\n    def __init__(self):\n        super().__init__('arm_controller')\n        self.declare_parameter('control_rate', 10.0)\n        self.control_rate = self.get_parameter('control_rate').get_parameter_value().double_value\n        self.joint_state_sub = self.create_subscription(\n            JointState, 'joint_states', self.joint_state_callback, QoSProfile(depth=10))\n        self.joint_cmd_pubs = [\n            self.create_publisher(Float64, f'joint{i}_command', 10) for i in range(1, 4)\n        ]\n        self.timer = self.create_timer(1.0 / self.control_rate, self.publish_commands)\n        self.current_positions = [0.0, 0.0, 0.0]\n    \n    def joint_state_callback(self, msg):\n        self.current_positions = msg.position\n    \n    def publish_commands(self):\n        # Simple PD control (dummy implementation)\n        for i, pub in enumerate(self.joint_cmd_pubs):\n            cmd = Float64()\n            cmd.data = self.current_positions[i] + 0.1  # Add small offset for demo\n            pub.publish(cmd)\n\ndef main(args=None):\n    rclpy.init(args=args)\n    node = ArmController()\n    rclpy.spin(node)\n    node.destroy_node()\n    rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()",
+                "params": [
+                  {
+                    "name": "control_rate"
+                  }
+                ],
+                "ports": {
+                  "in": [
+                    {
+                      "name": "joint_states"
+                    }
+                  ],
+                  "out": [
+                    {
+                      "name": "joint_commands"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "id": "f98117ae-84a4-4adc-8b7f-687ca30a71bc",
+              "type": "basic.output",
+              "data": {
+                "name": "joint_commands"
+              }
+            },
+            {
+              "id": "0efeefb7-021d-4452-9456-4e4811af0953",
+              "type": "basic.constant",
+              "data": {
+                "name": "control_rate",
+                "value": "10",
+                "local": true
+              }
+            }
+          ],
+          "wires": []
+        }
+      },
+      "dependencies": {}
+    },
+    "ux0R9BvhTkDH6gpufxD37FQ7SGf5tfFgB8RMdF337yU=": {
+      "package": {
+        "name": "RViz Display",
+        "description": "Visualizes the RRR robot arm in RViz.",
+        "version": "1.0.0"
+      },
+      "design": {
+        "graph": {
+          "blocks": [
+            {
+              "id": "10672615-99ba-4ca4-994b-564519045e49",
+              "type": "basic.input",
+              "data": {
+                "name": "joint_states"
+              }
+            },
+            {
+              "id": "30617eb4-4832-4a1e-9184-fd3b8959aa12",
+              "type": "basic.input",
+              "data": {
+                "name": "tf"
+              }
+            },
+            {
+              "id": "59581ab1-418d-49a7-9d16-6e319ba31bb3",
+              "type": "basic.code",
+              "data": {
+                "code": "# This is a placeholder for RViz launch configuration\n# In practice, you would launch RViz with a config file\nimport subprocess\nimport rclpy\nfrom rclpy.node import Node\n\nclass RvizDisplay(Node):\n    def __init__(self):\n        super().__init__('rviz_display')\n        self.declare_parameter('rviz_config', 'rrr_arm.rviz')\n        self.rviz_config = self.get_parameter('rviz_config').get_parameter_value().string_value\n        self.launch_rviz()\n    \n    def launch_rviz(self):\n        # Launch RViz with the specified config\n        subprocess.Popen(['rviz2', '-d', self.rviz_config])\n\ndef main(args=None):\n    rclpy.init(args=args)\n    node = RvizDisplay()\n    rclpy.spin(node)\n    node.destroy_node()\n    rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()",
+                "params": [
+                  {
+                    "name": "rviz_config"
+                  }
+                ],
+                "ports": {
+                  "in": [
+                    {
+                      "name": "joint_states"
+                    },
+                    {
+                      "name": "tf"
+                    }
+                  ],
+                  "out": []
+                }
+              }
+            },
+            {
+              "id": "c25f46f6-3a85-4eb2-b891-655ee75a3182",
+              "type": "basic.constant",
+              "data": {
+                "name": "rviz_config",
+                "value": "10",
+                "local": true
+              }
+            }
+          ],
+          "wires": []
+        }
+      },
+      "dependencies": {}
+    }
+  },
+  "package": {
+    "name": "Generated Pipeline",
+    "version": "0.1.0"
+  }
+}

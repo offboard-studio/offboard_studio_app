@@ -1,0 +1,2926 @@
+{
+  "version": "3.0",
+  "editor": {
+    "id": "f5972a8c-0f58-4b0b-a227-23de3bccdf90",
+    "offsetX": 0,
+    "offsetY": 0,
+    "zoom": 100,
+    "layers": [
+      {
+        "id": "b5b5f1ec-cdd2-4667-ad12-9de95f3d3de3",
+        "type": "diagram-links",
+        "isSvg": true,
+        "transformed": true,
+        "models": {
+          "55a34dc2-dfb7-4096-913b-d33fc74dcde1": {
+            "id": "55a34dc2-dfb7-4096-913b-d33fc74dcde1",
+            "type": "default",
+            "selected": false,
+            "source": "d5428112-b302-4dc2-862d-be47e8580f62",
+            "sourcePort": "607bf274-beec-49e7-826b-f9a0a2bb5fce",
+            "target": "2c52beff-520d-4836-861e-8901f4f396d5",
+            "targetPort": "ac64e34c-5e53-4496-a787-f5b1a68b5314",
+            "points": [
+              {
+                "id": "beb5eb4a-795c-47f9-bdb5-657c079b0c43",
+                "type": "point",
+                "x": 913,
+                "y": 316
+              },
+              {
+                "id": "50d7607b-6400-4d4c-ad1a-b0781dcd7994",
+                "type": "point",
+                "x": 1601,
+                "y": 316
+              }
+            ],
+            "labels": [],
+            "width": 3,
+            "color": "gray"
+          },
+          "2fc8eec3-d2c6-4c03-8fa5-c4d74af521b2": {
+            "id": "2fc8eec3-d2c6-4c03-8fa5-c4d74af521b2",
+            "type": "default",
+            "selected": false,
+            "source": "2c52beff-520d-4836-861e-8901f4f396d5",
+            "sourcePort": "81951696-fc89-42b5-a209-9b7b630243db",
+            "target": "710c8b46-3d64-43d1-8024-cf421ee49450",
+            "targetPort": "eef9ec6f-aeb0-4aad-ad0b-af5e5cc8c525",
+            "points": [
+              {
+                "id": "aeb60e3a-5698-44e7-a8d6-0a776117e5f7",
+                "type": "point",
+                "x": 1713,
+                "y": 341
+              },
+              {
+                "id": "e824e8c2-84a1-47cc-b1ce-9ca59528178b",
+                "type": "point",
+                "x": 2401,
+                "y": 316
+              }
+            ],
+            "labels": [],
+            "width": 3,
+            "color": "gray"
+          },
+          "add7cb47-18bb-4c5e-9626-06d739f60212": {
+            "id": "add7cb47-18bb-4c5e-9626-06d739f60212",
+            "type": "default",
+            "selected": false,
+            "source": "710c8b46-3d64-43d1-8024-cf421ee49450",
+            "sourcePort": "97563cc2-0215-4432-859b-1116d561d0d2",
+            "target": "2d22c099-d19f-4caf-a0e2-b74c79603978",
+            "targetPort": "578e0809-6649-4652-81f0-50921fe4eb29",
+            "points": [
+              {
+                "id": "8753cb28-565a-4fc1-ad5f-ee3a05d122da",
+                "type": "point",
+                "x": 2513,
+                "y": 341
+              },
+              {
+                "id": "3c2dc830-973e-4d9c-b1d3-eea06abdfe5c",
+                "type": "point",
+                "x": 3201,
+                "y": 316
+              }
+            ],
+            "labels": [],
+            "width": 3,
+            "color": "gray"
+          },
+          "942b8d24-f538-40b5-aa1f-e694ed2c321d": {
+            "id": "942b8d24-f538-40b5-aa1f-e694ed2c321d",
+            "type": "default",
+            "selected": false,
+            "source": "2d22c099-d19f-4caf-a0e2-b74c79603978",
+            "sourcePort": "0b8c3892-8f6b-44ea-9046-655d64b85c7e",
+            "target": "9f0a83cc-a208-406d-89fc-b5cde673b051",
+            "targetPort": "4b65dfe7-9dfd-406c-974a-88dfe602aaaf",
+            "points": [
+              {
+                "id": "7009f8db-14a9-4a74-9718-fc1b3411b977",
+                "type": "point",
+                "x": 3313,
+                "y": 341
+              },
+              {
+                "id": "87a946e6-50ec-4154-9f8f-43e776c3f13b",
+                "type": "point",
+                "x": 4001,
+                "y": 316
+              }
+            ],
+            "labels": [],
+            "width": 3,
+            "color": "gray"
+          },
+          "b504b36a-e0e2-47ed-9842-eb86b1bef63f": {
+            "id": "b504b36a-e0e2-47ed-9842-eb86b1bef63f",
+            "type": "default",
+            "selected": false,
+            "source": "9f0a83cc-a208-406d-89fc-b5cde673b051",
+            "sourcePort": "c71cfa45-052c-49e7-aadd-ac21c1e24cdd",
+            "target": "088ac4a9-8be6-463b-b195-a139364e29cb",
+            "targetPort": "7f963d58-9b91-4992-9197-bda9c6e07d6e",
+            "points": [
+              {
+                "id": "371eed7a-6905-4a76-b93e-25f125c3e593",
+                "type": "point",
+                "x": 4113,
+                "y": 341
+              },
+              {
+                "id": "87429a02-48c3-4253-a574-0c2b9a263f72",
+                "type": "point",
+                "x": 4850,
+                "y": 270
+              }
+            ],
+            "labels": [],
+            "width": 3,
+            "color": "gray"
+          },
+          "83e20274-1201-466a-a300-2a89b9a4272b": {
+            "id": "83e20274-1201-466a-a300-2a89b9a4272b",
+            "type": "default",
+            "selected": false,
+            "source": "088ac4a9-8be6-463b-b195-a139364e29cb",
+            "sourcePort": "7ef49582-078d-4337-bc52-b56ccfbf16ab",
+            "target": "8f7843b4-304e-4137-aaa2-bfde24a53ba5",
+            "targetPort": "cfc77bf3-58f2-4d69-be06-85ab8c50c392",
+            "points": [
+              {
+                "id": "72def281-7564-4a61-8186-f24a42b7d0d2",
+                "type": "point",
+                "x": 4913,
+                "y": 316
+              },
+              {
+                "id": "76314ad6-f2c5-4bde-a100-a32ec409382e",
+                "type": "point",
+                "x": 5601,
+                "y": 316
+              }
+            ],
+            "labels": [],
+            "width": 3,
+            "color": "gray"
+          }
+        }
+      },
+      {
+        "id": "8af07d71-2cfd-4ee1-bd68-5dd86cecdde7",
+        "type": "diagram-nodes",
+        "isSvg": false,
+        "transformed": true,
+        "models": {
+          "d5428112-b302-4dc2-862d-be47e8580f62": {
+            "id": "d5428112-b302-4dc2-862d-be47e8580f62",
+            "type": "block.package",
+            "selected": false,
+            "x": 400,
+            "y": 150,
+            "ports": [
+              {
+                "id": "607bf274-beec-49e7-826b-f9a0a2bb5fce",
+                "type": "port.output",
+                "x": 513,
+                "y": 166,
+                "name": "df27c025-8020-4c19-aeb2-26d647e531b9",
+                "alignment": "right",
+                "parentNode": "d5428112-b302-4dc2-862d-be47e8580f62",
+                "links": [
+                  "55a34dc2-dfb7-4096-913b-d33fc74dcde1"
+                ],
+                "in": false,
+                "label": "joint_states",
+                "hideLabel": false
+              },
+              {
+                "id": "91b636c0-c3c9-4324-a358-ba92e6b2c99e",
+                "type": "port.parameter",
+                "x": 450,
+                "y": 120,
+                "name": "5dc8f910-8ef6-4f9e-a825-3e61912efd9f",
+                "alignment": "top",
+                "parentNode": "d5428112-b302-4dc2-862d-be47e8580f62",
+                "links": [],
+                "in": true,
+                "label": "joint_names",
+                "hideLabel": false
+              },
+              {
+                "id": "eafe19b0-765f-4afc-8024-362be1bfaed1",
+                "type": "port.parameter",
+                "x": 530,
+                "y": 120,
+                "name": "42558c76-7769-4c7c-9472-e490761837c9",
+                "alignment": "top",
+                "parentNode": "d5428112-b302-4dc2-862d-be47e8580f62",
+                "links": [],
+                "in": true,
+                "label": "publish_rate",
+                "hideLabel": false
+              }
+            ],
+            "data": {},
+            "model": {
+              "id": "53f44ed3-d432-40af-80f3-5d6a7b719737",
+              "layers": [
+                {
+                  "id": "8b509592-dc48-4e81-9ebc-5bf6e2b6a5f3",
+                  "type": "diagram-links",
+                  "isSvg": true,
+                  "transformed": true,
+                  "models": {
+                    "0c1e1c16-b134-4f72-90d0-f3f8bb43877e": {
+                      "id": "0c1e1c16-b134-4f72-90d0-f3f8bb43877e",
+                      "type": "default",
+                      "source": "7be511ea-af3a-42da-b4a8-91be537e50ad",
+                      "sourcePort": "b4794634-598e-4d2b-b45e-6e76fd454c8c",
+                      "target": "b1cade3d-22a7-4fab-b1a7-3db1a1247fcd",
+                      "targetPort": "6a4dd701-6e56-4073-bfb0-ec4fec3addce",
+                      "points": [
+                        {
+                          "id": "0d73df9d-b28c-452f-aedf-d3f6d3b9c9d7",
+                          "type": "point",
+                          "x": 0,
+                          "y": 0
+                        }
+                      ]
+                    },
+                    "b7b1acb0-6d57-409c-a099-c7b77c6e7ee0": {
+                      "id": "b7b1acb0-6d57-409c-a099-c7b77c6e7ee0",
+                      "type": "default",
+                      "source": "de8ea21d-f39e-46cd-8286-2e9ed8907eeb",
+                      "sourcePort": "212700d8-a105-4a35-84f1-923d8a5730b4",
+                      "target": "7be511ea-af3a-42da-b4a8-91be537e50ad",
+                      "targetPort": "b1826ca6-c414-4a6a-b8e9-77aebf8d6f9b",
+                      "points": [
+                        {
+                          "id": "747262e8-43f3-46b1-b250-81cf89adfb2d",
+                          "type": "point",
+                          "x": 0,
+                          "y": 0
+                        }
+                      ]
+                    },
+                    "77ad58aa-d3ce-4392-b783-db1f6b49d62f": {
+                      "id": "77ad58aa-d3ce-4392-b783-db1f6b49d62f",
+                      "type": "default",
+                      "source": "a2e6a2e2-d20b-447f-887b-8aed4b8c362e",
+                      "sourcePort": "c622e1cc-804d-41d4-9597-24a402c9aa27",
+                      "target": "7be511ea-af3a-42da-b4a8-91be537e50ad",
+                      "targetPort": "5f91068d-8450-4778-8cfe-738bdaf4035e",
+                      "points": [
+                        {
+                          "id": "031e13fa-aa35-4d3e-a98f-a5c6f48c608b",
+                          "type": "point",
+                          "x": 0,
+                          "y": 0
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "id": "c18512df-ad74-42cc-8fdf-e23fcceb5c47",
+                  "type": "diagram-nodes",
+                  "isSvg": false,
+                  "transformed": true,
+                  "models": {
+                    "7be511ea-af3a-42da-b4a8-91be537e50ad": {
+                      "id": "7be511ea-af3a-42da-b4a8-91be537e50ad",
+                      "type": "basic.code",
+                      "x": 500,
+                      "y": 200,
+                      "ports": [
+                        {
+                          "id": "b4794634-598e-4d2b-b45e-6e76fd454c8c",
+                          "type": "port.output",
+                          "name": "joint_states",
+                          "label": "joint_states",
+                          "in": false,
+                          "x": 900,
+                          "y": 350
+                        },
+                        {
+                          "id": "b1826ca6-c414-4a6a-b8e9-77aebf8d6f9b",
+                          "type": "port.parameter",
+                          "name": "joint_names",
+                          "label": "joint_names",
+                          "in": true,
+                          "x": 600,
+                          "y": 280
+                        },
+                        {
+                          "id": "5f91068d-8450-4778-8cfe-738bdaf4035e",
+                          "type": "port.parameter",
+                          "name": "publish_rate",
+                          "label": "publish_rate",
+                          "in": true,
+                          "x": 700,
+                          "y": 280
+                        }
+                      ],
+                      "data": {
+                        "code": "import rclpy\nfrom rclpy.node import Node\nfrom sensor_msgs.msg import JointState\nfrom math import sin\n\nclass JointStatePublisher(Node):\n    def __init__(self):\n        super().__init__('joint_state_publisher')\n        self.publisher = self.create_publisher(JointState, 'joint_states', 10)\n        self.declare_parameter('joint_names', ['joint1', 'joint2', 'joint3'])\n        self.declare_parameter('publish_rate', 30.0)\n        self.joint_names = self.get_parameter('joint_names').get_parameter_value().string_array_value\n        self.publish_rate = self.get_parameter('publish_rate').get_parameter_value().double_value\n        self.timer = self.create_timer(1.0 / self.publish_rate, self.publish_joint_states)\n        self.time = 0.0\n    \n    def publish_joint_states(self):\n        msg = JointState()\n        msg.header.stamp = self.get_clock().now().to_msg()\n        msg.name = self.joint_names\n        self.time += 0.1\n        msg.position = [sin(self.time), sin(self.time * 1.5), sin(self.time * 2.0)]\n        self.publisher.publish(msg)\n\ndef main(args=None):\n    rclpy.init(args=args)\n    node = JointStatePublisher()\n    rclpy.spin(node)\n    node.destroy_node()\n    rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()",
+                        "params": [
+                          {
+                            "name": "joint_names"
+                          },
+                          {
+                            "name": "publish_rate"
+                          }
+                        ],
+                        "ports": {
+                          "in": [],
+                          "out": [
+                            {
+                              "name": "joint_states"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "b1cade3d-22a7-4fab-b1a7-3db1a1247fcd": {
+                      "id": "b1cade3d-22a7-4fab-b1a7-3db1a1247fcd",
+                      "type": "basic.output",
+                      "x": 900,
+                      "y": 300,
+                      "ports": [
+                        {
+                          "id": "6a4dd701-6e56-4073-bfb0-ec4fec3addce",
+                          "type": "port.input",
+                          "x": 900,
+                          "y": 320,
+                          "name": "in",
+                          "label": "joint_states",
+                          "links": []
+                        }
+                      ],
+                      "data": {
+                        "name": "joint_states"
+                      }
+                    },
+                    "de8ea21d-f39e-46cd-8286-2e9ed8907eeb": {
+                      "id": "de8ea21d-f39e-46cd-8286-2e9ed8907eeb",
+                      "type": "basic.constant",
+                      "x": 500,
+                      "y": 100,
+                      "ports": [
+                        {
+                          "id": "212700d8-a105-4a35-84f1-923d8a5730b4",
+                          "type": "port.output",
+                          "name": "out",
+                          "label": "joint_names",
+                          "links": []
+                        }
+                      ],
+                      "data": {
+                        "name": "joint_names",
+                        "value": "10",
+                        "local": true
+                      }
+                    },
+                    "a2e6a2e2-d20b-447f-887b-8aed4b8c362e": {
+                      "id": "a2e6a2e2-d20b-447f-887b-8aed4b8c362e",
+                      "type": "basic.constant",
+                      "x": 700,
+                      "y": 100,
+                      "ports": [
+                        {
+                          "id": "c622e1cc-804d-41d4-9597-24a402c9aa27",
+                          "type": "port.output",
+                          "name": "out",
+                          "label": "publish_rate",
+                          "links": []
+                        }
+                      ],
+                      "data": {
+                        "name": "publish_rate",
+                        "value": "10",
+                        "local": true
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "info": {
+              "name": "Joint State Publisher",
+              "description": "Publishes the joint states of the RRR robot arm.",
+              "version": "1.0.0"
+            },
+            "design": {
+              "board": "Python3-Noetic",
+              "graph": {
+                "blocks": [
+                  {
+                    "id": "7be511ea-af3a-42da-b4a8-91be537e50ad",
+                    "type": "basic.code",
+                    "data": {
+                      "code": "import rclpy\nfrom rclpy.node import Node\nfrom sensor_msgs.msg import JointState\nfrom math import sin\n\nclass JointStatePublisher(Node):\n    def __init__(self):\n        super().__init__('joint_state_publisher')\n        self.publisher = self.create_publisher(JointState, 'joint_states', 10)\n        self.declare_parameter('joint_names', ['joint1', 'joint2', 'joint3'])\n        self.declare_parameter('publish_rate', 30.0)\n        self.joint_names = self.get_parameter('joint_names').get_parameter_value().string_array_value\n        self.publish_rate = self.get_parameter('publish_rate').get_parameter_value().double_value\n        self.timer = self.create_timer(1.0 / self.publish_rate, self.publish_joint_states)\n        self.time = 0.0\n    \n    def publish_joint_states(self):\n        msg = JointState()\n        msg.header.stamp = self.get_clock().now().to_msg()\n        msg.name = self.joint_names\n        self.time += 0.1\n        msg.position = [sin(self.time), sin(self.time * 1.5), sin(self.time * 2.0)]\n        self.publisher.publish(msg)\n\ndef main(args=None):\n    rclpy.init(args=args)\n    node = JointStatePublisher()\n    rclpy.spin(node)\n    node.destroy_node()\n    rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()",
+                      "params": [
+                        {
+                          "name": "joint_names"
+                        },
+                        {
+                          "name": "publish_rate"
+                        }
+                      ],
+                      "ports": {
+                        "in": [],
+                        "out": [
+                          {
+                            "name": "joint_states"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "id": "b1cade3d-22a7-4fab-b1a7-3db1a1247fcd",
+                    "type": "basic.output",
+                    "data": {
+                      "name": "joint_states"
+                    }
+                  },
+                  {
+                    "id": "de8ea21d-f39e-46cd-8286-2e9ed8907eeb",
+                    "type": "basic.constant",
+                    "data": {
+                      "name": "joint_names",
+                      "value": "10",
+                      "local": true
+                    }
+                  },
+                  {
+                    "id": "a2e6a2e2-d20b-447f-887b-8aed4b8c362e",
+                    "type": "basic.constant",
+                    "data": {
+                      "name": "publish_rate",
+                      "value": "10",
+                      "local": true
+                    }
+                  }
+                ],
+                "wires": []
+              }
+            }
+          },
+          "2c52beff-520d-4836-861e-8901f4f396d5": {
+            "id": "2c52beff-520d-4836-861e-8901f4f396d5",
+            "type": "block.package",
+            "selected": false,
+            "x": 800,
+            "y": 150,
+            "ports": [
+              {
+                "id": "ac64e34c-5e53-4496-a787-f5b1a68b5314",
+                "type": "port.input",
+                "x": 801,
+                "y": 166,
+                "name": "6bfa7fb3-b941-45b0-8a25-f545aeee3046",
+                "alignment": "left",
+                "parentNode": "2c52beff-520d-4836-861e-8901f4f396d5",
+                "links": [
+                  "55a34dc2-dfb7-4096-913b-d33fc74dcde1"
+                ],
+                "in": true,
+                "label": "joint_states",
+                "hideLabel": false
+              },
+              {
+                "id": "81951696-fc89-42b5-a209-9b7b630243db",
+                "type": "port.output",
+                "x": 913,
+                "y": 191,
+                "name": "0529f48c-827b-4586-be19-e547f6d77838",
+                "alignment": "right",
+                "parentNode": "2c52beff-520d-4836-861e-8901f4f396d5",
+                "links": [
+                  "2fc8eec3-d2c6-4c03-8fa5-c4d74af521b2"
+                ],
+                "in": false,
+                "label": "tf",
+                "hideLabel": false
+              },
+              {
+                "id": "a78255a3-440c-4397-9719-fac9a783dcba",
+                "type": "port.parameter",
+                "x": 850,
+                "y": 120,
+                "name": "6c3869a2-f375-4368-9740-ff6a99643de1",
+                "alignment": "top",
+                "parentNode": "2c52beff-520d-4836-861e-8901f4f396d5",
+                "links": [],
+                "in": true,
+                "label": "robot_description",
+                "hideLabel": false
+              }
+            ],
+            "data": {},
+            "model": {
+              "id": "d60e1d44-69f6-4b98-acfb-7efa9f9506c9",
+              "layers": [
+                {
+                  "id": "78fde50a-bd65-46a7-a83b-ff9e74775226",
+                  "type": "diagram-links",
+                  "isSvg": true,
+                  "transformed": true,
+                  "models": {
+                    "e9fe6d4c-76f1-4ca7-9038-54593ba1b7b4": {
+                      "id": "e9fe6d4c-76f1-4ca7-9038-54593ba1b7b4",
+                      "type": "default",
+                      "source": "ff04f8c3-bdf7-420d-94e8-f1b1244d09e3",
+                      "sourcePort": "85b1108a-f6c9-434f-a559-e8037ad12c68",
+                      "target": "d93040d9-32e8-4fdf-b4f5-b4cbfdd0919e",
+                      "targetPort": "c728114f-2969-445b-bba4-e77d2088bfe3",
+                      "points": [
+                        {
+                          "id": "593dc353-e08a-4e56-9c6d-7f4ae1baa8ae",
+                          "type": "point",
+                          "x": 0,
+                          "y": 0
+                        }
+                      ]
+                    },
+                    "e0ddd23f-2057-4fe3-97bf-90420c10e6f0": {
+                      "id": "e0ddd23f-2057-4fe3-97bf-90420c10e6f0",
+                      "type": "default",
+                      "source": "d93040d9-32e8-4fdf-b4f5-b4cbfdd0919e",
+                      "sourcePort": "b66d2022-207e-4313-a6b5-0b08f707bd4b",
+                      "target": "5b01ef4b-5144-4b67-99cf-f91e4a9f794b",
+                      "targetPort": "0650938c-0421-421a-b098-cbfe199c909e",
+                      "points": [
+                        {
+                          "id": "fa93e4dc-d1e7-4665-9d37-8574b7187dee",
+                          "type": "point",
+                          "x": 0,
+                          "y": 0
+                        }
+                      ]
+                    },
+                    "4a44abf3-b09b-4a37-914d-0fc1ed2df4bd": {
+                      "id": "4a44abf3-b09b-4a37-914d-0fc1ed2df4bd",
+                      "type": "default",
+                      "source": "c27ec1d4-70d9-483a-9057-8923a30eb97f",
+                      "sourcePort": "958ea967-d1a7-4c7e-945e-b561b71d2e8f",
+                      "target": "d93040d9-32e8-4fdf-b4f5-b4cbfdd0919e",
+                      "targetPort": "14d0ceeb-614c-4838-b3c4-c0c9428bf1f7",
+                      "points": [
+                        {
+                          "id": "84cde44e-1dc9-4adf-91b4-14432a2391ac",
+                          "type": "point",
+                          "x": 0,
+                          "y": 0
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "id": "780db5a7-a729-4eae-8191-44453625f490",
+                  "type": "diagram-nodes",
+                  "isSvg": false,
+                  "transformed": true,
+                  "models": {
+                    "ff04f8c3-bdf7-420d-94e8-f1b1244d09e3": {
+                      "id": "ff04f8c3-bdf7-420d-94e8-f1b1244d09e3",
+                      "type": "basic.input",
+                      "x": 200,
+                      "y": 300,
+                      "ports": [
+                        {
+                          "id": "85b1108a-f6c9-434f-a559-e8037ad12c68",
+                          "type": "port.output",
+                          "x": 280,
+                          "y": 320,
+                          "name": "out",
+                          "label": "joint_states",
+                          "links": []
+                        }
+                      ],
+                      "data": {
+                        "name": "joint_states"
+                      }
+                    },
+                    "d93040d9-32e8-4fdf-b4f5-b4cbfdd0919e": {
+                      "id": "d93040d9-32e8-4fdf-b4f5-b4cbfdd0919e",
+                      "type": "basic.code",
+                      "x": 500,
+                      "y": 200,
+                      "ports": [
+                        {
+                          "id": "c728114f-2969-445b-bba4-e77d2088bfe3",
+                          "type": "port.input",
+                          "name": "joint_states",
+                          "label": "joint_states",
+                          "in": true,
+                          "x": 500,
+                          "y": 350
+                        },
+                        {
+                          "id": "b66d2022-207e-4313-a6b5-0b08f707bd4b",
+                          "type": "port.output",
+                          "name": "tf",
+                          "label": "tf",
+                          "in": false,
+                          "x": 900,
+                          "y": 350
+                        },
+                        {
+                          "id": "14d0ceeb-614c-4838-b3c4-c0c9428bf1f7",
+                          "type": "port.parameter",
+                          "name": "robot_description",
+                          "label": "robot_description",
+                          "in": true,
+                          "x": 600,
+                          "y": 280
+                        }
+                      ],
+                      "data": {
+                        "code": "import rclpy\nfrom rclpy.node import Node\nfrom sensor_msgs.msg import JointState\nfrom tf2_ros import TransformBroadcaster\nfrom tf2_ros import TransformStamped\nfrom math import sin, cos\n\nclass RobotStatePublisher(Node):\n    def __init__(self):\n        super().__init__('robot_state_publisher')\n        self.subscription = self.create_subscription(JointState, 'joint_states', self.joint_states_callback, 10)\n        self.broadcaster = TransformBroadcaster(self)\n        self.declare_parameter('robot_description', '')\n        self.robot_description = self.get_parameter('robot_description').get_parameter_value().string_value\n    \n    def joint_states_callback(self, msg):\n        transforms = []\n        for i, joint_name in enumerate(msg.name):\n            transform = TransformStamped()\n            transform.header.stamp = self.get_clock().now().to_msg()\n            transform.header.frame_id = f'link{i}'\n            transform.child_frame_id = f'link{i+1}'\n            transform.transform.translation.x = 1.0\n            transform.transform.translation.y = 0.0\n            transform.transform.translation.z = 0.0\n            transform.transform.rotation.x = 0.0\n            transform.transform.rotation.y = 0.0\n            transform.transform.rotation.z = sin(msg.position[i] / 2.0)\n            transform.transform.rotation.w = cos(msg.position[i] / 2.0)\n            transforms.append(transform)\n        self.broadcaster.sendTransform(transforms)\n\ndef main(args=None):\n    rclpy.init(args=args)\n    node = RobotStatePublisher()\n    rclpy.spin(node)\n    node.destroy_node()\n    rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()",
+                        "params": [
+                          {
+                            "name": "robot_description"
+                          }
+                        ],
+                        "ports": {
+                          "in": [
+                            {
+                              "name": "joint_states"
+                            }
+                          ],
+                          "out": [
+                            {
+                              "name": "tf"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "5b01ef4b-5144-4b67-99cf-f91e4a9f794b": {
+                      "id": "5b01ef4b-5144-4b67-99cf-f91e4a9f794b",
+                      "type": "basic.output",
+                      "x": 900,
+                      "y": 300,
+                      "ports": [
+                        {
+                          "id": "0650938c-0421-421a-b098-cbfe199c909e",
+                          "type": "port.input",
+                          "x": 900,
+                          "y": 320,
+                          "name": "in",
+                          "label": "tf",
+                          "links": []
+                        }
+                      ],
+                      "data": {
+                        "name": "tf"
+                      }
+                    },
+                    "c27ec1d4-70d9-483a-9057-8923a30eb97f": {
+                      "id": "c27ec1d4-70d9-483a-9057-8923a30eb97f",
+                      "type": "basic.constant",
+                      "x": 500,
+                      "y": 100,
+                      "ports": [
+                        {
+                          "id": "958ea967-d1a7-4c7e-945e-b561b71d2e8f",
+                          "type": "port.output",
+                          "name": "out",
+                          "label": "robot_description",
+                          "links": []
+                        }
+                      ],
+                      "data": {
+                        "name": "robot_description",
+                        "value": "10",
+                        "local": true
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "info": {
+              "name": "Robot State Publisher",
+              "description": "Publishes the robot state (TF transformations) based on joint states.",
+              "version": "1.0.0"
+            },
+            "design": {
+              "board": "Python3-Noetic",
+              "graph": {
+                "blocks": [
+                  {
+                    "id": "ff04f8c3-bdf7-420d-94e8-f1b1244d09e3",
+                    "type": "basic.input",
+                    "data": {
+                      "name": "joint_states"
+                    }
+                  },
+                  {
+                    "id": "d93040d9-32e8-4fdf-b4f5-b4cbfdd0919e",
+                    "type": "basic.code",
+                    "data": {
+                      "code": "import rclpy\nfrom rclpy.node import Node\nfrom sensor_msgs.msg import JointState\nfrom tf2_ros import TransformBroadcaster\nfrom tf2_ros import TransformStamped\nfrom math import sin, cos\n\nclass RobotStatePublisher(Node):\n    def __init__(self):\n        super().__init__('robot_state_publisher')\n        self.subscription = self.create_subscription(JointState, 'joint_states', self.joint_states_callback, 10)\n        self.broadcaster = TransformBroadcaster(self)\n        self.declare_parameter('robot_description', '')\n        self.robot_description = self.get_parameter('robot_description').get_parameter_value().string_value\n    \n    def joint_states_callback(self, msg):\n        transforms = []\n        for i, joint_name in enumerate(msg.name):\n            transform = TransformStamped()\n            transform.header.stamp = self.get_clock().now().to_msg()\n            transform.header.frame_id = f'link{i}'\n            transform.child_frame_id = f'link{i+1}'\n            transform.transform.translation.x = 1.0\n            transform.transform.translation.y = 0.0\n            transform.transform.translation.z = 0.0\n            transform.transform.rotation.x = 0.0\n            transform.transform.rotation.y = 0.0\n            transform.transform.rotation.z = sin(msg.position[i] / 2.0)\n            transform.transform.rotation.w = cos(msg.position[i] / 2.0)\n            transforms.append(transform)\n        self.broadcaster.sendTransform(transforms)\n\ndef main(args=None):\n    rclpy.init(args=args)\n    node = RobotStatePublisher()\n    rclpy.spin(node)\n    node.destroy_node()\n    rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()",
+                      "params": [
+                        {
+                          "name": "robot_description"
+                        }
+                      ],
+                      "ports": {
+                        "in": [
+                          {
+                            "name": "joint_states"
+                          }
+                        ],
+                        "out": [
+                          {
+                            "name": "tf"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "id": "5b01ef4b-5144-4b67-99cf-f91e4a9f794b",
+                    "type": "basic.output",
+                    "data": {
+                      "name": "tf"
+                    }
+                  },
+                  {
+                    "id": "c27ec1d4-70d9-483a-9057-8923a30eb97f",
+                    "type": "basic.constant",
+                    "data": {
+                      "name": "robot_description",
+                      "value": "10",
+                      "local": true
+                    }
+                  }
+                ],
+                "wires": []
+              }
+            }
+          },
+          "710c8b46-3d64-43d1-8024-cf421ee49450": {
+            "id": "710c8b46-3d64-43d1-8024-cf421ee49450",
+            "type": "block.package",
+            "selected": false,
+            "x": 1200,
+            "y": 150,
+            "ports": [
+              {
+                "id": "eef9ec6f-aeb0-4aad-ad0b-af5e5cc8c525",
+                "type": "port.input",
+                "x": 1201,
+                "y": 166,
+                "name": "ee1c45f9-736d-4477-905c-3ceeb74e5baf",
+                "alignment": "left",
+                "parentNode": "710c8b46-3d64-43d1-8024-cf421ee49450",
+                "links": [
+                  "2fc8eec3-d2c6-4c03-8fa5-c4d74af521b2"
+                ],
+                "in": true,
+                "label": "target_pose",
+                "hideLabel": false
+              },
+              {
+                "id": "97563cc2-0215-4432-859b-1116d561d0d2",
+                "type": "port.output",
+                "x": 1313,
+                "y": 191,
+                "name": "d3694af5-f656-430d-ada4-59ff3059507c",
+                "alignment": "right",
+                "parentNode": "710c8b46-3d64-43d1-8024-cf421ee49450",
+                "links": [
+                  "add7cb47-18bb-4c5e-9626-06d739f60212"
+                ],
+                "in": false,
+                "label": "joint_angles",
+                "hideLabel": false
+              },
+              {
+                "id": "75cf4266-1d69-4b01-8923-2836402acbe6",
+                "type": "port.parameter",
+                "x": 1250,
+                "y": 120,
+                "name": "9eb56f50-2dfd-4408-9c68-a888adcdebc2",
+                "alignment": "top",
+                "parentNode": "710c8b46-3d64-43d1-8024-cf421ee49450",
+                "links": [],
+                "in": true,
+                "label": "link_lengths",
+                "hideLabel": false
+              },
+              {
+                "id": "e444c49b-5392-46c5-b1c8-22d2bd08c6eb",
+                "type": "port.parameter",
+                "x": 1330,
+                "y": 120,
+                "name": "22947d86-f7f1-4ff2-9529-c1d81f939d59",
+                "alignment": "top",
+                "parentNode": "710c8b46-3d64-43d1-8024-cf421ee49450",
+                "links": [],
+                "in": true,
+                "label": "tolerance",
+                "hideLabel": false
+              }
+            ],
+            "data": {},
+            "model": {
+              "id": "f4d189d2-0586-4a3c-a570-00a2e7767fc6",
+              "layers": [
+                {
+                  "id": "c0e667cd-c4ec-498e-8f1b-b9a71c9ba7ea",
+                  "type": "diagram-links",
+                  "isSvg": true,
+                  "transformed": true,
+                  "models": {
+                    "9fb39784-b725-404c-8d39-183addb2b1e2": {
+                      "id": "9fb39784-b725-404c-8d39-183addb2b1e2",
+                      "type": "default",
+                      "source": "305611cd-349a-4e59-b15e-ecf459b391ab",
+                      "sourcePort": "77f8fd8e-646b-434d-9075-8ccb7b5703bc",
+                      "target": "6a75d809-2d2d-436f-8c30-13d8075daf1b",
+                      "targetPort": "d2da9a57-5f72-4b6c-b71c-16e8086e4d33",
+                      "points": [
+                        {
+                          "id": "ba37d73f-d177-4ee6-9be3-b98938405fca",
+                          "type": "point",
+                          "x": 0,
+                          "y": 0
+                        }
+                      ]
+                    },
+                    "e34c8fd6-2cd0-47a3-bafb-a9d2d60c3dc9": {
+                      "id": "e34c8fd6-2cd0-47a3-bafb-a9d2d60c3dc9",
+                      "type": "default",
+                      "source": "6a75d809-2d2d-436f-8c30-13d8075daf1b",
+                      "sourcePort": "0c92f02e-8db7-422f-a174-fcc8bf5cd060",
+                      "target": "f87df67e-0d46-4e6f-906c-e58944b9a3bb",
+                      "targetPort": "a442ad51-b008-4b8a-af96-a8946172c6da",
+                      "points": [
+                        {
+                          "id": "46b58556-b5fe-4059-9233-ba129144772d",
+                          "type": "point",
+                          "x": 0,
+                          "y": 0
+                        }
+                      ]
+                    },
+                    "c54adf49-540c-4572-824a-de579256eb84": {
+                      "id": "c54adf49-540c-4572-824a-de579256eb84",
+                      "type": "default",
+                      "source": "05a3fb19-b9bc-4ab5-b698-982387e8a34f",
+                      "sourcePort": "58513dd1-0211-4509-b7aa-72f19e6ac631",
+                      "target": "6a75d809-2d2d-436f-8c30-13d8075daf1b",
+                      "targetPort": "29c9f175-101e-424b-92fe-623c35784e51",
+                      "points": [
+                        {
+                          "id": "581c88d7-637c-42b4-9280-7ca5228e9558",
+                          "type": "point",
+                          "x": 0,
+                          "y": 0
+                        }
+                      ]
+                    },
+                    "7a4b548a-cb81-4c10-b504-018a128176b6": {
+                      "id": "7a4b548a-cb81-4c10-b504-018a128176b6",
+                      "type": "default",
+                      "source": "c6ed8fb0-9de5-4463-9fb3-754af09c68d9",
+                      "sourcePort": "b0e53858-6f6f-4dd7-9ff3-94f2d70d6348",
+                      "target": "6a75d809-2d2d-436f-8c30-13d8075daf1b",
+                      "targetPort": "835edc37-e993-419f-a7fd-2d8a0d473f7e",
+                      "points": [
+                        {
+                          "id": "a87bd01a-7f6e-4401-9bcc-4a7eb1bade1a",
+                          "type": "point",
+                          "x": 0,
+                          "y": 0
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "id": "0b37fa11-7079-45f0-b30b-60011c26279c",
+                  "type": "diagram-nodes",
+                  "isSvg": false,
+                  "transformed": true,
+                  "models": {
+                    "305611cd-349a-4e59-b15e-ecf459b391ab": {
+                      "id": "305611cd-349a-4e59-b15e-ecf459b391ab",
+                      "type": "basic.input",
+                      "x": 200,
+                      "y": 300,
+                      "ports": [
+                        {
+                          "id": "77f8fd8e-646b-434d-9075-8ccb7b5703bc",
+                          "type": "port.output",
+                          "x": 280,
+                          "y": 320,
+                          "name": "out",
+                          "label": "target_pose",
+                          "links": []
+                        }
+                      ],
+                      "data": {
+                        "name": "target_pose"
+                      }
+                    },
+                    "6a75d809-2d2d-436f-8c30-13d8075daf1b": {
+                      "id": "6a75d809-2d2d-436f-8c30-13d8075daf1b",
+                      "type": "basic.code",
+                      "x": 500,
+                      "y": 200,
+                      "ports": [
+                        {
+                          "id": "d2da9a57-5f72-4b6c-b71c-16e8086e4d33",
+                          "type": "port.input",
+                          "name": "target_pose",
+                          "label": "target_pose",
+                          "in": true,
+                          "x": 500,
+                          "y": 350
+                        },
+                        {
+                          "id": "0c92f02e-8db7-422f-a174-fcc8bf5cd060",
+                          "type": "port.output",
+                          "name": "joint_angles",
+                          "label": "joint_angles",
+                          "in": false,
+                          "x": 900,
+                          "y": 350
+                        },
+                        {
+                          "id": "29c9f175-101e-424b-92fe-623c35784e51",
+                          "type": "port.parameter",
+                          "name": "link_lengths",
+                          "label": "link_lengths",
+                          "in": true,
+                          "x": 600,
+                          "y": 280
+                        },
+                        {
+                          "id": "835edc37-e993-419f-a7fd-2d8a0d473f7e",
+                          "type": "port.parameter",
+                          "name": "tolerance",
+                          "label": "tolerance",
+                          "in": true,
+                          "x": 700,
+                          "y": 280
+                        }
+                      ],
+                      "data": {
+                        "code": "import rclpy\nfrom rclpy.node import Node\nfrom geometry_msgs.msg import Pose\nfrom sensor_msgs.msg import JointState\nfrom math import atan2, acos, sqrt\n\nclass InverseKinematicsSolver(Node):\n    def __init__(self):\n        super().__init__('inverse_kinematics_solver')\n        self.subscription = self.create_subscription(Pose, 'target_pose', self.target_pose_callback, 10)\n        self.publisher = self.create_publisher(JointState, 'joint_angles', 10)\n        self.declare_parameter('link_lengths', [1.0, 1.0, 1.0])\n        self.declare_parameter('tolerance', 0.01)\n        self.link_lengths = self.get_parameter('link_lengths').get_parameter_value().double_array_value\n        self.tolerance = self.get_parameter('tolerance').get_parameter_value().double_value\n    \n    def target_pose_callback(self, msg):\n        x, y, z = msg.position.x, msg.position.y, msg.position.z\n        l1, l2, l3 = self.link_lengths\n        \n        # Simplified IK for RRR arm (planar case)\n        r = sqrt(x**2 + y**2)\n        theta1 = atan2(y, x)\n        \n        # Check if target is reachable\n        if r > (l1 + l2 + l3) or r < abs(l1 - l2 - l3):\n            self.get_logger().warn('Target out of reach')\n            return\n        \n        # Calculate theta2 and theta3\n        cos_theta3 = (r**2 - l1**2 - l2**2) / (2 * l1 * l2)\n        theta3 = acos(cos_theta3)\n        theta2 = atan2(z, r) - atan2(l2 * sin(theta3), l1 + l2 * cos(theta3))\n        \n        joint_angles = JointState()\n        joint_angles.name = ['joint1', 'joint2', 'joint3']\n        joint_angles.position = [theta1, theta2, theta3]\n        self.publisher.publish(joint_angles)\n\ndef main(args=None):\n    rclpy.init(args=args)\n    node = InverseKinematicsSolver()\n    rclpy.spin(node)\n    node.destroy_node()\n    rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()",
+                        "params": [
+                          {
+                            "name": "link_lengths"
+                          },
+                          {
+                            "name": "tolerance"
+                          }
+                        ],
+                        "ports": {
+                          "in": [
+                            {
+                              "name": "target_pose"
+                            }
+                          ],
+                          "out": [
+                            {
+                              "name": "joint_angles"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "f87df67e-0d46-4e6f-906c-e58944b9a3bb": {
+                      "id": "f87df67e-0d46-4e6f-906c-e58944b9a3bb",
+                      "type": "basic.output",
+                      "x": 900,
+                      "y": 300,
+                      "ports": [
+                        {
+                          "id": "a442ad51-b008-4b8a-af96-a8946172c6da",
+                          "type": "port.input",
+                          "x": 900,
+                          "y": 320,
+                          "name": "in",
+                          "label": "joint_angles",
+                          "links": []
+                        }
+                      ],
+                      "data": {
+                        "name": "joint_angles"
+                      }
+                    },
+                    "05a3fb19-b9bc-4ab5-b698-982387e8a34f": {
+                      "id": "05a3fb19-b9bc-4ab5-b698-982387e8a34f",
+                      "type": "basic.constant",
+                      "x": 500,
+                      "y": 100,
+                      "ports": [
+                        {
+                          "id": "58513dd1-0211-4509-b7aa-72f19e6ac631",
+                          "type": "port.output",
+                          "name": "out",
+                          "label": "link_lengths",
+                          "links": []
+                        }
+                      ],
+                      "data": {
+                        "name": "link_lengths",
+                        "value": "10",
+                        "local": true
+                      }
+                    },
+                    "c6ed8fb0-9de5-4463-9fb3-754af09c68d9": {
+                      "id": "c6ed8fb0-9de5-4463-9fb3-754af09c68d9",
+                      "type": "basic.constant",
+                      "x": 700,
+                      "y": 100,
+                      "ports": [
+                        {
+                          "id": "b0e53858-6f6f-4dd7-9ff3-94f2d70d6348",
+                          "type": "port.output",
+                          "name": "out",
+                          "label": "tolerance",
+                          "links": []
+                        }
+                      ],
+                      "data": {
+                        "name": "tolerance",
+                        "value": "10",
+                        "local": true
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "info": {
+              "name": "Inverse Kinematics Solver",
+              "description": "Solves inverse kinematics for the RRR robot arm to reach a target pose.",
+              "version": "1.0.0"
+            },
+            "design": {
+              "board": "Python3-Noetic",
+              "graph": {
+                "blocks": [
+                  {
+                    "id": "305611cd-349a-4e59-b15e-ecf459b391ab",
+                    "type": "basic.input",
+                    "data": {
+                      "name": "target_pose"
+                    }
+                  },
+                  {
+                    "id": "6a75d809-2d2d-436f-8c30-13d8075daf1b",
+                    "type": "basic.code",
+                    "data": {
+                      "code": "import rclpy\nfrom rclpy.node import Node\nfrom geometry_msgs.msg import Pose\nfrom sensor_msgs.msg import JointState\nfrom math import atan2, acos, sqrt\n\nclass InverseKinematicsSolver(Node):\n    def __init__(self):\n        super().__init__('inverse_kinematics_solver')\n        self.subscription = self.create_subscription(Pose, 'target_pose', self.target_pose_callback, 10)\n        self.publisher = self.create_publisher(JointState, 'joint_angles', 10)\n        self.declare_parameter('link_lengths', [1.0, 1.0, 1.0])\n        self.declare_parameter('tolerance', 0.01)\n        self.link_lengths = self.get_parameter('link_lengths').get_parameter_value().double_array_value\n        self.tolerance = self.get_parameter('tolerance').get_parameter_value().double_value\n    \n    def target_pose_callback(self, msg):\n        x, y, z = msg.position.x, msg.position.y, msg.position.z\n        l1, l2, l3 = self.link_lengths\n        \n        # Simplified IK for RRR arm (planar case)\n        r = sqrt(x**2 + y**2)\n        theta1 = atan2(y, x)\n        \n        # Check if target is reachable\n        if r > (l1 + l2 + l3) or r < abs(l1 - l2 - l3):\n            self.get_logger().warn('Target out of reach')\n            return\n        \n        # Calculate theta2 and theta3\n        cos_theta3 = (r**2 - l1**2 - l2**2) / (2 * l1 * l2)\n        theta3 = acos(cos_theta3)\n        theta2 = atan2(z, r) - atan2(l2 * sin(theta3), l1 + l2 * cos(theta3))\n        \n        joint_angles = JointState()\n        joint_angles.name = ['joint1', 'joint2', 'joint3']\n        joint_angles.position = [theta1, theta2, theta3]\n        self.publisher.publish(joint_angles)\n\ndef main(args=None):\n    rclpy.init(args=args)\n    node = InverseKinematicsSolver()\n    rclpy.spin(node)\n    node.destroy_node()\n    rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()",
+                      "params": [
+                        {
+                          "name": "link_lengths"
+                        },
+                        {
+                          "name": "tolerance"
+                        }
+                      ],
+                      "ports": {
+                        "in": [
+                          {
+                            "name": "target_pose"
+                          }
+                        ],
+                        "out": [
+                          {
+                            "name": "joint_angles"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "id": "f87df67e-0d46-4e6f-906c-e58944b9a3bb",
+                    "type": "basic.output",
+                    "data": {
+                      "name": "joint_angles"
+                    }
+                  },
+                  {
+                    "id": "05a3fb19-b9bc-4ab5-b698-982387e8a34f",
+                    "type": "basic.constant",
+                    "data": {
+                      "name": "link_lengths",
+                      "value": "10",
+                      "local": true
+                    }
+                  },
+                  {
+                    "id": "c6ed8fb0-9de5-4463-9fb3-754af09c68d9",
+                    "type": "basic.constant",
+                    "data": {
+                      "name": "tolerance",
+                      "value": "10",
+                      "local": true
+                    }
+                  }
+                ],
+                "wires": []
+              }
+            }
+          },
+          "2d22c099-d19f-4caf-a0e2-b74c79603978": {
+            "id": "2d22c099-d19f-4caf-a0e2-b74c79603978",
+            "type": "block.package",
+            "selected": false,
+            "x": 1600,
+            "y": 150,
+            "ports": [
+              {
+                "id": "578e0809-6649-4652-81f0-50921fe4eb29",
+                "type": "port.input",
+                "x": 1601,
+                "y": 166,
+                "name": "3739e2ef-237f-402e-b573-ab0aa7d90656",
+                "alignment": "left",
+                "parentNode": "2d22c099-d19f-4caf-a0e2-b74c79603978",
+                "links": [
+                  "add7cb47-18bb-4c5e-9626-06d739f60212"
+                ],
+                "in": true,
+                "label": "joint_angles",
+                "hideLabel": false
+              },
+              {
+                "id": "0b8c3892-8f6b-44ea-9046-655d64b85c7e",
+                "type": "port.output",
+                "x": 1713,
+                "y": 191,
+                "name": "f4635e40-d081-47a9-9d18-9a57ed4ce2b0",
+                "alignment": "right",
+                "parentNode": "2d22c099-d19f-4caf-a0e2-b74c79603978",
+                "links": [
+                  "942b8d24-f538-40b5-aa1f-e694ed2c321d"
+                ],
+                "in": false,
+                "label": "trajectory",
+                "hideLabel": false
+              },
+              {
+                "id": "7a49976b-ca4c-48fa-bc5a-3acc976aed89",
+                "type": "port.parameter",
+                "x": 1650,
+                "y": 120,
+                "name": "32acdef6-69da-4a19-bfff-631a8f4b31b8",
+                "alignment": "top",
+                "parentNode": "2d22c099-d19f-4caf-a0e2-b74c79603978",
+                "links": [],
+                "in": true,
+                "label": "max_velocity",
+                "hideLabel": false
+              },
+              {
+                "id": "90082e63-3ee2-4da9-a494-1a8e6262cc4a",
+                "type": "port.parameter",
+                "x": 1730,
+                "y": 120,
+                "name": "4928c3fd-9406-41d0-91c9-996593a67aa8",
+                "alignment": "top",
+                "parentNode": "2d22c099-d19f-4caf-a0e2-b74c79603978",
+                "links": [],
+                "in": true,
+                "label": "max_acceleration",
+                "hideLabel": false
+              }
+            ],
+            "data": {},
+            "model": {
+              "id": "70bc4d81-8d0f-494e-a28b-6235dd07e7ea",
+              "layers": [
+                {
+                  "id": "10a5a9a8-93a9-4408-a3e8-41e762b575f7",
+                  "type": "diagram-links",
+                  "isSvg": true,
+                  "transformed": true,
+                  "models": {
+                    "f14d94ad-bcf1-4ef9-a05d-227c2651f0f8": {
+                      "id": "f14d94ad-bcf1-4ef9-a05d-227c2651f0f8",
+                      "type": "default",
+                      "source": "3e5ae50a-099b-4f31-89cc-ebfc049e63de",
+                      "sourcePort": "411512bb-e76e-41b9-a5a0-bf88b7f85c45",
+                      "target": "f1ff2fb5-5d08-46da-9640-05310b82b7de",
+                      "targetPort": "a9c3c308-8487-452e-baaa-43bd642bb4d4",
+                      "points": [
+                        {
+                          "id": "123fff25-8301-45fe-9ec0-2fe846d488c3",
+                          "type": "point",
+                          "x": 0,
+                          "y": 0
+                        }
+                      ]
+                    },
+                    "ec2176d9-dc6a-433a-8e38-6b452aaf39b3": {
+                      "id": "ec2176d9-dc6a-433a-8e38-6b452aaf39b3",
+                      "type": "default",
+                      "source": "f1ff2fb5-5d08-46da-9640-05310b82b7de",
+                      "sourcePort": "d24e3828-4cd8-4873-8801-88c86c21a4f0",
+                      "target": "6c697964-f164-4413-8ff2-68a29f97db9c",
+                      "targetPort": "ce36283d-563c-4dbc-a11f-1da3408c7fab",
+                      "points": [
+                        {
+                          "id": "1eeda677-9e40-442a-b78f-784d19e505e6",
+                          "type": "point",
+                          "x": 0,
+                          "y": 0
+                        }
+                      ]
+                    },
+                    "66d2d97d-3009-4a5f-8eb1-d686cd206f01": {
+                      "id": "66d2d97d-3009-4a5f-8eb1-d686cd206f01",
+                      "type": "default",
+                      "source": "cb5db5f1-0cb8-4710-ba90-0b8df9c680ea",
+                      "sourcePort": "e977dfe5-67f3-4c38-8281-980b22f660af",
+                      "target": "f1ff2fb5-5d08-46da-9640-05310b82b7de",
+                      "targetPort": "a42afd14-0d3d-4c56-badb-d00d00d253ab",
+                      "points": [
+                        {
+                          "id": "9ef400bd-2ae0-4c71-a897-13206bd6689b",
+                          "type": "point",
+                          "x": 0,
+                          "y": 0
+                        }
+                      ]
+                    },
+                    "86643d3e-8ec4-4273-9465-bad71b7212ef": {
+                      "id": "86643d3e-8ec4-4273-9465-bad71b7212ef",
+                      "type": "default",
+                      "source": "7b35a2db-326a-44a5-90ed-2f637807a4e4",
+                      "sourcePort": "b9583662-de27-42da-8d46-8c6f264633ce",
+                      "target": "f1ff2fb5-5d08-46da-9640-05310b82b7de",
+                      "targetPort": "3204eb1d-990c-4fc6-88db-c7da029b23a0",
+                      "points": [
+                        {
+                          "id": "f50b9259-798c-4933-b579-181b53b66ff7",
+                          "type": "point",
+                          "x": 0,
+                          "y": 0
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "id": "3f5219ed-4454-4348-99fc-0353bc0a7be0",
+                  "type": "diagram-nodes",
+                  "isSvg": false,
+                  "transformed": true,
+                  "models": {
+                    "3e5ae50a-099b-4f31-89cc-ebfc049e63de": {
+                      "id": "3e5ae50a-099b-4f31-89cc-ebfc049e63de",
+                      "type": "basic.input",
+                      "x": 200,
+                      "y": 300,
+                      "ports": [
+                        {
+                          "id": "411512bb-e76e-41b9-a5a0-bf88b7f85c45",
+                          "type": "port.output",
+                          "x": 280,
+                          "y": 320,
+                          "name": "out",
+                          "label": "joint_angles",
+                          "links": []
+                        }
+                      ],
+                      "data": {
+                        "name": "joint_angles"
+                      }
+                    },
+                    "f1ff2fb5-5d08-46da-9640-05310b82b7de": {
+                      "id": "f1ff2fb5-5d08-46da-9640-05310b82b7de",
+                      "type": "basic.code",
+                      "x": 500,
+                      "y": 200,
+                      "ports": [
+                        {
+                          "id": "a9c3c308-8487-452e-baaa-43bd642bb4d4",
+                          "type": "port.input",
+                          "name": "joint_angles",
+                          "label": "joint_angles",
+                          "in": true,
+                          "x": 500,
+                          "y": 350
+                        },
+                        {
+                          "id": "d24e3828-4cd8-4873-8801-88c86c21a4f0",
+                          "type": "port.output",
+                          "name": "trajectory",
+                          "label": "trajectory",
+                          "in": false,
+                          "x": 900,
+                          "y": 350
+                        },
+                        {
+                          "id": "a42afd14-0d3d-4c56-badb-d00d00d253ab",
+                          "type": "port.parameter",
+                          "name": "max_velocity",
+                          "label": "max_velocity",
+                          "in": true,
+                          "x": 600,
+                          "y": 280
+                        },
+                        {
+                          "id": "3204eb1d-990c-4fc6-88db-c7da029b23a0",
+                          "type": "port.parameter",
+                          "name": "max_acceleration",
+                          "label": "max_acceleration",
+                          "in": true,
+                          "x": 700,
+                          "y": 280
+                        }
+                      ],
+                      "data": {
+                        "code": "import rclpy\nfrom rclpy.node import Node\nfrom sensor_msgs.msg import JointState\nfrom trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint\nfrom math import sin, cos, pi\n\nclass MotionPlanner(Node):\n    def __init__(self):\n        super().__init__('motion_planner')\n        self.subscription = self.create_subscription(JointState, 'joint_angles', self.joint_angles_callback, 10)\n        self.publisher = self.create_publisher(JointTrajectory, 'trajectory', 10)\n        self.declare_parameter('max_velocity', 1.0)\n        self.declare_parameter('max_acceleration', 0.5)\n        self.max_velocity = self.get_parameter('max_velocity').get_parameter_value().double_value\n        self.max_acceleration = self.get_parameter('max_acceleration').get_parameter_value().double_value\n    \n    def joint_angles_callback(self, msg):\n        trajectory = JointTrajectory()\n        trajectory.joint_names = msg.name\n        \n        # Create a simple smooth trajectory (e.g., quintic polynomial)\n        duration = 2.0\n        num_points = 10\n        for i in range(num_points):\n            point = JointTrajectoryPoint()\n            t = i / (num_points - 1) * duration\n            # Linear interpolation for simplicity (replace with smoother interpolation)\n            point.positions = [\n                msg.position[0] * t,\n                msg.position[1] * t,\n                msg.position[2] * t\n            ]\n            point.velocities = [self.max_velocity * 0.5 * t, self.max_velocity * 0.5 * t, self.max_velocity * 0.5 * t]\n            point.accelerations = [self.max_acceleration * 0.5, self.max_acceleration * 0.5, self.max_acceleration * 0.5]\n            point.time_from_start.sec = int(t)\n            point.time_from_start.nanosec = int((t - int(t)) * 1e9)\n            trajectory.points.append(point)\n        \n        self.publisher.publish(trajectory)\n\ndef main(args=None):\n    rclpy.init(args=args)\n    node = MotionPlanner()\n    rclpy.spin(node)\n    node.destroy_node()\n    rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()",
+                        "params": [
+                          {
+                            "name": "max_velocity"
+                          },
+                          {
+                            "name": "max_acceleration"
+                          }
+                        ],
+                        "ports": {
+                          "in": [
+                            {
+                              "name": "joint_angles"
+                            }
+                          ],
+                          "out": [
+                            {
+                              "name": "trajectory"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "6c697964-f164-4413-8ff2-68a29f97db9c": {
+                      "id": "6c697964-f164-4413-8ff2-68a29f97db9c",
+                      "type": "basic.output",
+                      "x": 900,
+                      "y": 300,
+                      "ports": [
+                        {
+                          "id": "ce36283d-563c-4dbc-a11f-1da3408c7fab",
+                          "type": "port.input",
+                          "x": 900,
+                          "y": 320,
+                          "name": "in",
+                          "label": "trajectory",
+                          "links": []
+                        }
+                      ],
+                      "data": {
+                        "name": "trajectory"
+                      }
+                    },
+                    "cb5db5f1-0cb8-4710-ba90-0b8df9c680ea": {
+                      "id": "cb5db5f1-0cb8-4710-ba90-0b8df9c680ea",
+                      "type": "basic.constant",
+                      "x": 500,
+                      "y": 100,
+                      "ports": [
+                        {
+                          "id": "e977dfe5-67f3-4c38-8281-980b22f660af",
+                          "type": "port.output",
+                          "name": "out",
+                          "label": "max_velocity",
+                          "links": []
+                        }
+                      ],
+                      "data": {
+                        "name": "max_velocity",
+                        "value": "10",
+                        "local": true
+                      }
+                    },
+                    "7b35a2db-326a-44a5-90ed-2f637807a4e4": {
+                      "id": "7b35a2db-326a-44a5-90ed-2f637807a4e4",
+                      "type": "basic.constant",
+                      "x": 700,
+                      "y": 100,
+                      "ports": [
+                        {
+                          "id": "b9583662-de27-42da-8d46-8c6f264633ce",
+                          "type": "port.output",
+                          "name": "out",
+                          "label": "max_acceleration",
+                          "links": []
+                        }
+                      ],
+                      "data": {
+                        "name": "max_acceleration",
+                        "value": "10",
+                        "local": true
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "info": {
+              "name": "Motion Planner",
+              "description": "Generates a smooth trajectory for the robot arm to follow.",
+              "version": "1.0.0"
+            },
+            "design": {
+              "board": "Python3-Noetic",
+              "graph": {
+                "blocks": [
+                  {
+                    "id": "3e5ae50a-099b-4f31-89cc-ebfc049e63de",
+                    "type": "basic.input",
+                    "data": {
+                      "name": "joint_angles"
+                    }
+                  },
+                  {
+                    "id": "f1ff2fb5-5d08-46da-9640-05310b82b7de",
+                    "type": "basic.code",
+                    "data": {
+                      "code": "import rclpy\nfrom rclpy.node import Node\nfrom sensor_msgs.msg import JointState\nfrom trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint\nfrom math import sin, cos, pi\n\nclass MotionPlanner(Node):\n    def __init__(self):\n        super().__init__('motion_planner')\n        self.subscription = self.create_subscription(JointState, 'joint_angles', self.joint_angles_callback, 10)\n        self.publisher = self.create_publisher(JointTrajectory, 'trajectory', 10)\n        self.declare_parameter('max_velocity', 1.0)\n        self.declare_parameter('max_acceleration', 0.5)\n        self.max_velocity = self.get_parameter('max_velocity').get_parameter_value().double_value\n        self.max_acceleration = self.get_parameter('max_acceleration').get_parameter_value().double_value\n    \n    def joint_angles_callback(self, msg):\n        trajectory = JointTrajectory()\n        trajectory.joint_names = msg.name\n        \n        # Create a simple smooth trajectory (e.g., quintic polynomial)\n        duration = 2.0\n        num_points = 10\n        for i in range(num_points):\n            point = JointTrajectoryPoint()\n            t = i / (num_points - 1) * duration\n            # Linear interpolation for simplicity (replace with smoother interpolation)\n            point.positions = [\n                msg.position[0] * t,\n                msg.position[1] * t,\n                msg.position[2] * t\n            ]\n            point.velocities = [self.max_velocity * 0.5 * t, self.max_velocity * 0.5 * t, self.max_velocity * 0.5 * t]\n            point.accelerations = [self.max_acceleration * 0.5, self.max_acceleration * 0.5, self.max_acceleration * 0.5]\n            point.time_from_start.sec = int(t)\n            point.time_from_start.nanosec = int((t - int(t)) * 1e9)\n            trajectory.points.append(point)\n        \n        self.publisher.publish(trajectory)\n\ndef main(args=None):\n    rclpy.init(args=args)\n    node = MotionPlanner()\n    rclpy.spin(node)\n    node.destroy_node()\n    rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()",
+                      "params": [
+                        {
+                          "name": "max_velocity"
+                        },
+                        {
+                          "name": "max_acceleration"
+                        }
+                      ],
+                      "ports": {
+                        "in": [
+                          {
+                            "name": "joint_angles"
+                          }
+                        ],
+                        "out": [
+                          {
+                            "name": "trajectory"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "id": "6c697964-f164-4413-8ff2-68a29f97db9c",
+                    "type": "basic.output",
+                    "data": {
+                      "name": "trajectory"
+                    }
+                  },
+                  {
+                    "id": "cb5db5f1-0cb8-4710-ba90-0b8df9c680ea",
+                    "type": "basic.constant",
+                    "data": {
+                      "name": "max_velocity",
+                      "value": "10",
+                      "local": true
+                    }
+                  },
+                  {
+                    "id": "7b35a2db-326a-44a5-90ed-2f637807a4e4",
+                    "type": "basic.constant",
+                    "data": {
+                      "name": "max_acceleration",
+                      "value": "10",
+                      "local": true
+                    }
+                  }
+                ],
+                "wires": []
+              }
+            }
+          },
+          "9f0a83cc-a208-406d-89fc-b5cde673b051": {
+            "id": "9f0a83cc-a208-406d-89fc-b5cde673b051",
+            "type": "block.package",
+            "selected": false,
+            "x": 2000,
+            "y": 150,
+            "ports": [
+              {
+                "id": "4b65dfe7-9dfd-406c-974a-88dfe602aaaf",
+                "type": "port.input",
+                "x": 2001,
+                "y": 166,
+                "name": "b6435aea-056b-4fd5-afe6-b1b3f39177f6",
+                "alignment": "left",
+                "parentNode": "9f0a83cc-a208-406d-89fc-b5cde673b051",
+                "links": [
+                  "942b8d24-f538-40b5-aa1f-e694ed2c321d"
+                ],
+                "in": true,
+                "label": "trajectory",
+                "hideLabel": false
+              },
+              {
+                "id": "c71cfa45-052c-49e7-aadd-ac21c1e24cdd",
+                "type": "port.output",
+                "x": 2113,
+                "y": 191,
+                "name": "35354d18-5bf9-44e1-8d78-9202dd6167fc",
+                "alignment": "right",
+                "parentNode": "9f0a83cc-a208-406d-89fc-b5cde673b051",
+                "links": [
+                  "b504b36a-e0e2-47ed-9842-eb86b1bef63f"
+                ],
+                "in": false,
+                "label": "joint_commands",
+                "hideLabel": false
+              },
+              {
+                "id": "3b95aac5-6cbb-42ee-a289-c59a29edcb96",
+                "type": "port.parameter",
+                "x": 2050,
+                "y": 120,
+                "name": "a7eeffef-282e-4125-a727-86d159bb8272",
+                "alignment": "top",
+                "parentNode": "9f0a83cc-a208-406d-89fc-b5cde673b051",
+                "links": [],
+                "in": true,
+                "label": "control_rate",
+                "hideLabel": false
+              }
+            ],
+            "data": {},
+            "model": {
+              "id": "48d2412c-e71d-4b55-b6b5-7826f3dd1fef",
+              "layers": [
+                {
+                  "id": "83075cb0-9417-40f9-9257-99c04c207e1f",
+                  "type": "diagram-links",
+                  "isSvg": true,
+                  "transformed": true,
+                  "models": {
+                    "82dde8a2-e314-41b1-aae4-be80cbea9a95": {
+                      "id": "82dde8a2-e314-41b1-aae4-be80cbea9a95",
+                      "type": "default",
+                      "source": "a37f8ae3-0f91-40dd-ad21-d3c08c1cb666",
+                      "sourcePort": "c1ec1041-5b7f-4d42-8ad1-1addf4933d90",
+                      "target": "126ec21b-10e3-4bca-9d95-1e92655e037e",
+                      "targetPort": "96c246ea-43a9-4f9e-b971-ad97d8384a28",
+                      "points": [
+                        {
+                          "id": "6d0f68b2-e677-488d-b087-b8863221123c",
+                          "type": "point",
+                          "x": 0,
+                          "y": 0
+                        }
+                      ]
+                    },
+                    "4e9fee4b-5237-4a00-b452-08c44e4503de": {
+                      "id": "4e9fee4b-5237-4a00-b452-08c44e4503de",
+                      "type": "default",
+                      "source": "126ec21b-10e3-4bca-9d95-1e92655e037e",
+                      "sourcePort": "c5fa1824-5b4f-44f4-a065-947d129b91a1",
+                      "target": "d1a7a3a1-ee2a-4349-9eae-eef0589fc8df",
+                      "targetPort": "be9ae948-06b6-4f62-b89a-013ba9a52f40",
+                      "points": [
+                        {
+                          "id": "d5359f42-aec4-48df-804a-a95ab24b270c",
+                          "type": "point",
+                          "x": 0,
+                          "y": 0
+                        }
+                      ]
+                    },
+                    "ef06a58f-4a30-4512-9cac-9a65d2f4daf8": {
+                      "id": "ef06a58f-4a30-4512-9cac-9a65d2f4daf8",
+                      "type": "default",
+                      "source": "c3353284-b3c8-45ce-930d-b5dc73217379",
+                      "sourcePort": "7aa302be-7707-458d-ae8a-06d2bcfefc90",
+                      "target": "126ec21b-10e3-4bca-9d95-1e92655e037e",
+                      "targetPort": "7851bab7-f05e-40a5-88a1-6649201b8e1b",
+                      "points": [
+                        {
+                          "id": "037259a3-109a-4897-8a50-6ad6f696f87c",
+                          "type": "point",
+                          "x": 0,
+                          "y": 0
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "id": "b7330a39-9e27-44e5-9ccf-abed508bdac1",
+                  "type": "diagram-nodes",
+                  "isSvg": false,
+                  "transformed": true,
+                  "models": {
+                    "a37f8ae3-0f91-40dd-ad21-d3c08c1cb666": {
+                      "id": "a37f8ae3-0f91-40dd-ad21-d3c08c1cb666",
+                      "type": "basic.input",
+                      "x": 200,
+                      "y": 300,
+                      "ports": [
+                        {
+                          "id": "c1ec1041-5b7f-4d42-8ad1-1addf4933d90",
+                          "type": "port.output",
+                          "x": 280,
+                          "y": 320,
+                          "name": "out",
+                          "label": "trajectory",
+                          "links": []
+                        }
+                      ],
+                      "data": {
+                        "name": "trajectory"
+                      }
+                    },
+                    "126ec21b-10e3-4bca-9d95-1e92655e037e": {
+                      "id": "126ec21b-10e3-4bca-9d95-1e92655e037e",
+                      "type": "basic.code",
+                      "x": 500,
+                      "y": 200,
+                      "ports": [
+                        {
+                          "id": "96c246ea-43a9-4f9e-b971-ad97d8384a28",
+                          "type": "port.input",
+                          "name": "trajectory",
+                          "label": "trajectory",
+                          "in": true,
+                          "x": 500,
+                          "y": 350
+                        },
+                        {
+                          "id": "c5fa1824-5b4f-44f4-a065-947d129b91a1",
+                          "type": "port.output",
+                          "name": "joint_commands",
+                          "label": "joint_commands",
+                          "in": false,
+                          "x": 900,
+                          "y": 350
+                        },
+                        {
+                          "id": "7851bab7-f05e-40a5-88a1-6649201b8e1b",
+                          "type": "port.parameter",
+                          "name": "control_rate",
+                          "label": "control_rate",
+                          "in": true,
+                          "x": 600,
+                          "y": 280
+                        }
+                      ],
+                      "data": {
+                        "code": "import rclpy\nfrom rclpy.node import Node\nfrom trajectory_msgs.msg import JointTrajectory\nfrom sensor_msgs.msg import JointState\n\nclass TrajectoryController(Node):\n    def __init__(self):\n        super().__init__('trajectory_controller')\n        self.subscription = self.create_subscription(JointTrajectory, 'trajectory', self.trajectory_callback, 10)\n        self.publisher = self.create_publisher(JointState, 'joint_commands', 10)\n        self.declare_parameter('control_rate', 50.0)\n        self.control_rate = self.get_parameter('control_rate').get_parameter_value().double_value\n        self.current_trajectory = None\n        self.start_time = None\n        self.timer = self.create_timer(1.0 / self.control_rate, self.control_loop)\n    \n    def trajectory_callback(self, msg):\n        self.current_trajectory = msg\n        self.start_time = self.get_clock().now()\n    \n    def control_loop(self):\n        if self.current_trajectory is None or self.start_time is None:\n            return\n        \n        current_time = self.get_clock().now()\n        elapsed_time = (current_time - self.start_time).nanoseconds / 1e9\n        \n        # Find the closest point in the trajectory\n        for i, point in enumerate(self.current_trajectory.points):\n            point_time = point.time_from_start.sec + point.time_from_start.nanosec / 1e9\n            if elapsed_time <= point_time:\n                joint_commands = JointState()\n                joint_commands.name = self.current_trajectory.joint_names\n                joint_commands.position = point.positions\n                self.publisher.publish(joint_commands)\n                break\n\ndef main(args=None):\n    rclpy.init(args=args)\n    node = TrajectoryController()\n    rclpy.spin(node)\n    node.destroy_node()\n    rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()",
+                        "params": [
+                          {
+                            "name": "control_rate"
+                          }
+                        ],
+                        "ports": {
+                          "in": [
+                            {
+                              "name": "trajectory"
+                            }
+                          ],
+                          "out": [
+                            {
+                              "name": "joint_commands"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "d1a7a3a1-ee2a-4349-9eae-eef0589fc8df": {
+                      "id": "d1a7a3a1-ee2a-4349-9eae-eef0589fc8df",
+                      "type": "basic.output",
+                      "x": 900,
+                      "y": 300,
+                      "ports": [
+                        {
+                          "id": "be9ae948-06b6-4f62-b89a-013ba9a52f40",
+                          "type": "port.input",
+                          "x": 900,
+                          "y": 320,
+                          "name": "in",
+                          "label": "joint_commands",
+                          "links": []
+                        }
+                      ],
+                      "data": {
+                        "name": "joint_commands"
+                      }
+                    },
+                    "c3353284-b3c8-45ce-930d-b5dc73217379": {
+                      "id": "c3353284-b3c8-45ce-930d-b5dc73217379",
+                      "type": "basic.constant",
+                      "x": 500,
+                      "y": 100,
+                      "ports": [
+                        {
+                          "id": "7aa302be-7707-458d-ae8a-06d2bcfefc90",
+                          "type": "port.output",
+                          "name": "out",
+                          "label": "control_rate",
+                          "links": []
+                        }
+                      ],
+                      "data": {
+                        "name": "control_rate",
+                        "value": "10",
+                        "local": true
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "info": {
+              "name": "Trajectory Controller",
+              "description": "Controls the robot arm to follow the generated trajectory.",
+              "version": "1.0.0"
+            },
+            "design": {
+              "board": "Python3-Noetic",
+              "graph": {
+                "blocks": [
+                  {
+                    "id": "a37f8ae3-0f91-40dd-ad21-d3c08c1cb666",
+                    "type": "basic.input",
+                    "data": {
+                      "name": "trajectory"
+                    }
+                  },
+                  {
+                    "id": "126ec21b-10e3-4bca-9d95-1e92655e037e",
+                    "type": "basic.code",
+                    "data": {
+                      "code": "import rclpy\nfrom rclpy.node import Node\nfrom trajectory_msgs.msg import JointTrajectory\nfrom sensor_msgs.msg import JointState\n\nclass TrajectoryController(Node):\n    def __init__(self):\n        super().__init__('trajectory_controller')\n        self.subscription = self.create_subscription(JointTrajectory, 'trajectory', self.trajectory_callback, 10)\n        self.publisher = self.create_publisher(JointState, 'joint_commands', 10)\n        self.declare_parameter('control_rate', 50.0)\n        self.control_rate = self.get_parameter('control_rate').get_parameter_value().double_value\n        self.current_trajectory = None\n        self.start_time = None\n        self.timer = self.create_timer(1.0 / self.control_rate, self.control_loop)\n    \n    def trajectory_callback(self, msg):\n        self.current_trajectory = msg\n        self.start_time = self.get_clock().now()\n    \n    def control_loop(self):\n        if self.current_trajectory is None or self.start_time is None:\n            return\n        \n        current_time = self.get_clock().now()\n        elapsed_time = (current_time - self.start_time).nanoseconds / 1e9\n        \n        # Find the closest point in the trajectory\n        for i, point in enumerate(self.current_trajectory.points):\n            point_time = point.time_from_start.sec + point.time_from_start.nanosec / 1e9\n            if elapsed_time <= point_time:\n                joint_commands = JointState()\n                joint_commands.name = self.current_trajectory.joint_names\n                joint_commands.position = point.positions\n                self.publisher.publish(joint_commands)\n                break\n\ndef main(args=None):\n    rclpy.init(args=args)\n    node = TrajectoryController()\n    rclpy.spin(node)\n    node.destroy_node()\n    rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()",
+                      "params": [
+                        {
+                          "name": "control_rate"
+                        }
+                      ],
+                      "ports": {
+                        "in": [
+                          {
+                            "name": "trajectory"
+                          }
+                        ],
+                        "out": [
+                          {
+                            "name": "joint_commands"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "id": "d1a7a3a1-ee2a-4349-9eae-eef0589fc8df",
+                    "type": "basic.output",
+                    "data": {
+                      "name": "joint_commands"
+                    }
+                  },
+                  {
+                    "id": "c3353284-b3c8-45ce-930d-b5dc73217379",
+                    "type": "basic.constant",
+                    "data": {
+                      "name": "control_rate",
+                      "value": "10",
+                      "local": true
+                    }
+                  }
+                ],
+                "wires": []
+              }
+            }
+          },
+          "088ac4a9-8be6-463b-b195-a139364e29cb": {
+            "id": "088ac4a9-8be6-463b-b195-a139364e29cb",
+            "type": "block.package",
+            "selected": false,
+            "x": 2400,
+            "y": 150,
+            "ports": [
+              {
+                "id": "7ef49582-078d-4337-bc52-b56ccfbf16ab",
+                "type": "port.output",
+                "x": 2513,
+                "y": 166,
+                "name": "068c2024-bfc9-4bab-801a-ae3fd3b59b65",
+                "alignment": "right",
+                "parentNode": "088ac4a9-8be6-463b-b195-a139364e29cb",
+                "links": [
+                  "83e20274-1201-466a-a300-2a89b9a4272b"
+                ],
+                "in": false,
+                "label": "target_pose",
+                "hideLabel": false
+              },
+              {
+                "id": "7f963d58-9b91-4992-9197-bda9c6e07d6e",
+                "type": "port.parameter",
+                "x": 2450,
+                "y": 120,
+                "name": "b93719dd-01c8-4948-9079-a330cd079d12",
+                "alignment": "top",
+                "parentNode": "088ac4a9-8be6-463b-b195-a139364e29cb",
+                "links": [
+                  "b504b36a-e0e2-47ed-9842-eb86b1bef63f"
+                ],
+                "in": true,
+                "label": "pose_update_rate",
+                "hideLabel": false
+              }
+            ],
+            "data": {},
+            "model": {
+              "id": "a5dace0c-7989-426c-9b32-c8775ef030c7",
+              "layers": [
+                {
+                  "id": "7f220907-cebc-4b54-92e9-97e60a03d32f",
+                  "type": "diagram-links",
+                  "isSvg": true,
+                  "transformed": true,
+                  "models": {
+                    "366e4a62-fc09-481b-81a7-f9c1c9f8567e": {
+                      "id": "366e4a62-fc09-481b-81a7-f9c1c9f8567e",
+                      "type": "default",
+                      "source": "367e00ff-6fde-459d-8fa1-7f67688576a3",
+                      "sourcePort": "c564443a-0473-4023-af20-bca127059e32",
+                      "target": "c219ca2b-bcd0-4ccc-9b12-c2a6829721eb",
+                      "targetPort": "6b84a964-1f9d-4f67-a277-ab8edc67cdf8",
+                      "points": [
+                        {
+                          "id": "6690b516-e723-4101-8e81-e5631e89dd31",
+                          "type": "point",
+                          "x": 0,
+                          "y": 0
+                        }
+                      ]
+                    },
+                    "0aff2ae0-4ffa-40e5-b726-c786ac3bb33b": {
+                      "id": "0aff2ae0-4ffa-40e5-b726-c786ac3bb33b",
+                      "type": "default",
+                      "source": "dd6830c7-4e8e-46e8-9edf-b5b938de84cd",
+                      "sourcePort": "0c40c789-41bc-4b50-b7fb-20dad9c11962",
+                      "target": "367e00ff-6fde-459d-8fa1-7f67688576a3",
+                      "targetPort": "1c6edd99-5242-41a9-bb07-905b0087b594",
+                      "points": [
+                        {
+                          "id": "276e0591-3b75-4ebd-941e-4a9ba5611d1a",
+                          "type": "point",
+                          "x": 0,
+                          "y": 0
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "id": "1f203abf-8cc4-4db9-8f36-773299e16c29",
+                  "type": "diagram-nodes",
+                  "isSvg": false,
+                  "transformed": true,
+                  "models": {
+                    "367e00ff-6fde-459d-8fa1-7f67688576a3": {
+                      "id": "367e00ff-6fde-459d-8fa1-7f67688576a3",
+                      "type": "basic.code",
+                      "x": 500,
+                      "y": 200,
+                      "ports": [
+                        {
+                          "id": "c564443a-0473-4023-af20-bca127059e32",
+                          "type": "port.output",
+                          "name": "target_pose",
+                          "label": "target_pose",
+                          "in": false,
+                          "x": 900,
+                          "y": 350
+                        },
+                        {
+                          "id": "1c6edd99-5242-41a9-bb07-905b0087b594",
+                          "type": "port.parameter",
+                          "name": "pose_update_rate",
+                          "label": "pose_update_rate",
+                          "in": true,
+                          "x": 600,
+                          "y": 280
+                        }
+                      ],
+                      "data": {
+                        "code": "import rclpy\nfrom rclpy.node import Node\nfrom geometry_msgs.msg import Pose\nfrom math import sin, cos\n\nclass TargetPoseSource(Node):\n    def __init__(self):\n        super().__init__('target_pose_source')\n        self.publisher = self.create_publisher(Pose, 'target_pose', 10)\n        self.declare_parameter('pose_update_rate', 1.0)\n        self.pose_update_rate = self.get_parameter('pose_update_rate').get_parameter_value().double_value\n        self.timer = self.create_timer(1.0 / self.pose_update_rate, self.publish_target_pose)\n        self.time = 0.0\n    \n    def publish_target_pose(self):\n        pose = Pose()\n        self.time += 0.1\n        pose.position.x = 1.5 + sin(self.time)\n        pose.position.y = 0.5 + cos(self.time)\n        pose.position.z = 0.5 + sin(self.time * 0.5)\n        pose.orientation.x = 0.0\n        pose.orientation.y = 0.0\n        pose.orientation.z = 0.0\n        pose.orientation.w = 1.0\n        self.publisher.publish(pose)\n\ndef main(args=None):\n    rclpy.init(args=args)\n    node = TargetPoseSource()\n    rclpy.spin(node)\n    node.destroy_node()\n    rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()",
+                        "params": [
+                          {
+                            "name": "pose_update_rate"
+                          }
+                        ],
+                        "ports": {
+                          "in": [],
+                          "out": [
+                            {
+                              "name": "target_pose"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "c219ca2b-bcd0-4ccc-9b12-c2a6829721eb": {
+                      "id": "c219ca2b-bcd0-4ccc-9b12-c2a6829721eb",
+                      "type": "basic.output",
+                      "x": 900,
+                      "y": 300,
+                      "ports": [
+                        {
+                          "id": "6b84a964-1f9d-4f67-a277-ab8edc67cdf8",
+                          "type": "port.input",
+                          "x": 900,
+                          "y": 320,
+                          "name": "in",
+                          "label": "target_pose",
+                          "links": []
+                        }
+                      ],
+                      "data": {
+                        "name": "target_pose"
+                      }
+                    },
+                    "dd6830c7-4e8e-46e8-9edf-b5b938de84cd": {
+                      "id": "dd6830c7-4e8e-46e8-9edf-b5b938de84cd",
+                      "type": "basic.constant",
+                      "x": 500,
+                      "y": 100,
+                      "ports": [
+                        {
+                          "id": "0c40c789-41bc-4b50-b7fb-20dad9c11962",
+                          "type": "port.output",
+                          "name": "out",
+                          "label": "pose_update_rate",
+                          "links": []
+                        }
+                      ],
+                      "data": {
+                        "name": "pose_update_rate",
+                        "value": "10",
+                        "local": true
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "info": {
+              "name": "Target Pose Source",
+              "description": "Generates target poses for the robot arm to reach.",
+              "version": "1.0.0"
+            },
+            "design": {
+              "board": "Python3-Noetic",
+              "graph": {
+                "blocks": [
+                  {
+                    "id": "367e00ff-6fde-459d-8fa1-7f67688576a3",
+                    "type": "basic.code",
+                    "data": {
+                      "code": "import rclpy\nfrom rclpy.node import Node\nfrom geometry_msgs.msg import Pose\nfrom math import sin, cos\n\nclass TargetPoseSource(Node):\n    def __init__(self):\n        super().__init__('target_pose_source')\n        self.publisher = self.create_publisher(Pose, 'target_pose', 10)\n        self.declare_parameter('pose_update_rate', 1.0)\n        self.pose_update_rate = self.get_parameter('pose_update_rate').get_parameter_value().double_value\n        self.timer = self.create_timer(1.0 / self.pose_update_rate, self.publish_target_pose)\n        self.time = 0.0\n    \n    def publish_target_pose(self):\n        pose = Pose()\n        self.time += 0.1\n        pose.position.x = 1.5 + sin(self.time)\n        pose.position.y = 0.5 + cos(self.time)\n        pose.position.z = 0.5 + sin(self.time * 0.5)\n        pose.orientation.x = 0.0\n        pose.orientation.y = 0.0\n        pose.orientation.z = 0.0\n        pose.orientation.w = 1.0\n        self.publisher.publish(pose)\n\ndef main(args=None):\n    rclpy.init(args=args)\n    node = TargetPoseSource()\n    rclpy.spin(node)\n    node.destroy_node()\n    rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()",
+                      "params": [
+                        {
+                          "name": "pose_update_rate"
+                        }
+                      ],
+                      "ports": {
+                        "in": [],
+                        "out": [
+                          {
+                            "name": "target_pose"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "id": "c219ca2b-bcd0-4ccc-9b12-c2a6829721eb",
+                    "type": "basic.output",
+                    "data": {
+                      "name": "target_pose"
+                    }
+                  },
+                  {
+                    "id": "dd6830c7-4e8e-46e8-9edf-b5b938de84cd",
+                    "type": "basic.constant",
+                    "data": {
+                      "name": "pose_update_rate",
+                      "value": "10",
+                      "local": true
+                    }
+                  }
+                ],
+                "wires": []
+              }
+            }
+          },
+          "8f7843b4-304e-4137-aaa2-bfde24a53ba5": {
+            "id": "8f7843b4-304e-4137-aaa2-bfde24a53ba5",
+            "type": "block.package",
+            "selected": false,
+            "x": 2800,
+            "y": 150,
+            "ports": [
+              {
+                "id": "cfc77bf3-58f2-4d69-be06-85ab8c50c392",
+                "type": "port.input",
+                "x": 2801,
+                "y": 166,
+                "name": "cab73696-3d17-412f-a3ee-b2ddadcbdfd6",
+                "alignment": "left",
+                "parentNode": "8f7843b4-304e-4137-aaa2-bfde24a53ba5",
+                "links": [
+                  "83e20274-1201-466a-a300-2a89b9a4272b"
+                ],
+                "in": true,
+                "label": "joint_states",
+                "hideLabel": false
+              },
+              {
+                "id": "ae316877-543d-4c88-8b76-a291b8851588",
+                "type": "port.input",
+                "x": 2801,
+                "y": 206,
+                "name": "8be89e00-b393-40fb-ae59-82617c6404e7",
+                "alignment": "left",
+                "parentNode": "8f7843b4-304e-4137-aaa2-bfde24a53ba5",
+                "links": [],
+                "in": true,
+                "label": "tf",
+                "hideLabel": false
+              },
+              {
+                "id": "c60c090e-821d-418a-8afb-9c0cb404296b",
+                "type": "port.parameter",
+                "x": 2850,
+                "y": 120,
+                "name": "cdadf7d8-76ec-440e-b25d-fc09a0283264",
+                "alignment": "top",
+                "parentNode": "8f7843b4-304e-4137-aaa2-bfde24a53ba5",
+                "links": [],
+                "in": true,
+                "label": "rviz_config",
+                "hideLabel": false
+              }
+            ],
+            "data": {},
+            "model": {
+              "id": "fa6abcda-2339-4616-a663-bff626054a84",
+              "layers": [
+                {
+                  "id": "47f856d3-e1c2-4dec-b1e2-bf0802c285a8",
+                  "type": "diagram-links",
+                  "isSvg": true,
+                  "transformed": true,
+                  "models": {
+                    "8bff0b77-4d37-4973-92d2-9413a49606b6": {
+                      "id": "8bff0b77-4d37-4973-92d2-9413a49606b6",
+                      "type": "default",
+                      "source": "1004b1a3-0a62-41b5-b026-57740b41c2bd",
+                      "sourcePort": "f585328e-a766-4a5c-bb07-65b687f4ebdf",
+                      "target": "f3bd14ed-e397-40c2-89e3-0392fb631abf",
+                      "targetPort": "36bad77b-96f5-4722-9bf3-e272bab0f276",
+                      "points": [
+                        {
+                          "id": "fc48b8e0-0a69-4a32-af05-9fe1f687aa51",
+                          "type": "point",
+                          "x": 0,
+                          "y": 0
+                        }
+                      ]
+                    },
+                    "68f4e994-6bcc-4c6d-adf8-ebebe0dcfffb": {
+                      "id": "68f4e994-6bcc-4c6d-adf8-ebebe0dcfffb",
+                      "type": "default",
+                      "source": "8c536b86-ec86-477f-bc14-a664c75035fc",
+                      "sourcePort": "cbfc6c58-13af-4dd7-b9dd-655cf6ab2272",
+                      "target": "f3bd14ed-e397-40c2-89e3-0392fb631abf",
+                      "targetPort": "30625a41-4376-45c5-b146-219ddba5c31f",
+                      "points": [
+                        {
+                          "id": "7ec0c8ac-ee14-4a4f-88bd-2a908c06a941",
+                          "type": "point",
+                          "x": 0,
+                          "y": 0
+                        }
+                      ]
+                    },
+                    "f93f8f06-aee2-4cf9-831c-ba8d92f30c4e": {
+                      "id": "f93f8f06-aee2-4cf9-831c-ba8d92f30c4e",
+                      "type": "default",
+                      "source": "b10c9e45-532c-490d-ba6a-2691b488623b",
+                      "sourcePort": "912c7e51-0e6f-4662-a50e-84e7d23dcd38",
+                      "target": "f3bd14ed-e397-40c2-89e3-0392fb631abf",
+                      "targetPort": "c1c67430-7e53-426b-bce2-73cc1c92e472",
+                      "points": [
+                        {
+                          "id": "91347e51-d34b-4520-bb9d-d1527ad7865e",
+                          "type": "point",
+                          "x": 0,
+                          "y": 0
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "id": "b4bf2cc1-01ea-4655-b50a-ff221817bc9e",
+                  "type": "diagram-nodes",
+                  "isSvg": false,
+                  "transformed": true,
+                  "models": {
+                    "1004b1a3-0a62-41b5-b026-57740b41c2bd": {
+                      "id": "1004b1a3-0a62-41b5-b026-57740b41c2bd",
+                      "type": "basic.input",
+                      "x": 200,
+                      "y": 300,
+                      "ports": [
+                        {
+                          "id": "f585328e-a766-4a5c-bb07-65b687f4ebdf",
+                          "type": "port.output",
+                          "x": 280,
+                          "y": 320,
+                          "name": "out",
+                          "label": "joint_states",
+                          "links": []
+                        }
+                      ],
+                      "data": {
+                        "name": "joint_states"
+                      }
+                    },
+                    "8c536b86-ec86-477f-bc14-a664c75035fc": {
+                      "id": "8c536b86-ec86-477f-bc14-a664c75035fc",
+                      "type": "basic.input",
+                      "x": 200,
+                      "y": 400,
+                      "ports": [
+                        {
+                          "id": "cbfc6c58-13af-4dd7-b9dd-655cf6ab2272",
+                          "type": "port.output",
+                          "x": 280,
+                          "y": 420,
+                          "name": "out",
+                          "label": "tf",
+                          "links": []
+                        }
+                      ],
+                      "data": {
+                        "name": "tf"
+                      }
+                    },
+                    "f3bd14ed-e397-40c2-89e3-0392fb631abf": {
+                      "id": "f3bd14ed-e397-40c2-89e3-0392fb631abf",
+                      "type": "basic.code",
+                      "x": 500,
+                      "y": 200,
+                      "ports": [
+                        {
+                          "id": "36bad77b-96f5-4722-9bf3-e272bab0f276",
+                          "type": "port.input",
+                          "name": "joint_states",
+                          "label": "joint_states",
+                          "in": true,
+                          "x": 500,
+                          "y": 350
+                        },
+                        {
+                          "id": "30625a41-4376-45c5-b146-219ddba5c31f",
+                          "type": "port.input",
+                          "name": "tf",
+                          "label": "tf",
+                          "in": true,
+                          "x": 500,
+                          "y": 400
+                        },
+                        {
+                          "id": "c1c67430-7e53-426b-bce2-73cc1c92e472",
+                          "type": "port.parameter",
+                          "name": "rviz_config",
+                          "label": "rviz_config",
+                          "in": true,
+                          "x": 600,
+                          "y": 280
+                        }
+                      ],
+                      "data": {
+                        "code": "import rclpy\nfrom rclpy.node import Node\n\nclass VisualizationSink(Node):\n    def __init__(self):\n        super().__init__('visualization_sink')\n        self.declare_parameter('rviz_config', 'rrr_arm.rviz')\n        self.rviz_config = self.get_parameter('rviz_config').get_parameter_value().string_value\n        self.get_logger().info(f'Launch RViz with config: {self.rviz_config}')\n        # Note: RViz is typically launched separately with the specified config file.\n\ndef main(args=None):\n    rclpy.init(args=args)\n    node = VisualizationSink()\n    rclpy.spin(node)\n    node.destroy_node()\n    rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()",
+                        "params": [
+                          {
+                            "name": "rviz_config"
+                          }
+                        ],
+                        "ports": {
+                          "in": [
+                            {
+                              "name": "joint_states"
+                            },
+                            {
+                              "name": "tf"
+                            }
+                          ],
+                          "out": []
+                        }
+                      }
+                    },
+                    "b10c9e45-532c-490d-ba6a-2691b488623b": {
+                      "id": "b10c9e45-532c-490d-ba6a-2691b488623b",
+                      "type": "basic.constant",
+                      "x": 500,
+                      "y": 100,
+                      "ports": [
+                        {
+                          "id": "912c7e51-0e6f-4662-a50e-84e7d23dcd38",
+                          "type": "port.output",
+                          "name": "out",
+                          "label": "rviz_config",
+                          "links": []
+                        }
+                      ],
+                      "data": {
+                        "name": "rviz_config",
+                        "value": "10",
+                        "local": true
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "info": {
+              "name": "Visualization Sink",
+              "description": "Visualizes the robot arm and its movements in RViz.",
+              "version": "1.0.0"
+            },
+            "design": {
+              "board": "Python3-Noetic",
+              "graph": {
+                "blocks": [
+                  {
+                    "id": "1004b1a3-0a62-41b5-b026-57740b41c2bd",
+                    "type": "basic.input",
+                    "data": {
+                      "name": "joint_states"
+                    }
+                  },
+                  {
+                    "id": "8c536b86-ec86-477f-bc14-a664c75035fc",
+                    "type": "basic.input",
+                    "data": {
+                      "name": "tf"
+                    }
+                  },
+                  {
+                    "id": "f3bd14ed-e397-40c2-89e3-0392fb631abf",
+                    "type": "basic.code",
+                    "data": {
+                      "code": "import rclpy\nfrom rclpy.node import Node\n\nclass VisualizationSink(Node):\n    def __init__(self):\n        super().__init__('visualization_sink')\n        self.declare_parameter('rviz_config', 'rrr_arm.rviz')\n        self.rviz_config = self.get_parameter('rviz_config').get_parameter_value().string_value\n        self.get_logger().info(f'Launch RViz with config: {self.rviz_config}')\n        # Note: RViz is typically launched separately with the specified config file.\n\ndef main(args=None):\n    rclpy.init(args=args)\n    node = VisualizationSink()\n    rclpy.spin(node)\n    node.destroy_node()\n    rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()",
+                      "params": [
+                        {
+                          "name": "rviz_config"
+                        }
+                      ],
+                      "ports": {
+                        "in": [
+                          {
+                            "name": "joint_states"
+                          },
+                          {
+                            "name": "tf"
+                          }
+                        ],
+                        "out": []
+                      }
+                    }
+                  },
+                  {
+                    "id": "b10c9e45-532c-490d-ba6a-2691b488623b",
+                    "type": "basic.constant",
+                    "data": {
+                      "name": "rviz_config",
+                      "value": "10",
+                      "local": true
+                    }
+                  }
+                ],
+                "wires": []
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "design": {
+    "board": "Python3-Noetic",
+    "graph": {
+      "blocks": [
+        {
+          "id": "d5428112-b302-4dc2-862d-be47e8580f62",
+          "type": "URrDkZJ-HA-DG0--ljCSplxsHOk1UjIle3G5xEMUhO0=",
+          "data": {},
+          "position": {
+            "x": 400,
+            "y": 150
+          }
+        },
+        {
+          "id": "2c52beff-520d-4836-861e-8901f4f396d5",
+          "type": "0nuFm_6pnaMAIDfEVuPJWVdFWFKlLUl9Ndnn1KbgWWw=",
+          "data": {},
+          "position": {
+            "x": 800,
+            "y": 150
+          }
+        },
+        {
+          "id": "710c8b46-3d64-43d1-8024-cf421ee49450",
+          "type": "nvux8yrH_hGrpiysGI_cxRrHuo7-rkXKWcAMQALutnM=",
+          "data": {},
+          "position": {
+            "x": 1200,
+            "y": 150
+          }
+        },
+        {
+          "id": "2d22c099-d19f-4caf-a0e2-b74c79603978",
+          "type": "8J1PF6LzU6xlTwGH3NkOSQlT5OYXnntlYiCSLIBlaRs=",
+          "data": {},
+          "position": {
+            "x": 1600,
+            "y": 150
+          }
+        },
+        {
+          "id": "9f0a83cc-a208-406d-89fc-b5cde673b051",
+          "type": "GXq66NnICWHO0zzrLy5RNCj2cJ03oJrM23tfDmnY7WM=",
+          "data": {},
+          "position": {
+            "x": 2000,
+            "y": 150
+          }
+        },
+        {
+          "id": "088ac4a9-8be6-463b-b195-a139364e29cb",
+          "type": "yVsR8iJSwbDIfyPVr0ZY_ZYZUI3fdeGNdhimvriLJX4=",
+          "data": {},
+          "position": {
+            "x": 2400,
+            "y": 150
+          }
+        },
+        {
+          "id": "8f7843b4-304e-4137-aaa2-bfde24a53ba5",
+          "type": "-nH7mHS3ViFtoNIOPWTUKjd81X8PKc9NN6zMRMmj8SE=",
+          "data": {},
+          "position": {
+            "x": 2800,
+            "y": 150
+          }
+        }
+      ],
+      "wires": [
+        {
+          "source": {
+            "block": "d5428112-b302-4dc2-862d-be47e8580f62",
+            "port": "607bf274-beec-49e7-826b-f9a0a2bb5fce",
+            "name": "joint_states"
+          },
+          "target": {
+            "block": "2c52beff-520d-4836-861e-8901f4f396d5",
+            "port": "ac64e34c-5e53-4496-a787-f5b1a68b5314",
+            "name": "joint_states"
+          }
+        },
+        {
+          "source": {
+            "block": "2c52beff-520d-4836-861e-8901f4f396d5",
+            "port": "81951696-fc89-42b5-a209-9b7b630243db",
+            "name": "tf"
+          },
+          "target": {
+            "block": "710c8b46-3d64-43d1-8024-cf421ee49450",
+            "port": "eef9ec6f-aeb0-4aad-ad0b-af5e5cc8c525",
+            "name": "target_pose"
+          }
+        },
+        {
+          "source": {
+            "block": "710c8b46-3d64-43d1-8024-cf421ee49450",
+            "port": "97563cc2-0215-4432-859b-1116d561d0d2",
+            "name": "joint_angles"
+          },
+          "target": {
+            "block": "2d22c099-d19f-4caf-a0e2-b74c79603978",
+            "port": "578e0809-6649-4652-81f0-50921fe4eb29",
+            "name": "joint_angles"
+          }
+        },
+        {
+          "source": {
+            "block": "2d22c099-d19f-4caf-a0e2-b74c79603978",
+            "port": "0b8c3892-8f6b-44ea-9046-655d64b85c7e",
+            "name": "trajectory"
+          },
+          "target": {
+            "block": "9f0a83cc-a208-406d-89fc-b5cde673b051",
+            "port": "4b65dfe7-9dfd-406c-974a-88dfe602aaaf",
+            "name": "trajectory"
+          }
+        },
+        {
+          "source": {
+            "block": "9f0a83cc-a208-406d-89fc-b5cde673b051",
+            "port": "c71cfa45-052c-49e7-aadd-ac21c1e24cdd",
+            "name": "joint_commands"
+          },
+          "target": {
+            "block": "088ac4a9-8be6-463b-b195-a139364e29cb",
+            "port": "7f963d58-9b91-4992-9197-bda9c6e07d6e",
+            "name": "pose_update_rate"
+          }
+        },
+        {
+          "source": {
+            "block": "088ac4a9-8be6-463b-b195-a139364e29cb",
+            "port": "7ef49582-078d-4337-bc52-b56ccfbf16ab",
+            "name": "target_pose"
+          },
+          "target": {
+            "block": "8f7843b4-304e-4137-aaa2-bfde24a53ba5",
+            "port": "cfc77bf3-58f2-4d69-be06-85ab8c50c392",
+            "name": "joint_states"
+          }
+        }
+      ]
+    }
+  },
+  "dependencies": {
+    "URrDkZJ-HA-DG0--ljCSplxsHOk1UjIle3G5xEMUhO0=": {
+      "package": {
+        "name": "Joint State Publisher",
+        "description": "Publishes the joint states of the RRR robot arm.",
+        "version": "1.0.0"
+      },
+      "design": {
+        "graph": {
+          "blocks": [
+            {
+              "id": "7be511ea-af3a-42da-b4a8-91be537e50ad",
+              "type": "basic.code",
+              "data": {
+                "code": "import rclpy\nfrom rclpy.node import Node\nfrom sensor_msgs.msg import JointState\nfrom math import sin\n\nclass JointStatePublisher(Node):\n    def __init__(self):\n        super().__init__('joint_state_publisher')\n        self.publisher = self.create_publisher(JointState, 'joint_states', 10)\n        self.declare_parameter('joint_names', ['joint1', 'joint2', 'joint3'])\n        self.declare_parameter('publish_rate', 30.0)\n        self.joint_names = self.get_parameter('joint_names').get_parameter_value().string_array_value\n        self.publish_rate = self.get_parameter('publish_rate').get_parameter_value().double_value\n        self.timer = self.create_timer(1.0 / self.publish_rate, self.publish_joint_states)\n        self.time = 0.0\n    \n    def publish_joint_states(self):\n        msg = JointState()\n        msg.header.stamp = self.get_clock().now().to_msg()\n        msg.name = self.joint_names\n        self.time += 0.1\n        msg.position = [sin(self.time), sin(self.time * 1.5), sin(self.time * 2.0)]\n        self.publisher.publish(msg)\n\ndef main(args=None):\n    rclpy.init(args=args)\n    node = JointStatePublisher()\n    rclpy.spin(node)\n    node.destroy_node()\n    rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()",
+                "params": [
+                  {
+                    "name": "joint_names"
+                  },
+                  {
+                    "name": "publish_rate"
+                  }
+                ],
+                "ports": {
+                  "in": [],
+                  "out": [
+                    {
+                      "name": "joint_states"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "id": "b1cade3d-22a7-4fab-b1a7-3db1a1247fcd",
+              "type": "basic.output",
+              "data": {
+                "name": "joint_states"
+              }
+            },
+            {
+              "id": "de8ea21d-f39e-46cd-8286-2e9ed8907eeb",
+              "type": "basic.constant",
+              "data": {
+                "name": "joint_names",
+                "value": "10",
+                "local": true
+              }
+            },
+            {
+              "id": "a2e6a2e2-d20b-447f-887b-8aed4b8c362e",
+              "type": "basic.constant",
+              "data": {
+                "name": "publish_rate",
+                "value": "10",
+                "local": true
+              }
+            }
+          ],
+          "wires": []
+        }
+      },
+      "dependencies": {}
+    },
+    "0nuFm_6pnaMAIDfEVuPJWVdFWFKlLUl9Ndnn1KbgWWw=": {
+      "package": {
+        "name": "Robot State Publisher",
+        "description": "Publishes the robot state (TF transformations) based on joint states.",
+        "version": "1.0.0"
+      },
+      "design": {
+        "graph": {
+          "blocks": [
+            {
+              "id": "ff04f8c3-bdf7-420d-94e8-f1b1244d09e3",
+              "type": "basic.input",
+              "data": {
+                "name": "joint_states"
+              }
+            },
+            {
+              "id": "d93040d9-32e8-4fdf-b4f5-b4cbfdd0919e",
+              "type": "basic.code",
+              "data": {
+                "code": "import rclpy\nfrom rclpy.node import Node\nfrom sensor_msgs.msg import JointState\nfrom tf2_ros import TransformBroadcaster\nfrom tf2_ros import TransformStamped\nfrom math import sin, cos\n\nclass RobotStatePublisher(Node):\n    def __init__(self):\n        super().__init__('robot_state_publisher')\n        self.subscription = self.create_subscription(JointState, 'joint_states', self.joint_states_callback, 10)\n        self.broadcaster = TransformBroadcaster(self)\n        self.declare_parameter('robot_description', '')\n        self.robot_description = self.get_parameter('robot_description').get_parameter_value().string_value\n    \n    def joint_states_callback(self, msg):\n        transforms = []\n        for i, joint_name in enumerate(msg.name):\n            transform = TransformStamped()\n            transform.header.stamp = self.get_clock().now().to_msg()\n            transform.header.frame_id = f'link{i}'\n            transform.child_frame_id = f'link{i+1}'\n            transform.transform.translation.x = 1.0\n            transform.transform.translation.y = 0.0\n            transform.transform.translation.z = 0.0\n            transform.transform.rotation.x = 0.0\n            transform.transform.rotation.y = 0.0\n            transform.transform.rotation.z = sin(msg.position[i] / 2.0)\n            transform.transform.rotation.w = cos(msg.position[i] / 2.0)\n            transforms.append(transform)\n        self.broadcaster.sendTransform(transforms)\n\ndef main(args=None):\n    rclpy.init(args=args)\n    node = RobotStatePublisher()\n    rclpy.spin(node)\n    node.destroy_node()\n    rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()",
+                "params": [
+                  {
+                    "name": "robot_description"
+                  }
+                ],
+                "ports": {
+                  "in": [
+                    {
+                      "name": "joint_states"
+                    }
+                  ],
+                  "out": [
+                    {
+                      "name": "tf"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "id": "5b01ef4b-5144-4b67-99cf-f91e4a9f794b",
+              "type": "basic.output",
+              "data": {
+                "name": "tf"
+              }
+            },
+            {
+              "id": "c27ec1d4-70d9-483a-9057-8923a30eb97f",
+              "type": "basic.constant",
+              "data": {
+                "name": "robot_description",
+                "value": "10",
+                "local": true
+              }
+            }
+          ],
+          "wires": []
+        }
+      },
+      "dependencies": {}
+    },
+    "nvux8yrH_hGrpiysGI_cxRrHuo7-rkXKWcAMQALutnM=": {
+      "package": {
+        "name": "Inverse Kinematics Solver",
+        "description": "Solves inverse kinematics for the RRR robot arm to reach a target pose.",
+        "version": "1.0.0"
+      },
+      "design": {
+        "graph": {
+          "blocks": [
+            {
+              "id": "305611cd-349a-4e59-b15e-ecf459b391ab",
+              "type": "basic.input",
+              "data": {
+                "name": "target_pose"
+              }
+            },
+            {
+              "id": "6a75d809-2d2d-436f-8c30-13d8075daf1b",
+              "type": "basic.code",
+              "data": {
+                "code": "import rclpy\nfrom rclpy.node import Node\nfrom geometry_msgs.msg import Pose\nfrom sensor_msgs.msg import JointState\nfrom math import atan2, acos, sqrt\n\nclass InverseKinematicsSolver(Node):\n    def __init__(self):\n        super().__init__('inverse_kinematics_solver')\n        self.subscription = self.create_subscription(Pose, 'target_pose', self.target_pose_callback, 10)\n        self.publisher = self.create_publisher(JointState, 'joint_angles', 10)\n        self.declare_parameter('link_lengths', [1.0, 1.0, 1.0])\n        self.declare_parameter('tolerance', 0.01)\n        self.link_lengths = self.get_parameter('link_lengths').get_parameter_value().double_array_value\n        self.tolerance = self.get_parameter('tolerance').get_parameter_value().double_value\n    \n    def target_pose_callback(self, msg):\n        x, y, z = msg.position.x, msg.position.y, msg.position.z\n        l1, l2, l3 = self.link_lengths\n        \n        # Simplified IK for RRR arm (planar case)\n        r = sqrt(x**2 + y**2)\n        theta1 = atan2(y, x)\n        \n        # Check if target is reachable\n        if r > (l1 + l2 + l3) or r < abs(l1 - l2 - l3):\n            self.get_logger().warn('Target out of reach')\n            return\n        \n        # Calculate theta2 and theta3\n        cos_theta3 = (r**2 - l1**2 - l2**2) / (2 * l1 * l2)\n        theta3 = acos(cos_theta3)\n        theta2 = atan2(z, r) - atan2(l2 * sin(theta3), l1 + l2 * cos(theta3))\n        \n        joint_angles = JointState()\n        joint_angles.name = ['joint1', 'joint2', 'joint3']\n        joint_angles.position = [theta1, theta2, theta3]\n        self.publisher.publish(joint_angles)\n\ndef main(args=None):\n    rclpy.init(args=args)\n    node = InverseKinematicsSolver()\n    rclpy.spin(node)\n    node.destroy_node()\n    rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()",
+                "params": [
+                  {
+                    "name": "link_lengths"
+                  },
+                  {
+                    "name": "tolerance"
+                  }
+                ],
+                "ports": {
+                  "in": [
+                    {
+                      "name": "target_pose"
+                    }
+                  ],
+                  "out": [
+                    {
+                      "name": "joint_angles"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "id": "f87df67e-0d46-4e6f-906c-e58944b9a3bb",
+              "type": "basic.output",
+              "data": {
+                "name": "joint_angles"
+              }
+            },
+            {
+              "id": "05a3fb19-b9bc-4ab5-b698-982387e8a34f",
+              "type": "basic.constant",
+              "data": {
+                "name": "link_lengths",
+                "value": "10",
+                "local": true
+              }
+            },
+            {
+              "id": "c6ed8fb0-9de5-4463-9fb3-754af09c68d9",
+              "type": "basic.constant",
+              "data": {
+                "name": "tolerance",
+                "value": "10",
+                "local": true
+              }
+            }
+          ],
+          "wires": []
+        }
+      },
+      "dependencies": {}
+    },
+    "8J1PF6LzU6xlTwGH3NkOSQlT5OYXnntlYiCSLIBlaRs=": {
+      "package": {
+        "name": "Motion Planner",
+        "description": "Generates a smooth trajectory for the robot arm to follow.",
+        "version": "1.0.0"
+      },
+      "design": {
+        "graph": {
+          "blocks": [
+            {
+              "id": "3e5ae50a-099b-4f31-89cc-ebfc049e63de",
+              "type": "basic.input",
+              "data": {
+                "name": "joint_angles"
+              }
+            },
+            {
+              "id": "f1ff2fb5-5d08-46da-9640-05310b82b7de",
+              "type": "basic.code",
+              "data": {
+                "code": "import rclpy\nfrom rclpy.node import Node\nfrom sensor_msgs.msg import JointState\nfrom trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint\nfrom math import sin, cos, pi\n\nclass MotionPlanner(Node):\n    def __init__(self):\n        super().__init__('motion_planner')\n        self.subscription = self.create_subscription(JointState, 'joint_angles', self.joint_angles_callback, 10)\n        self.publisher = self.create_publisher(JointTrajectory, 'trajectory', 10)\n        self.declare_parameter('max_velocity', 1.0)\n        self.declare_parameter('max_acceleration', 0.5)\n        self.max_velocity = self.get_parameter('max_velocity').get_parameter_value().double_value\n        self.max_acceleration = self.get_parameter('max_acceleration').get_parameter_value().double_value\n    \n    def joint_angles_callback(self, msg):\n        trajectory = JointTrajectory()\n        trajectory.joint_names = msg.name\n        \n        # Create a simple smooth trajectory (e.g., quintic polynomial)\n        duration = 2.0\n        num_points = 10\n        for i in range(num_points):\n            point = JointTrajectoryPoint()\n            t = i / (num_points - 1) * duration\n            # Linear interpolation for simplicity (replace with smoother interpolation)\n            point.positions = [\n                msg.position[0] * t,\n                msg.position[1] * t,\n                msg.position[2] * t\n            ]\n            point.velocities = [self.max_velocity * 0.5 * t, self.max_velocity * 0.5 * t, self.max_velocity * 0.5 * t]\n            point.accelerations = [self.max_acceleration * 0.5, self.max_acceleration * 0.5, self.max_acceleration * 0.5]\n            point.time_from_start.sec = int(t)\n            point.time_from_start.nanosec = int((t - int(t)) * 1e9)\n            trajectory.points.append(point)\n        \n        self.publisher.publish(trajectory)\n\ndef main(args=None):\n    rclpy.init(args=args)\n    node = MotionPlanner()\n    rclpy.spin(node)\n    node.destroy_node()\n    rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()",
+                "params": [
+                  {
+                    "name": "max_velocity"
+                  },
+                  {
+                    "name": "max_acceleration"
+                  }
+                ],
+                "ports": {
+                  "in": [
+                    {
+                      "name": "joint_angles"
+                    }
+                  ],
+                  "out": [
+                    {
+                      "name": "trajectory"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "id": "6c697964-f164-4413-8ff2-68a29f97db9c",
+              "type": "basic.output",
+              "data": {
+                "name": "trajectory"
+              }
+            },
+            {
+              "id": "cb5db5f1-0cb8-4710-ba90-0b8df9c680ea",
+              "type": "basic.constant",
+              "data": {
+                "name": "max_velocity",
+                "value": "10",
+                "local": true
+              }
+            },
+            {
+              "id": "7b35a2db-326a-44a5-90ed-2f637807a4e4",
+              "type": "basic.constant",
+              "data": {
+                "name": "max_acceleration",
+                "value": "10",
+                "local": true
+              }
+            }
+          ],
+          "wires": []
+        }
+      },
+      "dependencies": {}
+    },
+    "GXq66NnICWHO0zzrLy5RNCj2cJ03oJrM23tfDmnY7WM=": {
+      "package": {
+        "name": "Trajectory Controller",
+        "description": "Controls the robot arm to follow the generated trajectory.",
+        "version": "1.0.0"
+      },
+      "design": {
+        "graph": {
+          "blocks": [
+            {
+              "id": "a37f8ae3-0f91-40dd-ad21-d3c08c1cb666",
+              "type": "basic.input",
+              "data": {
+                "name": "trajectory"
+              }
+            },
+            {
+              "id": "126ec21b-10e3-4bca-9d95-1e92655e037e",
+              "type": "basic.code",
+              "data": {
+                "code": "import rclpy\nfrom rclpy.node import Node\nfrom trajectory_msgs.msg import JointTrajectory\nfrom sensor_msgs.msg import JointState\n\nclass TrajectoryController(Node):\n    def __init__(self):\n        super().__init__('trajectory_controller')\n        self.subscription = self.create_subscription(JointTrajectory, 'trajectory', self.trajectory_callback, 10)\n        self.publisher = self.create_publisher(JointState, 'joint_commands', 10)\n        self.declare_parameter('control_rate', 50.0)\n        self.control_rate = self.get_parameter('control_rate').get_parameter_value().double_value\n        self.current_trajectory = None\n        self.start_time = None\n        self.timer = self.create_timer(1.0 / self.control_rate, self.control_loop)\n    \n    def trajectory_callback(self, msg):\n        self.current_trajectory = msg\n        self.start_time = self.get_clock().now()\n    \n    def control_loop(self):\n        if self.current_trajectory is None or self.start_time is None:\n            return\n        \n        current_time = self.get_clock().now()\n        elapsed_time = (current_time - self.start_time).nanoseconds / 1e9\n        \n        # Find the closest point in the trajectory\n        for i, point in enumerate(self.current_trajectory.points):\n            point_time = point.time_from_start.sec + point.time_from_start.nanosec / 1e9\n            if elapsed_time <= point_time:\n                joint_commands = JointState()\n                joint_commands.name = self.current_trajectory.joint_names\n                joint_commands.position = point.positions\n                self.publisher.publish(joint_commands)\n                break\n\ndef main(args=None):\n    rclpy.init(args=args)\n    node = TrajectoryController()\n    rclpy.spin(node)\n    node.destroy_node()\n    rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()",
+                "params": [
+                  {
+                    "name": "control_rate"
+                  }
+                ],
+                "ports": {
+                  "in": [
+                    {
+                      "name": "trajectory"
+                    }
+                  ],
+                  "out": [
+                    {
+                      "name": "joint_commands"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "id": "d1a7a3a1-ee2a-4349-9eae-eef0589fc8df",
+              "type": "basic.output",
+              "data": {
+                "name": "joint_commands"
+              }
+            },
+            {
+              "id": "c3353284-b3c8-45ce-930d-b5dc73217379",
+              "type": "basic.constant",
+              "data": {
+                "name": "control_rate",
+                "value": "10",
+                "local": true
+              }
+            }
+          ],
+          "wires": []
+        }
+      },
+      "dependencies": {}
+    },
+    "yVsR8iJSwbDIfyPVr0ZY_ZYZUI3fdeGNdhimvriLJX4=": {
+      "package": {
+        "name": "Target Pose Source",
+        "description": "Generates target poses for the robot arm to reach.",
+        "version": "1.0.0"
+      },
+      "design": {
+        "graph": {
+          "blocks": [
+            {
+              "id": "367e00ff-6fde-459d-8fa1-7f67688576a3",
+              "type": "basic.code",
+              "data": {
+                "code": "import rclpy\nfrom rclpy.node import Node\nfrom geometry_msgs.msg import Pose\nfrom math import sin, cos\n\nclass TargetPoseSource(Node):\n    def __init__(self):\n        super().__init__('target_pose_source')\n        self.publisher = self.create_publisher(Pose, 'target_pose', 10)\n        self.declare_parameter('pose_update_rate', 1.0)\n        self.pose_update_rate = self.get_parameter('pose_update_rate').get_parameter_value().double_value\n        self.timer = self.create_timer(1.0 / self.pose_update_rate, self.publish_target_pose)\n        self.time = 0.0\n    \n    def publish_target_pose(self):\n        pose = Pose()\n        self.time += 0.1\n        pose.position.x = 1.5 + sin(self.time)\n        pose.position.y = 0.5 + cos(self.time)\n        pose.position.z = 0.5 + sin(self.time * 0.5)\n        pose.orientation.x = 0.0\n        pose.orientation.y = 0.0\n        pose.orientation.z = 0.0\n        pose.orientation.w = 1.0\n        self.publisher.publish(pose)\n\ndef main(args=None):\n    rclpy.init(args=args)\n    node = TargetPoseSource()\n    rclpy.spin(node)\n    node.destroy_node()\n    rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()",
+                "params": [
+                  {
+                    "name": "pose_update_rate"
+                  }
+                ],
+                "ports": {
+                  "in": [],
+                  "out": [
+                    {
+                      "name": "target_pose"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "id": "c219ca2b-bcd0-4ccc-9b12-c2a6829721eb",
+              "type": "basic.output",
+              "data": {
+                "name": "target_pose"
+              }
+            },
+            {
+              "id": "dd6830c7-4e8e-46e8-9edf-b5b938de84cd",
+              "type": "basic.constant",
+              "data": {
+                "name": "pose_update_rate",
+                "value": "10",
+                "local": true
+              }
+            }
+          ],
+          "wires": []
+        }
+      },
+      "dependencies": {}
+    },
+    "-nH7mHS3ViFtoNIOPWTUKjd81X8PKc9NN6zMRMmj8SE=": {
+      "package": {
+        "name": "Visualization Sink",
+        "description": "Visualizes the robot arm and its movements in RViz.",
+        "version": "1.0.0"
+      },
+      "design": {
+        "graph": {
+          "blocks": [
+            {
+              "id": "1004b1a3-0a62-41b5-b026-57740b41c2bd",
+              "type": "basic.input",
+              "data": {
+                "name": "joint_states"
+              }
+            },
+            {
+              "id": "8c536b86-ec86-477f-bc14-a664c75035fc",
+              "type": "basic.input",
+              "data": {
+                "name": "tf"
+              }
+            },
+            {
+              "id": "f3bd14ed-e397-40c2-89e3-0392fb631abf",
+              "type": "basic.code",
+              "data": {
+                "code": "import rclpy\nfrom rclpy.node import Node\n\nclass VisualizationSink(Node):\n    def __init__(self):\n        super().__init__('visualization_sink')\n        self.declare_parameter('rviz_config', 'rrr_arm.rviz')\n        self.rviz_config = self.get_parameter('rviz_config').get_parameter_value().string_value\n        self.get_logger().info(f'Launch RViz with config: {self.rviz_config}')\n        # Note: RViz is typically launched separately with the specified config file.\n\ndef main(args=None):\n    rclpy.init(args=args)\n    node = VisualizationSink()\n    rclpy.spin(node)\n    node.destroy_node()\n    rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()",
+                "params": [
+                  {
+                    "name": "rviz_config"
+                  }
+                ],
+                "ports": {
+                  "in": [
+                    {
+                      "name": "joint_states"
+                    },
+                    {
+                      "name": "tf"
+                    }
+                  ],
+                  "out": []
+                }
+              }
+            },
+            {
+              "id": "b10c9e45-532c-490d-ba6a-2691b488623b",
+              "type": "basic.constant",
+              "data": {
+                "name": "rviz_config",
+                "value": "10",
+                "local": true
+              }
+            }
+          ],
+          "wires": []
+        }
+      },
+      "dependencies": {}
+    }
+  },
+  "package": {
+    "name": "Generated Pipeline",
+    "version": "0.1.0"
+  }
+}

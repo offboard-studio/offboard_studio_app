@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, TextField } from'@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, TextField } from '@mui/material';
 import React, { ChangeEvent, useState } from 'react';
 import { create, InstanceProps } from 'react-modal-promise';
 import { InputBlockModelOptions } from '../blocks/basic/input/input-model';
@@ -51,12 +51,22 @@ const IOBlockDialog = ({ isOpen, onResolve, onReject, name: _name }: InstancePro
   }
 
   return (
-    <Dialog open={isOpen} aria-labelledby="form-dialog-title">
+    <Dialog
+      open={isOpen}
+      aria-labelledby="form-dialog-title"
+      PaperProps={{
+        sx: {
+          bgcolor: '#111',
+          color: '#fff',
+          border: '1px solid rgba(255,255,255,0.05)'
+        }
+      }}
+    >
 
       <DialogContent>
-        <DialogContentText>
+        <DialogContentText sx={{ color: '#fff' }}>
           Enter the name
-          </DialogContentText>
+        </DialogContentText>
         <TextField
           autoFocus
           margin="dense"
@@ -67,15 +77,26 @@ const IOBlockDialog = ({ isOpen, onResolve, onReject, name: _name }: InstancePro
           error={Boolean(errorMsg)}
           helperText={errorMsg}
           fullWidth
+          sx={{
+            '& .MuiOutlinedInput-root': {
+              color: '#fff',
+              '& fieldset': { borderColor: 'rgba(255,255,255,0.23)' },
+              '&:hover fieldset': { borderColor: '#BB86FC' },
+              '&.Mui-focused fieldset': { borderColor: '#BB86FC' },
+            },
+            '& .MuiInputLabel-root': { color: '#aaa' },
+            '& .MuiInputLabel-root.Mui-focused': { color: '#BB86FC' },
+            '& .MuiFormHelperText-root': { color: '#f44336' }
+          }}
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => onReject()}>
+        <Button onClick={() => onReject()} sx={{ color: '#aaa' }}>
           Cancel
-          </Button>
-        <Button onClick={handleSubmit}>
+        </Button>
+        <Button onClick={handleSubmit} sx={{ color: '#BB86FC' }}>
           Ok
-          </Button>
+        </Button>
       </DialogActions>
     </Dialog>
   )

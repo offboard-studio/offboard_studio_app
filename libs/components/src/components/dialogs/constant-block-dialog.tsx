@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, TextField } from'@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, TextField } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel/FormControlLabel';
 import React, { ChangeEvent, useState } from 'react';
@@ -14,7 +14,7 @@ import { ConstantBlockModelOptions } from '../blocks/basic/constant/constant-mod
  *          onReject: Will be called to indicate failure.
  *        }
  */
-const ConstantBlockDialog = ({ isOpen, onResolve, onReject, name: _name, local: _local}: InstanceProps<ConstantBlockModelOptions> & Partial<ConstantBlockModelOptions>) => {
+const ConstantBlockDialog = ({ isOpen, onResolve, onReject, name: _name, local: _local }: InstanceProps<ConstantBlockModelOptions> & Partial<ConstantBlockModelOptions>) => {
 
 
   const [name, setName] = useState(_name || '');
@@ -49,10 +49,19 @@ const ConstantBlockDialog = ({ isOpen, onResolve, onReject, name: _name, local: 
   }
 
   return (
-    <Dialog open={isOpen} aria-labelledby="form-dialog-title">
-
+    <Dialog
+      open={isOpen}
+      aria-labelledby="form-dialog-title"
+      PaperProps={{
+        sx: {
+          bgcolor: '#111',
+          color: '#fff',
+          border: '1px solid rgba(255,255,255,0.05)'
+        }
+      }}
+    >
       <DialogContent>
-        <DialogContentText>
+        <DialogContentText sx={{ color: '#fff' }}>
           Enter the name of constant block
         </DialogContentText>
         <TextField
@@ -65,6 +74,17 @@ const ConstantBlockDialog = ({ isOpen, onResolve, onReject, name: _name, local: 
           error={Boolean(errorMsg)}
           helperText={errorMsg}
           fullWidth
+          sx={{
+            '& .MuiOutlinedInput-root': {
+              color: '#fff',
+              '& fieldset': { borderColor: 'rgba(255,255,255,0.23)' },
+              '&:hover fieldset': { borderColor: '#BB86FC' },
+              '&.Mui-focused fieldset': { borderColor: '#BB86FC' },
+            },
+            '& .MuiInputLabel-root': { color: '#aaa' },
+            '& .MuiInputLabel-root.Mui-focused': { color: '#BB86FC' },
+            '& .MuiFormHelperText-root': { color: '#f44336' }
+          }}
         />
         <FormControlLabel
           control={
@@ -72,16 +92,20 @@ const ConstantBlockDialog = ({ isOpen, onResolve, onReject, name: _name, local: 
               color='default'
               checked={local}
               onChange={(event) => setLocal(event.target.checked)}
+              sx={{
+                color: '#aaa',
+                '&.Mui-checked': { color: '#BB86FC' }
+              }}
             />
           }
-          label="Local Parameter"
+          label={<span style={{ color: '#fff' }}>Local Parameter</span>}
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => onReject()}>
+        <Button onClick={() => onReject()} sx={{ color: '#aaa' }}>
           Cancel
         </Button>
-        <Button onClick={handleSubmit}>
+        <Button onClick={handleSubmit} sx={{ color: '#BB86FC' }}>
           Ok
         </Button>
       </DialogActions>
