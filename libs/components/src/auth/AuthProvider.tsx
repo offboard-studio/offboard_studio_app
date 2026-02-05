@@ -1,6 +1,9 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { Box } from '@mui/material';
 import { IAuthService, IAuthUser } from '../core/interfaces/auth.service.interface';
 import { firebaseAuthService } from '../infrastructure/firebase/firebase.auth.service';
+import { LoadingSpinner } from '../components/loading';
+import { THEME_COLORS } from '../core/constants';
 
 interface AuthContextType {
   user: IAuthUser | null;
@@ -25,9 +28,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const authService = firebaseAuthService;
 
   useEffect(() => {
-    console.log("AuthProvider: Initializing auth listener...");
     const unsubscribe = authService.onAuthStateChanged((currentUser) => {
-      console.log("AuthProvider: Auth state changed:", currentUser ? "User logged in" : "No user");
       setUser(currentUser);
       setLoading(false);
     });
@@ -49,17 +50,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   return (
     <AuthContext.Provider value={value}>
       {loading ? (
-        <div style={{
-          height: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: '#000',
-          color: '#fff',
-          fontFamily: 'sans-serif'
-        }}>
-          <h2>Loading Offboard Studio...</h2>
-        </div>
+        <Box
+          sx={{
+            height: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: THEME_COLORS.background,
+          }}
+        >
+          <LoadingSpinner message="Loading Offboard Studio..." size="large" />
+        </Box>
       ) : children}
     </AuthContext.Provider>
   );

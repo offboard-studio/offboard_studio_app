@@ -497,7 +497,7 @@ export const BoardPage = (): JSX.Element => {
             setTabIndexBoard(false);
           }}
         />
-
+      )}
 
       {deploymentOpen && (
         <DeploymentDialog

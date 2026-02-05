@@ -3,6 +3,14 @@ import throttle from 'lodash/throttle';
 import { ICollaborationService } from './interfaces/collaboration.service.interface';
 import { firebaseCollaborationService } from '../infrastructure/firebase/firebase.collaboration.service';
 import * as htmlToImage from 'html-to-image';
+import {
+  COLLAB_SYNC_THROTTLE_MS,
+  SCREENSHOT_THROTTLE_MS,
+  SCREENSHOT_QUALITY,
+  SCREENSHOT_WIDTH,
+  SCREENSHOT_HEIGHT,
+  THEME_COLORS,
+} from './constants';
 
 // import { v4 as uuidv4 } from 'uuid'; // Removed to avoid type issues
 
@@ -188,12 +196,12 @@ class CollaborationManager {
     if (boardElement) {
       try {
         const dataUrl = await htmlToImage.toJpeg(boardElement, {
-          quality: 0.5,
-          width: 400,
-          height: 300,
-          canvasWidth: 400,
-          canvasHeight: 300,
-          backgroundColor: '#1e1e1e',
+          quality: SCREENSHOT_QUALITY,
+          width: SCREENSHOT_WIDTH,
+          height: SCREENSHOT_HEIGHT,
+          canvasWidth: SCREENSHOT_WIDTH,
+          canvasHeight: SCREENSHOT_HEIGHT,
+          backgroundColor: THEME_COLORS.background,
           style: { transform: 'scale(1)' }
         });
         // Update ONLY the image field in Firestore
@@ -203,7 +211,7 @@ class CollaborationManager {
         console.warn('[CollaborationManager] Screenshot capture failed:', imgError);
       }
     }
-  }, 30000); // Run at most every 30 seconds
+  }, SCREENSHOT_THROTTLE_MS);
 
   private throttledSync = throttle(async () => {
     if (!this.currentProjectId || this.isRemoteUpdate) return;
@@ -232,7 +240,7 @@ class CollaborationManager {
     } catch (error) {
       console.error('[CollaborationManager] Sync failed:', error);
     }
-  }, 1000); // 1s sync for better responsiveness
+  }, COLLAB_SYNC_THROTTLE_MS);
 
   public syncLocalToRemote() {
     if (this.isRemoteUpdate) return;

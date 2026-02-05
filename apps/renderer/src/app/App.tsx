@@ -1,6 +1,3 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable prettier/prettier */
 import {
   createHashRouter,
   RouterProvider,
@@ -19,34 +16,23 @@ import {
 } from '@pages';
 
 import { AuthProvider, useAuth } from '@components/auth/AuthProvider';
+import { ErrorBoundary, NotificationProvider, theme, QUERY_STALE_TIME_MS, QUERY_RETRY_COUNT } from '@components';
 import { Navigate } from 'react-router-dom';
 
 import './App.module.scss';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { createTheme, ThemeProvider } from '@mui/material';
+import { ThemeProvider, CssBaseline } from '@mui/material';
 import { JSX } from 'react/jsx-runtime';
 
-const queryClient = new QueryClient();
-
-const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: { main: '#90caf9' },
-    secondary: { main: '#f48fb1' },
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: QUERY_RETRY_COUNT,
+      staleTime: QUERY_STALE_TIME_MS,
+      refetchOnWindowFocus: false,
+    },
   },
 });
-// console.log('basename', basename);
-// console.log('window.location.pathname', window.location.pathname);
-// console.log('window.location.origin', window.location.origin);
-// console.log('window.location.href', window.location.href);
-// console.log('window.location.protocol', window.location.protocol);
-// console.log('window.location.host', window.location.host);
-// console.log('window.location.hostname', window.location.hostname);
-// console.log('window.location.port', window.location.port);
-// console.log('window.location.search', window.location.search);
-// console.log('window.location.hash', window.location.hash);
-// console.log('window.location', window.location);
-// console.log('window', window);
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, loading } = useAuth();
@@ -107,14 +93,25 @@ const router = createHashRouter(
   } as DOMRouterOpts
 );
 
+const handleError = (error: Error, errorInfo: React.ErrorInfo): void => {
+  // Log to external service in production (e.g., Sentry)
+  console.error('Application Error:', error);
+  console.error('Error Info:', errorInfo);
+};
+
 const App = (): JSX.Element => (
-  <QueryClientProvider client={queryClient}>
-    <ThemeProvider theme={darkTheme}>
-      <AuthProvider>
-        <RouterProvider router={router} />
-      </AuthProvider>
-    </ThemeProvider>
-  </QueryClientProvider>
+  <ErrorBoundary onError={handleError}>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <NotificationProvider>
+          <AuthProvider>
+            <RouterProvider router={router} />
+          </AuthProvider>
+        </NotificationProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
+  </ErrorBoundary>
 );
 
 export default App;

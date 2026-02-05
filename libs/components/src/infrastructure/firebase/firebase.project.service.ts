@@ -18,6 +18,7 @@ import {
 } from 'firebase/firestore';
 import { db } from './init';
 import { IProject, IProjectService } from '../../core/interfaces/project.service.interface';
+import { AppError, ErrorCode, getErrorMessage } from '../../core/errors';
 
 export class FirebaseProjectService implements IProjectService {
   private readonly collectionName = 'projects';
@@ -102,29 +103,74 @@ export class FirebaseProjectService implements IProjectService {
   }
 
   async addMember(projectId: string, email: string): Promise<void> {
-    // 1. Find user by email in 'users' collection
-    const usersQ = query(collection(db, this.usersCollection), where('email', '==', email));
-    const userSnapshot = await getDocs(usersQ);
+    try {
+      if (!email || !email.includes('@')) {
+        throw new AppError({
+          code: ErrorCode.VALIDATION_ERROR,
+          message: 'Please enter a valid email address.',
+        });
+      }
 
-    if (userSnapshot.empty) {
-      throw new Error('User not found with this email.');
+      // 1. Find user by email in 'users' collection
+      const usersQ = query(collection(db, this.usersCollection), where('email', '==', email));
+      const userSnapshot = await getDocs(usersQ);
+
+      if (userSnapshot.empty) {
+        throw new AppError({
+          code: ErrorCode.COLLAB_USER_NOT_FOUND,
+          message: getErrorMessage(ErrorCode.COLLAB_USER_NOT_FOUND),
+        });
+      }
+
+      const userId = userSnapshot.docs[0].id;
+
+      // 2. Check if user is already a member
+      const project = await this.getProject(projectId);
+      if (project?.members?.includes(userId)) {
+        throw new AppError({
+          code: ErrorCode.COLLAB_ALREADY_MEMBER,
+          message: getErrorMessage(ErrorCode.COLLAB_ALREADY_MEMBER),
+        });
+      }
+
+      const projectRef = doc(db, this.collectionName, projectId);
+
+      await updateDoc(projectRef, {
+        members: arrayUnion(userId),
+        updatedAt: Timestamp.now()
+      });
+    } catch (error: unknown) {
+      if (error instanceof AppError) throw error;
+      throw new AppError({
+        code: ErrorCode.UNKNOWN_ERROR,
+        message: 'Failed to add member. Please try again.',
+        originalError: error,
+      });
     }
-
-    const userId = userSnapshot.docs[0].id;
-    const projectRef = doc(db, this.collectionName, projectId);
-
-    await updateDoc(projectRef, {
-      members: arrayUnion(userId),
-      updatedAt: Timestamp.now()
-    });
   }
 
   async removeMember(projectId: string, userId: string): Promise<void> {
-    const projectRef = doc(db, this.collectionName, projectId);
-    await updateDoc(projectRef, {
-      members: arrayRemove(userId),
-      updatedAt: Timestamp.now()
-    });
+    try {
+      if (!userId) {
+        throw new AppError({
+          code: ErrorCode.VALIDATION_ERROR,
+          message: 'User ID is required.',
+        });
+      }
+
+      const projectRef = doc(db, this.collectionName, projectId);
+      await updateDoc(projectRef, {
+        members: arrayRemove(userId),
+        updatedAt: Timestamp.now()
+      });
+    } catch (error: unknown) {
+      if (error instanceof AppError) throw error;
+      throw new AppError({
+        code: ErrorCode.UNKNOWN_ERROR,
+        message: 'Failed to remove member. Please try again.',
+        originalError: error,
+      });
+    }
   }
 
   async getUserProfiles(userIds: string[]): Promise<any[]> {
