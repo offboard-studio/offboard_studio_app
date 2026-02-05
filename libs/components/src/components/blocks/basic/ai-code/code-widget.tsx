@@ -26,6 +26,7 @@ import { AiCodeBlockModel } from './code-model';
 import { unitConversion } from '../../../utils/tooltip/index';
 import './styles.scss';
 
+import CodeBlockCreatorAI from '../../../../code_block_creator';
 import loader from '@monaco-editor/loader';
 
 // CDN'den yükle
@@ -102,6 +103,49 @@ export class AiCodeBlockWidget extends React.Component<
       alwaysConsumeMouseWheel: false, // Allow the page to scroll when the mouse wheel is over the editor
     },
   };
+
+  handleEditorDidMount = (editor: any, monaco: any) => {
+    // Register Inline Completion Provider
+    monaco.languages.registerInlineCompletionsProvider('python', {
+        provideInlineCompletions: async (model: any, position: any, context: any, token: any) => {
+            console.log('[AiCodeBlockWidget] Inline completion triggered at', position);
+            const text = model.getValue();
+            const editorInstance = Editor.getInstance();
+            const apiKey = editorInstance.getApiKey();
+            const baseUrl = editorInstance.getBaseUrl();
+            const aiModel = editorInstance.getAiModel();
+            
+            console.log('[AiCodeBlockWidget] Settings:', { hasApiKey: !!apiKey, baseUrl, aiModel });
+
+            if (!apiKey) {
+                console.warn('[AiCodeBlockWidget] No API key found. Skipping completion.');
+                return { items: [] };
+            }
+
+            const creator = new CodeBlockCreatorAI({}, undefined, apiKey, baseUrl, aiModel);
+            console.log('[AiCodeBlockWidget] Requesting completion from CodeBlockCreatorAI...');
+            const completion = await creator.getInlineCompletion(text, position.lineNumber, position.column);
+            console.log('[AiCodeBlockWidget] Completion received:', completion);
+            
+            if (!completion) {
+                return { items: [] };
+            }
+
+            return {
+                items: [{
+                    insertText: completion,
+                    range: new monaco.Range(
+                        position.lineNumber,
+                        position.column,
+                        position.lineNumber,
+                        position.column
+                    )
+                }]
+            };
+        },
+        freeInlineCompletions: (completions: any) => {}
+    });
+  }
 
   /**
    * Handler for context menu
@@ -212,6 +256,7 @@ export class AiCodeBlockWidget extends React.Component<
                     value={this.state.code}
                     onChange={this.handleInput}
                     theme="vs-dark"
+                    onMount={this.handleEditorDidMount}
                   />
                 </div>
 

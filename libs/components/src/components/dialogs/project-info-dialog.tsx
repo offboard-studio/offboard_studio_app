@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, TextField } from'@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, TextField } from '@mui/material';
 import React, { ChangeEvent, useState } from 'react';
 import { create, InstanceProps } from 'react-modal-promise';
 import { ProjectInfo } from '../../core/constants';
@@ -71,10 +71,18 @@ const ProjectInfoDialog = ({ isOpen, onResolve, onReject,
             open={isOpen}
             fullWidth={true}
             maxWidth='md'
-            aria-labelledby="form-dialog-title">
+            aria-labelledby="form-dialog-title"
+            PaperProps={{
+                sx: {
+                    bgcolor: '#111',
+                    color: '#fff',
+                    border: '1px solid rgba(255,255,255,0.05)'
+                }
+            }}
+        >
 
             <DialogContent>
-                <DialogContentText>
+                <DialogContentText sx={{ color: '#fff' }}>
                     Name
                 </DialogContentText>
                 <TextField
@@ -85,47 +93,76 @@ const ProjectInfoDialog = ({ isOpen, onResolve, onReject,
                     value={nameInput}
                     onChange={(event) => setName(event.target.value)}
                     fullWidth
+                    sx={{
+                        '& .MuiOutlinedInput-root': {
+                            color: '#fff',
+                            '& fieldset': { borderColor: 'rgba(255,255,255,0.23)' },
+                            '&:hover fieldset': { borderColor: '#BB86FC' },
+                            '&.Mui-focused fieldset': { borderColor: '#BB86FC' },
+                        }
+                    }}
                 />
 
-                <DialogContentText>
+                <DialogContentText sx={{ color: '#fff', mt: 2 }}>
                     Version
                 </DialogContentText>
                 <TextField
-                    autoFocus
                     margin="dense"
                     type="text"
                     variant='outlined'
                     value={versionInput}
                     onChange={(event) => setVersion(event.target.value)}
                     fullWidth
+                    sx={{
+                        '& .MuiOutlinedInput-root': {
+                            color: '#fff',
+                            '& fieldset': { borderColor: 'rgba(255,255,255,0.23)' },
+                            '&:hover fieldset': { borderColor: '#BB86FC' },
+                            '&.Mui-focused fieldset': { borderColor: '#BB86FC' },
+                        }
+                    }}
                 />
 
-                <DialogContentText>
+                <DialogContentText sx={{ color: '#fff', mt: 2 }}>
                     Description
                 </DialogContentText>
                 <TextField
-                    autoFocus
                     margin="dense"
                     type="text"
                     variant='outlined'
                     value={descriptionInput}
                     onChange={(event) => setDescription(event.target.value)}
                     fullWidth
+                    sx={{
+                        '& .MuiOutlinedInput-root': {
+                            color: '#fff',
+                            '& fieldset': { borderColor: 'rgba(255,255,255,0.23)' },
+                            '&:hover fieldset': { borderColor: '#BB86FC' },
+                            '&.Mui-focused fieldset': { borderColor: '#BB86FC' },
+                        }
+                    }}
                 />
 
-                <DialogContentText>
+                <DialogContentText sx={{ color: '#fff', mt: 2 }}>
                     Author
                 </DialogContentText>
                 <TextField
-                    autoFocus
                     margin="dense"
                     type="text"
                     variant='outlined'
                     value={authorInput}
                     onChange={(event) => setAuthor(event.target.value)}
                     fullWidth
+                    sx={{
+                        '& .MuiOutlinedInput-root': {
+                            color: '#fff',
+                            '& fieldset': { borderColor: 'rgba(255,255,255,0.23)' },
+                            '&:hover fieldset': { borderColor: '#BB86FC' },
+                            '&.Mui-focused fieldset': { borderColor: '#BB86FC' },
+                        }
+                    }}
                 />
-                <DialogContentText>
+                <DialogContentText sx={{ color: '#fff', mt: 2 }}>
                     Image
                 </DialogContentText>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -133,6 +170,7 @@ const ProjectInfoDialog = ({ isOpen, onResolve, onReject,
                         <Button
                             variant="outlined"
                             component="label"
+                            sx={{ color: '#BB86FC', borderColor: '#BB86FC' }}
                         >
                             Upload File Image
                             <input
@@ -148,10 +186,10 @@ const ProjectInfoDialog = ({ isOpen, onResolve, onReject,
                 </div>
             </DialogContent>
             <DialogActions>
-                <Button onClick={() => onReject()}>
+                <Button onClick={() => onReject()} sx={{ color: '#aaa' }}>
                     Cancel
                 </Button>
-                <Button onClick={() => handleSubmit()}>
+                <Button onClick={() => handleSubmit()} sx={{ color: '#BB86FC' }}>
                     Ok
                 </Button>
             </DialogActions>

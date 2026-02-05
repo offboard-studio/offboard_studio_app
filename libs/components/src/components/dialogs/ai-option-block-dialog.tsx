@@ -46,10 +46,21 @@ const AiOptionBlockDialog = ({ isOpen, onResolve, onReject, apiKey, baseUrl }: I
     }
 
     return (
-        <Dialog open={isOpen} aria-labelledby="form-dialog-title" fullWidth>
+        <Dialog
+            open={isOpen}
+            aria-labelledby="form-dialog-title"
+            fullWidth
+            PaperProps={{
+                sx: {
+                    bgcolor: '#111',
+                    color: '#fff',
+                    border: '1px solid rgba(255,255,255,0.05)'
+                }
+            }}
+        >
 
             <DialogContent>
-                <DialogContentText>
+                <DialogContentText sx={{ color: '#fff' }}>
                     Enter Base URL for AI Code Block
                 </DialogContentText>
                 <TextField
@@ -62,12 +73,19 @@ const AiOptionBlockDialog = ({ isOpen, onResolve, onReject, apiKey, baseUrl }: I
                     error={Boolean(error)}
                     helperText={error}
                     fullWidth
+                    sx={{
+                        '& .MuiOutlinedInput-root': {
+                            color: '#fff',
+                            '& fieldset': { borderColor: 'rgba(255,255,255,0.23)' },
+                            '&:hover fieldset': { borderColor: '#BB86FC' },
+                            '&.Mui-focused fieldset': { borderColor: '#BB86FC' },
+                        }
+                    }}
                 />
-                <DialogContentText>
+                <DialogContentText sx={{ color: '#fff', mt: 2 }}>
                     Set API Key generally used for AI Code Blocks.
                 </DialogContentText>
                 <TextField
-                    autoFocus
                     margin="dense"
                     type="text"
                     variant='outlined'
@@ -76,14 +94,22 @@ const AiOptionBlockDialog = ({ isOpen, onResolve, onReject, apiKey, baseUrl }: I
                     error={Boolean(error)}
                     helperText={error}
                     fullWidth
+                    sx={{
+                        '& .MuiOutlinedInput-root': {
+                            color: '#fff',
+                            '& fieldset': { borderColor: 'rgba(255,255,255,0.23)' },
+                            '&:hover fieldset': { borderColor: '#BB86FC' },
+                            '&.Mui-focused fieldset': { borderColor: '#BB86FC' },
+                        }
+                    }}
                 />
 
             </DialogContent>
             <DialogActions>
-                <Button onClick={() => onReject()}>
+                <Button onClick={() => onReject()} sx={{ color: '#aaa' }}>
                     Cancel
                 </Button>
-                <Button onClick={() => handleSubmit()}>
+                <Button onClick={() => handleSubmit()} sx={{ color: '#BB86FC' }}>
                     Ok
                 </Button>
             </DialogActions>

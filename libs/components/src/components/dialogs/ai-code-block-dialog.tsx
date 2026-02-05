@@ -12,7 +12,7 @@ import { AiCodeBlockModelOptions } from '../blocks/basic/ai-code/code-model';
  *          onReject: Will be called to indicate failure.
  *        }
  */
-const AiCodeBlockDialog = ({ isOpen, onResolve, onReject, inputs, outputs, params,aiDescription }: InstanceProps<AiCodeBlockModelOptions> & Partial<AiCodeBlockModelOptions>) => {
+const AiCodeBlockDialog = ({ isOpen, onResolve, onReject, inputs, outputs, params, aiDescription }: InstanceProps<AiCodeBlockModelOptions> & Partial<AiCodeBlockModelOptions>) => {
 
     // Comma separated list of inputs for the Code block
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -25,14 +25,14 @@ const AiCodeBlockDialog = ({ isOpen, onResolve, onReject, inputs, outputs, param
     const [parameters, setParameters] = useState((params || []).join(', ') || '');
     const [error, setError] = useState('');
 
-    const [aiDescriptionOut, setAiDescriptionOut] = useState(aiDescription||'AI Description');
+    const [aiDescriptionOut, setAiDescriptionOut] = useState(aiDescription || 'AI Description');
 
     /**
      * Callback for 'Ok' button of the dialog
      */
     const handleSubmit = () => {
         // If neither input or output field is filled, show an error message.
-        if (aiDescription!=='AI Description') {
+        if (aiDescription !== 'AI Description') {
             // Clear the previous error if any.
             setError('')
             // Split the inputs, outputs and parameters by comma 
@@ -40,17 +40,28 @@ const AiCodeBlockDialog = ({ isOpen, onResolve, onReject, inputs, outputs, param
             // const outputs = outputPorts.split(',').filter((port) => Boolean(port)).map((port) => port.trim());
             // const params = parameters.split(',').filter((port) => Boolean(port)).map((port) => port.trim());
             // Send data back indicating as success
-            onResolve({ inputs: inputs, outputs: outputs, params: params,aiDescription: aiDescriptionOut });
+            onResolve({ inputs: inputs, outputs: outputs, params: params, aiDescription: aiDescriptionOut });
         } else {
             setError('Code block needs a description');
         }
     }
 
     return (
-        <Dialog open={isOpen} aria-labelledby="form-dialog-title" fullWidth>
+        <Dialog
+            open={isOpen}
+            aria-labelledby="form-dialog-title"
+            fullWidth
+            PaperProps={{
+                sx: {
+                    bgcolor: '#111',
+                    color: '#fff',
+                    border: '1px solid rgba(255,255,255,0.05)'
+                }
+            }}
+        >
 
             <DialogContent>
-                <DialogContentText>
+                <DialogContentText sx={{ color: '#fff' }}>
                     Enter Description for AI Code Block
                 </DialogContentText>
                 <TextField
@@ -63,12 +74,19 @@ const AiCodeBlockDialog = ({ isOpen, onResolve, onReject, inputs, outputs, param
                     error={Boolean(error)}
                     helperText={error}
                     fullWidth
+                    sx={{
+                        '& .MuiOutlinedInput-root': {
+                            color: '#fff',
+                            '& fieldset': { borderColor: 'rgba(255,255,255,0.23)' },
+                            '&:hover fieldset': { borderColor: '#BB86FC' },
+                            '&.Mui-focused fieldset': { borderColor: '#BB86FC' },
+                        }
+                    }}
                 />
-                <DialogContentText>
+                <DialogContentText sx={{ color: '#fff', mt: 2 }}>
                     Enter the input ports
                 </DialogContentText>
                 <TextField
-                    autoFocus
                     margin="dense"
                     type="text"
                     variant='outlined'
@@ -77,13 +95,19 @@ const AiCodeBlockDialog = ({ isOpen, onResolve, onReject, inputs, outputs, param
                     error={Boolean(error)}
                     helperText={error}
                     fullWidth
+                    sx={{
+                        '& .MuiOutlinedInput-root': {
+                            color: '#fff',
+                            '& fieldset': { borderColor: 'rgba(255,255,255,0.23)' },
+                            '&:hover fieldset': { borderColor: '#BB86FC' },
+                            '&.Mui-focused fieldset': { borderColor: '#BB86FC' },
+                        }
+                    }}
                 />
-
-                <DialogContentText>
+                <DialogContentText sx={{ color: '#fff', mt: 2 }}>
                     Enter the output ports
                 </DialogContentText>
                 <TextField
-                    autoFocus
                     margin="dense"
                     type="text"
                     variant='outlined'
@@ -92,27 +116,42 @@ const AiCodeBlockDialog = ({ isOpen, onResolve, onReject, inputs, outputs, param
                     error={Boolean(error)}
                     helperText={error}
                     fullWidth
+                    sx={{
+                        '& .MuiOutlinedInput-root': {
+                            color: '#fff',
+                            '& fieldset': { borderColor: 'rgba(255,255,255,0.23)' },
+                            '&:hover fieldset': { borderColor: '#BB86FC' },
+                            '&.Mui-focused fieldset': { borderColor: '#BB86FC' },
+                        }
+                    }}
                 />
 
-                <DialogContentText>
+                <DialogContentText sx={{ color: '#fff', mt: 2 }}>
                     Enter the parameters
                 </DialogContentText>
                 <TextField
-                    autoFocus
                     margin="dense"
                     type="text"
                     variant='outlined'
                     value={parameters}
                     onChange={(event) => setParameters(event.target.value)}
                     fullWidth
+                    sx={{
+                        '& .MuiOutlinedInput-root': {
+                            color: '#fff',
+                            '& fieldset': { borderColor: 'rgba(255,255,255,0.23)' },
+                            '&:hover fieldset': { borderColor: '#BB86FC' },
+                            '&.Mui-focused fieldset': { borderColor: '#BB86FC' },
+                        }
+                    }}
                 />
 
             </DialogContent>
             <DialogActions>
-                <Button onClick={() => onReject()}>
+                <Button onClick={() => onReject()} sx={{ color: '#aaa' }}>
                     Cancel
                 </Button>
-                <Button onClick={() => handleSubmit()}>
+                <Button onClick={() => handleSubmit()} sx={{ color: '#BB86FC' }}>
                     Ok
                 </Button>
             </DialogActions>

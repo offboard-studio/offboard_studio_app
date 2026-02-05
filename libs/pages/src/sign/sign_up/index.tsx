@@ -13,7 +13,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import GoogleIcon from '@mui/icons-material/Google';
 import GitHubIcon from '@mui/icons-material/GitHub';
-import axios from 'axios';
+import { auth } from '@components/infrastructure/firebase/init';
+import { useAuth } from '@components/auth/AuthProvider';
 
 const schema = yup.object().shape({
   name: yup.string().required('Name is required'),
@@ -24,10 +25,6 @@ const schema = yup.object().shape({
     .required('Password is required'),
 });
 
-interface SignupResponse {
-  token: string;
-}
-
 export const SignUp = (): JSX.Element => {
   const {
     register,
@@ -37,25 +34,33 @@ export const SignUp = (): JSX.Element => {
     resolver: yupResolver(schema),
   });
   const navigate = useNavigate();
+  const { authService } = useAuth();
 
-  const onSubmit = async (data: unknown) => {
+  const onSubmit = async (data: any) => {
     try {
-      const response = await axios.post<SignupResponse>(
-        'https://your-api.com/signup',
-        data
-      );
-      console.log('Signup Success:', response.data);
-
-      // JWT Token'ı almak
-      const { token } = response.data;
-
-      // Token'ı localStorage'da saklamak
-      localStorage.setItem('jwtToken', token);
-
-      // Kullanıcıyı giriş sayfasına yönlendirmek
+      await authService.signUpWithEmail(data.email, data.password, data.name);
       navigate('/dashboard');
     } catch (error) {
       console.error('Signup Error:', error);
+      alert('Signup failed. ' + (error as Error).message);
+    }
+  };
+
+  const handleGoogleSignUp = async () => {
+    try {
+      await authService.signInWithGoogle();
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Google Sign-Up Error:', error);
+    }
+  };
+
+  const handleGithubSignUp = async () => {
+    try {
+      await authService.signInWithGithub();
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('GitHub Sign-Up Error:', error);
     }
   };
 
@@ -136,9 +141,7 @@ export const SignUp = (): JSX.Element => {
                   alignItems: 'center',
                   gap: 1,
                 }}
-                onClick={() =>
-                  (window.location.href = 'https://your-api.com/auth/google')
-                }
+                onClick={handleGoogleSignUp}
               >
                 <GoogleIcon /> Sign Up with Google
               </Button>
@@ -152,9 +155,7 @@ export const SignUp = (): JSX.Element => {
                   alignItems: 'center',
                   gap: 1,
                 }}
-                onClick={() =>
-                  (window.location.href = 'https://your-api.com/auth/github')
-                }
+                onClick={handleGithubSignUp}
               >
                 <GitHubIcon /> Sign Up with GitHub
               </Button>

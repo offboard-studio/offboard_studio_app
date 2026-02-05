@@ -179,62 +179,102 @@ export class CodeBlockModel extends BaseModel<CodeBlockData, NodeModelGenerics &
         });
     }
 
-    inputAddPorts(ports: PortName[]) {
-        // Create Input ports for each input option
+    updateInputPorts(ports: PortName[]) {
+        const validNames = new Set(ports.map(p => p.name));
+        console.log('[CodeBlockModel] updateInputPorts target names:', Array.from(validNames));
+
+        // Remove obsolete ports
+        Object.values(this.getPorts()).forEach(port => {
+            const isInput = port.getOptions().type === PortTypes.INPUT;
+            const name = port.getName();
+            const shouldKeep = validNames.has(name);
+
+            console.log(`[CodeBlockModel] Checking port '${name}' (type=${port.getOptions().type}): isInput=${isInput}, shouldKeep=${shouldKeep}`);
+
+            if (isInput && !shouldKeep) {
+                console.warn(`[CodeBlockModel] Removing obsolete input port: ${name}`);
+                this.removePort(port);
+            }
+        });
+
+        // Add new ports
         ports.forEach((port) => {
-            this.addPort(
-                createPortModel({
-                    in: true,
-                    name: port.name,
-                    alignment: PortModelAlignment.LEFT,
-                    type: PortTypes.INPUT,
-                    label: port.name
-                })
-            );
+            const exists = !!this.getPort(port.name);
+            console.log(`[CodeBlockModel] Adding port '${port.name}'? Exists=${exists}`);
+
+            if (!exists) {
+                this.addPort(
+                    createPortModel({
+                        in: true,
+                        name: port.name,
+                        alignment: PortModelAlignment.LEFT,
+                        type: PortTypes.INPUT,
+                        label: port.name
+                    })
+                );
+            }
         });
     }
 
-    outputAddPorts(ports: PortName[]) {
-        // Create Input ports for each input option
+    updateOutputPorts(ports: PortName[]) {
+        const validNames = new Set(ports.map(p => p.name));
+
+        // Remove obsolete ports
+        Object.values(this.getPorts()).forEach(port => {
+            if (port.getOptions().type === PortTypes.OUTPUT && !validNames.has(port.getName())) {
+                this.removePort(port);
+            }
+        });
+
+        // Add new ports
         ports.forEach((port) => {
-            this.addPort(
-                createPortModel({
-                    in: true,
-                    name: port.name,
-                    alignment: PortModelAlignment.RIGHT,
-                    type: PortTypes.OUTPUT,
-                    label: port.name
-                })
-            );
+            if (!this.getPort(port.name)) {
+                this.addPort(
+                    createPortModel({
+                        in: false,
+                        name: port.name,
+                        alignment: PortModelAlignment.RIGHT,
+                        type: PortTypes.OUTPUT,
+                        label: port.name
+                    })
+                );
+            }
         });
     }
 
 
-    paramsAddPorts(ports: PortName[]) {
-        // Create Input ports for each input option
+    updateParamsPorts(ports: PortName[]) {
+        const validNames = new Set(ports.map(p => p.name));
+
+        // Remove obsolete ports
+        Object.values(this.getPorts()).forEach(port => {
+            if (port.getOptions().type === PortTypes.PARAM && !validNames.has(port.getName())) {
+                this.removePort(port);
+            }
+        });
+
+        // Add new ports
         ports.forEach((port) => {
-            this.addPort(
-                createPortModel({
-                    in: true,
-                    name: port.name,
-                    alignment: PortModelAlignment.LEFT,
-                    type: PortTypes.PARAM,
-                    label: port.name
-                })
-            );
+            if (!this.getPort(port.name)) {
+                this.addPort(
+                    createPortModel({
+                        in: true,
+                        name: port.name,
+                        alignment: PortModelAlignment.TOP,
+                        type: PortTypes.PARAM,
+                        label: port.name
+                    })
+                );
+            }
         });
     }
-
-
-
-
 
     /**
      * Generate inputs from list of output port names.
      * @returns List of input ports
      */
     getInputs() {
-        return this.getData().ports.in?.map((port) => this.getPort(port.name)) || [];
+        return this.getData().ports.in?.map((port) => this.getPort(port.name)).filter(p => !!p) || [];
     }
 
     getInputNames() {
@@ -246,7 +286,7 @@ export class CodeBlockModel extends BaseModel<CodeBlockData, NodeModelGenerics &
      * @returns List of output ports
      */
     getOutputs() {
-        return this.getData().ports.out?.map((port) => this.getPort(port.name)) || [];
+        return this.getData().ports.out?.map((port) => this.getPort(port.name)).filter(p => !!p) || [];
     }
 
     getOutputNames() {
@@ -258,7 +298,7 @@ export class CodeBlockModel extends BaseModel<CodeBlockData, NodeModelGenerics &
      * @returns List of parameter ports
      */
     getParameters() {
-        return this.getData().params?.map((port) => this.getPort(port.name)) || [];
+        return this.getData().params?.map((port) => this.getPort(port.name)).filter(p => !!p) || [];
     }
 
     getParameterNames() {
@@ -273,7 +313,7 @@ export class CodeBlockModel extends BaseModel<CodeBlockData, NodeModelGenerics &
         return this.data;
     }
 
-    update():CodeBlockData {
+    update(): CodeBlockData {
         this.data.code = this.getPort('code')?.getOptions() || this.data.code;
         this.data.params = this.getParameterNames()?.map((port) => {
             return { name: port }
@@ -303,16 +343,16 @@ export class CodeBlockModel extends BaseModel<CodeBlockData, NodeModelGenerics &
 
     }
 
-    setData(_data:any): void {
+    setData(_data: any): void {
         // _data = _data as CodeBlockData;
-        console.log('setData', _data );
+        console.log('setData', _data);
         this.data = {
             ...this.data,
             ..._data
         }
-        this.inputAddPorts(this.data.ports.in || []);
-        this.outputAddPorts(this.data.ports.out || []);
-        this.paramsAddPorts(this.data.params || []);
+        this.updateInputPorts(this.data.ports.in || []);
+        this.updateOutputPorts(this.data.ports.out || []);
+        this.updateParamsPorts(this.data.params || []);
     }
 
     /**

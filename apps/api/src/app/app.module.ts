@@ -5,9 +5,10 @@ import { AppService } from './app.service';
 import { AppIPCService } from './app-ipc.service';
 import { AppSingleton } from './app.singleton';
 import { AppController2,AppService2 } from '@ai-modules';
+import { DeploymentModule } from './deployment/deployment.module';
 
 @Module({
-  imports: [],
+  imports: [DeploymentModule],
   controllers: [AppController, AppController2],
   providers: [AppService, AppIPCService, AppSingleton, AppService2],
   exports: [AppService, AppIPCService, AppSingleton],
