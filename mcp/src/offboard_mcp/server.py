@@ -485,6 +485,36 @@ async def list_tools() -> list[Tool]:
             },
         ),
         Tool(
+            name="update_project_settings",
+            description=(
+                "Update the project's metadata — name, description, author, "
+                "version, image — i.e. what the Project Settings panel "
+                "shows. Sends a patch push that only carries `package: {...}`; "
+                "nodes / wires / dependencies stay untouched.\n\n"
+                "All fields are optional. Unspecified fields keep their "
+                "current value (read from the accumulator's package). "
+                "Pass `image` as a data: URL or remote URL."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "name": {"type": "string"},
+                    "description": {"type": "string"},
+                    "author": {"type": "string"},
+                    "version": {"type": "string"},
+                    "image": {
+                        "type": "string",
+                        "description": "data:image/... URL or remote URL.",
+                    },
+                    "api_url": {"type": "string"},
+                    "source": {
+                        "type": "string",
+                        "default": "update_project_settings",
+                    },
+                },
+            },
+        ),
+        Tool(
             name="create_package_node",
             description=(
                 "Build a `block.package` node — a hierarchical container that "
@@ -966,6 +996,76 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
                     ),
                 }
             )
+
+    if name == "update_project_settings":
+        api_url = _resolve_api_url(arguments.get("api_url"))
+        arch = await _fetch_accumulator(api_url)
+        current_pkg = {}
+        if isinstance(arch, dict):
+            cp = arch.get("package")
+            if isinstance(cp, dict):
+                current_pkg = dict(cp)
+
+        # Merge incoming overrides on top of the accumulator's package so
+        # the user can update a single field without clobbering the rest.
+        new_pkg = dict(current_pkg)
+        changed: list[str] = []
+        for key in ("name", "description", "author", "version", "image"):
+            if key in arguments and arguments[key] is not None:
+                new_pkg[key] = str(arguments[key])
+                changed.append(key)
+
+        if not changed:
+            return _result(
+                {
+                    "error": "no fields supplied — pass at least one of name/description/author/version/image",
+                    "current": current_pkg,
+                }
+            )
+
+        # Default the missing required fields so the renderer's loadProject
+        # path doesn't crash if the accumulator's package was empty.
+        new_pkg.setdefault("name", "Untitled")
+        new_pkg.setdefault("version", "0.0.1")
+        new_pkg.setdefault("description", "")
+        new_pkg.setdefault("author", "")
+        new_pkg.setdefault("image", "")
+
+        bundle = {
+            "editor": {"layers": []},
+            "design": {"graph": {"blocks": [], "wires": []}},
+            "dependencies": {},
+            "package": new_pkg,
+        }
+
+        try:
+            async with httpx.AsyncClient(timeout=30) as client:
+                resp = await client.post(
+                    f"{api_url}/api/architecture/load",
+                    json={
+                        "architecture": bundle,
+                        "source": arguments.get("source") or "update_project_settings",
+                    },
+                    headers={"Content-Type": "application/json"},
+                )
+            resp.raise_for_status()
+            push_result = {
+                "ok": True,
+                "status": resp.status_code,
+                "body": resp.json(),
+            }
+        except httpx.HTTPError as exc:
+            logger.exception("update_project_settings: push failed")
+            push_result = {"ok": False, "error": str(exc)}
+
+        return _result(
+            {
+                "previous": current_pkg,
+                "new": new_pkg,
+                "changed_fields": changed,
+                "push_result": push_result,
+            }
+        )
 
     if name == "create_package_node":
         pkg_name = arguments.get("name", "").strip()
