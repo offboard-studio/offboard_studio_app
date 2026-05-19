@@ -33,6 +33,7 @@ const DEFAULT_POLL_MS = 2000;
 
 let timer: ReturnType<typeof setInterval> | null = null;
 let lastReceivedAt: string | null = null;
+let lastDeletionAt: string | null = null;
 let onLoaded: ((message: LoadedArchitecture) => void) | null = null;
 
 function resolveApiUrl(): string {
@@ -237,10 +238,24 @@ function mergeBundles(
             if (pos) pos.x = (Number(pos.x) || 0) + dx;
         }
     }
+    // ID-aware block merge: a re-pushed block (e.g. from update_node) with
+    // the same id replaces the previous copy instead of piling up.
+    const blockOrder: string[] = [];
+    const blockMap = new Map<string, AnyRec>();
+    for (const b of ((currentGraph.blocks as AnyRec[]) ?? [])) {
+        const id = String(b.id);
+        if (!blockMap.has(id)) blockOrder.push(id);
+        blockMap.set(id, b);
+    }
+    for (const b of incomingBlocks) {
+        const id = String(b.id);
+        if (!blockMap.has(id)) blockOrder.push(id);
+        blockMap.set(id, b);
+    }
     const mergedDesign: AnyRec = {
         board: currentDesign.board ?? incomingDesign.board ?? 'Python3-Noetic',
         graph: {
-            blocks: [...((currentGraph.blocks as AnyRec[]) ?? []), ...incomingBlocks],
+            blocks: blockOrder.map((id) => blockMap.get(id) as AnyRec),
             wires: [
                 ...((currentGraph.wires as AnyRec[]) ?? []),
                 ...((incomingGraph.wires as AnyRec[]) ?? []),
@@ -253,9 +268,12 @@ function mergeBundles(
         ...((incoming.dependencies as Record<string, unknown>) ?? {}),
     };
 
+    // Explicit overwrite when incoming carries a package — that's how
+    // update_project_settings pushes a settings-only patch. Without this
+    // override the old "first-set wins" rule silently drops updates.
     const pkg =
-        (current.package as AnyRec) ??
-        (incoming.package as AnyRec) ?? {
+        (incoming.package as AnyRec) ??
+        (current.package as AnyRec) ?? {
             name: `MCP push (${message.source})`,
             version: '0.0.1',
             description: `Pushed at ${message.receivedAt}`,
@@ -348,6 +366,63 @@ async function pollOnce(apiUrl: string): Promise<void> {
 }
 
 /**
+ * Poll the API for new node deletions and apply them locally with
+ * `editor.removeNode(node)`. This is the surgical counterpart to /latest
+ * polling — instead of reloading the whole canvas, just the targeted nodes
+ * disappear, leaving the rest of the editor state intact.
+ */
+async function pollDeletions(apiUrl: string): Promise<void> {
+    try {
+        const qs = lastDeletionAt
+            ? `?since=${encodeURIComponent(lastDeletionAt)}`
+            : '';
+        const resp = await fetch(`${apiUrl}/api/architecture/deletions${qs}`, {
+            method: 'GET',
+            headers: { Accept: 'application/json' },
+        });
+        if (!resp.ok) return;
+        const body = (await resp.json()) as {
+            latestAt: string | null;
+            deletions: Array<{ ids: string[]; at: string }>;
+        };
+        const deletions = body?.deletions ?? [];
+        if (!deletions.length) {
+            if (body.latestAt) lastDeletionAt = body.latestAt;
+            return;
+        }
+        for (const entry of deletions) {
+            applyDeletionLocally(entry.ids);
+        }
+        lastDeletionAt = body.latestAt ?? deletions[deletions.length - 1].at;
+    } catch {
+        // API offline — silent.
+    }
+}
+
+function applyDeletionLocally(ids: string[]): void {
+    if (!ids?.length) return;
+    try {
+        const editor = Editor.getInstance();
+        const model = editor.activeModel;
+        if (!model) return;
+        const idSet = new Set(ids.map(String));
+        // Snapshot the nodes since remove() mutates the underlying collection.
+        const targets = model.getNodes().filter((n) => idSet.has(n.getID()));
+        for (const node of targets) {
+            editor.removeNode(node);
+        }
+    } catch (err) {
+        reportError(
+            new AppError({
+                code: ErrorCode.UNKNOWN_ERROR,
+                message: 'Surgical node removal from API event failed.',
+                originalError: err,
+            }),
+        );
+    }
+}
+
+/**
  * Push the renderer's current editor state to /api/architecture/sync so the
  * server-side accumulator (used by MCP tools like `add_node`) reflects what
  * the user actually sees. Called when our local canvas has nodes but the
@@ -403,10 +478,14 @@ export function startArchitectureBridge(
     const url = apiUrl.replace(/\/$/, '');
     // Prime once so a freshly-opened renderer picks up an already-pushed graph.
     void pollOnce(url);
+    void pollDeletions(url);
     // After a delay (let any project file finish loading first) push our
     // current canvas to the server-side accumulator if it's behind us.
     setTimeout(() => void syncIfDrifted(url), 2500);
-    timer = setInterval(() => void pollOnce(url), pollIntervalMs);
+    timer = setInterval(() => {
+        void pollOnce(url);
+        void pollDeletions(url);
+    }, pollIntervalMs);
     return stopArchitectureBridge;
 }
 
@@ -417,6 +496,7 @@ export function stopArchitectureBridge(): void {
     }
     onLoaded = null;
     lastReceivedAt = null;
+    lastDeletionAt = null;
 }
 
 export function isArchitectureBridgeActive(): boolean {

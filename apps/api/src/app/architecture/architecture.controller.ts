@@ -5,6 +5,7 @@ import {
   Get,
   HttpCode,
   Post,
+  Query,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
@@ -17,6 +18,10 @@ interface LoadBody {
 
 interface SyncBody {
   architecture: Record<string, unknown>;
+}
+
+interface RemoveBody {
+  node_ids: string[];
 }
 
 @ApiTags('architecture')
@@ -75,6 +80,35 @@ export class ArchitectureController {
     }
     this.architectureService.seed(body.architecture);
     return;
+  }
+
+  @Post('remove-nodes')
+  @HttpCode(202)
+  @ApiOperation({
+    summary:
+      'Surgically remove nodes from the canvas. Updates the accumulator, ' +
+      'drops any link touching the removed nodes, GCs unused dependencies, ' +
+      'and notifies subscribers (renderer bridge) so they can apply the same ' +
+      'removal locally without a full canvas reload.',
+  })
+  removeNodes(@Body() body: RemoveBody) {
+    if (!Array.isArray(body?.node_ids) || body.node_ids.length === 0) {
+      return { ok: false, error: 'node_ids[] is required' };
+    }
+    const { receivedAt } = this.architectureService.remove(
+      body.node_ids.map(String),
+    );
+    return { ok: true, receivedAt, removed_count: body.node_ids.length };
+  }
+
+  @Get('deletions')
+  @ApiOperation({
+    summary:
+      'Deletion log since the given timestamp. The bridge polls this on the ' +
+      'same cadence as /latest and applies new deletions via editor.removeNode.',
+  })
+  deletions(@Query('since') since?: string) {
+    return this.architectureService.getDeletionsSince(since ?? null);
   }
 
   @Delete('latest')

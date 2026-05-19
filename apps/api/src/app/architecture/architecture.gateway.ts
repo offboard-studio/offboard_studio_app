@@ -41,6 +41,10 @@ export class ArchitectureGateway
       if (!this.server) return;
       this.server.emit('architecture:cleared', {});
     });
+    this.architectureService.on('removed', (event) => {
+      if (!this.server) return;
+      this.server.emit('architecture:removed', event);
+    });
   }
 
   handleConnection(client: Socket): void {

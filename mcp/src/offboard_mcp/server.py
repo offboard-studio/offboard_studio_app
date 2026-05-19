@@ -34,10 +34,128 @@ from offboard_mcp.core.architecture import build_architecture
 from offboard_mcp.core.context import gather as gather_context
 from offboard_mcp.core.nested import nest_subgraph
 from offboard_mcp.core.nodes import NodeSpec, PortSpec, build_node
+from offboard_mcp.core.package import build_package_node
 from offboard_mcp.core.wiring import auto_wire, validate_architecture, wire_against_existing
 
 logger = logging.getLogger("offboard_mcp")
 logging.basicConfig(level=os.environ.get("OFFBOARD_MCP_LOG", "INFO"))
+
+
+def _resolve_api_url(override: str | None) -> str:
+    return (
+        override
+        or os.environ.get("OFFBOARD_API_URL")
+        or "http://localhost:3333"
+    ).rstrip("/")
+
+
+async def _fetch_accumulator(api_url: str) -> dict[str, Any] | None:
+    """Fetch the merged canvas snapshot from `/api/architecture/state`.
+
+    Returns the inner `architecture` bundle (editor + design + dependencies)
+    or None if the accumulator is empty / the API is unreachable.
+    """
+    try:
+        async with httpx.AsyncClient(timeout=10) as client:
+            resp = await client.get(f"{api_url}/api/architecture/state")
+        if resp.status_code != 200:
+            return None
+        body = resp.json()
+        arch = body.get("architecture")
+        return arch if isinstance(arch, dict) else None
+    except httpx.HTTPError:
+        return None
+
+
+def _find_node(
+    arch: dict[str, Any],
+    *,
+    node_id: str | None = None,
+    name: str | None = None,
+) -> tuple[str, dict[str, Any]] | None:
+    """Locate a node in an architecture bundle by id (exact) or name
+    (case-insensitive, first match). Returns (node_id, node_model) or None."""
+    layers = (arch.get("editor") or {}).get("layers") or []
+    nodes_layer = next((L for L in layers if L.get("type") == "diagram-nodes"), {})
+    models = nodes_layer.get("models") or {}
+    if node_id and node_id in models:
+        return node_id, models[node_id]
+    if name:
+        needle = name.strip().lower()
+        for nid, n in models.items():
+            if ((n.get("extras") or {}).get("name") or "").strip().lower() == needle:
+                return nid, n
+    return None
+
+
+async def _push_replace(
+    api_url: str, architecture: dict[str, Any], source: str
+) -> dict[str, Any]:
+    """POST a full architecture bundle in `replace` mode so the renderer
+    re-loads from scratch and the server accumulator is overwritten.
+
+    Destructive — wipes any node/link that isn't in `architecture`. Prefer
+    `_push_patch` when changing a single node.
+    """
+    architecture = {**architecture, "mode": "replace"}
+    try:
+        async with httpx.AsyncClient(timeout=30) as client:
+            resp = await client.post(
+                f"{api_url}/api/architecture/load",
+                json={"architecture": architecture, "source": source},
+                headers={"Content-Type": "application/json"},
+            )
+        resp.raise_for_status()
+        return {"ok": True, "status": resp.status_code, "body": resp.json()}
+    except httpx.HTTPError as exc:
+        logger.exception("push_replace failed (source=%s)", source)
+        return {"ok": False, "error": str(exc)}
+
+
+async def _push_patch(
+    api_url: str,
+    *,
+    node_model: dict[str, Any] | None = None,
+    block: dict[str, Any] | None = None,
+    dependency: tuple[str, dict[str, Any]] | None = None,
+    source: str,
+) -> dict[str, Any]:
+    """POST a minimal architecture delta in append mode — only the touched
+    node/block/dep is included. The server-side mergeArchitecture overwrites
+    accumulator entries with the same id, and the renderer's mergeBundles
+    does the same for editor.layers.models. Everything else on the canvas
+    stays put — including nodes the accumulator never saw (e.g. a project
+    opened via File → Open before the API started accumulating).
+    """
+    bundle: dict[str, Any] = {
+        "editor": {"layers": []},
+        "design": {"graph": {"blocks": [], "wires": []}},
+        "dependencies": {},
+    }
+    if node_model is not None:
+        bundle["editor"]["layers"].append(
+            {
+                "type": "diagram-nodes",
+                "models": {node_model["id"]: node_model},
+            }
+        )
+    if block is not None:
+        bundle["design"]["graph"]["blocks"].append(block)
+    if dependency is not None:
+        dep_id, dep = dependency
+        bundle["dependencies"][dep_id] = dep
+    try:
+        async with httpx.AsyncClient(timeout=30) as client:
+            resp = await client.post(
+                f"{api_url}/api/architecture/load",
+                json={"architecture": bundle, "source": source},
+                headers={"Content-Type": "application/json"},
+            )
+        resp.raise_for_status()
+        return {"ok": True, "status": resp.status_code, "body": resp.json()}
+    except httpx.HTTPError as exc:
+        logger.exception("push_patch failed (source=%s)", source)
+        return {"ok": False, "error": str(exc)}
 
 
 def _ports_from_payload(payload: list[dict[str, Any]] | None, direction: str) -> list[PortSpec]:
@@ -318,6 +436,27 @@ async def list_tools() -> list[Tool]:
                 "required": ["name"],
                 "properties": {
                     **node_schema["properties"],
+                    "block_kind": {
+                        "type": "string",
+                        "enum": ["code", "package"],
+                        "default": "code",
+                        "description": (
+                            "'code' (default) → flat basic.code node, like the "
+                            "old behaviour. 'package' → block.package with "
+                            "inner basic.input/output/constant/code blocks "
+                            "(see create_package_node). Use 'package' when the "
+                            "node has tunable constants the user should edit "
+                            "from the UI."
+                        ),
+                    },
+                    "constants": {
+                        "type": "array",
+                        "items": {"type": "object"},
+                        "description": (
+                            "Only used when block_kind='package'. Each entry "
+                            "becomes a basic.constant block: {name, value}."
+                        ),
+                    },
                     "wire_mode": {
                         "type": "string",
                         "enum": ["nearest", "broadcast"],
@@ -342,6 +481,142 @@ async def list_tools() -> list[Tool]:
                     },
                     "api_url": {"type": "string"},
                     "source": {"type": "string", "default": "add_node"},
+                },
+            },
+        ),
+        Tool(
+            name="create_package_node",
+            description=(
+                "Build a `block.package` node — a hierarchical container that "
+                "wraps a sub-graph of `basic.input` / `basic.output` / "
+                "`basic.constant` / `basic.code` blocks behind one canvas "
+                "tile. This is what the Offboard Studio UI produces when a "
+                "user 'collapses' a graph (e.g. the PID example).\n\n"
+                "Use this instead of `create_node` / `add_node` when the "
+                "node has tunable constants the user should be able to edit "
+                "from the UI, or when the logic is meaningfully bigger than "
+                "a single function and benefits from named inputs/outputs.\n\n"
+                "The result is auto-wired against the current canvas (same "
+                "label compatibility as add_node) and pushed in append mode."
+            ),
+            inputSchema={
+                "type": "object",
+                "required": ["name", "code"],
+                "properties": {
+                    "name": {"type": "string"},
+                    "description": {"type": "string"},
+                    "inputs": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "Outer input port labels (one basic.input block per entry).",
+                    },
+                    "outputs": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "Outer output port labels (one basic.output block per entry).",
+                    },
+                    "constants": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": ["name"],
+                            "properties": {
+                                "name": {"type": "string"},
+                                "value": {"type": ["string", "number"]},
+                            },
+                        },
+                        "description": "Constants visible inside the package (basic.constant blocks). The basic.code reads each by name.",
+                    },
+                    "code": {
+                        "type": "string",
+                        "description": "Python source for the inner basic.code block. Inputs/constants arrive as named ports on the block.",
+                    },
+                    "auto_wire": {
+                        "type": "boolean",
+                        "default": True,
+                        "description": "Wire the new package's outer ports against existing canvas nodes by label.",
+                    },
+                    "wire_mode": {
+                        "type": "string",
+                        "enum": ["nearest", "broadcast"],
+                        "default": "nearest",
+                    },
+                    "auto_push": {
+                        "type": "boolean",
+                        "default": True,
+                    },
+                    "api_url": {"type": "string"},
+                    "source": {"type": "string", "default": "create_package_node"},
+                },
+            },
+        ),
+        Tool(
+            name="update_node",
+            description=(
+                "Modify fields of a node already on the canvas: replace its "
+                "Python code, change its execution frequency (Hz), edit "
+                "parameters, or rewrite its description. Identify the target "
+                "by `node_id` (exact) or `name` (case-insensitive). The full "
+                "architecture is re-pushed in replace mode so the renderer "
+                "and the server-side accumulator stay in sync.\n\n"
+                "Port changes are not supported here — recreating a node is "
+                "safer when port shape changes."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "node_id": {"type": "string"},
+                    "name": {
+                        "type": "string",
+                        "description": "Match by node name (case-insensitive). "
+                        "Use this OR node_id.",
+                    },
+                    "code": {"type": "string"},
+                    "frequency": {
+                        "type": ["string", "number"],
+                        "description": "Execution rate in Hz. Stored as a string.",
+                    },
+                    "params": {
+                        "type": "array",
+                        "items": {"type": "object"},
+                        "description": "Replace the parameter list entirely.",
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Replace the aiDescription (free-form text).",
+                    },
+                    "api_url": {"type": "string"},
+                    "source": {"type": "string", "default": "update_node"},
+                },
+            },
+        ),
+        Tool(
+            name="delete_nodes",
+            description=(
+                "Surgically remove one or more nodes from the canvas. Hits "
+                "the dedicated /api/architecture/remove-nodes endpoint, "
+                "which updates the accumulator and emits a deletion event "
+                "that the renderer bridge applies via editor.removeNode — "
+                "no full canvas reload, so any other nodes (including ones "
+                "the accumulator never saw, e.g. File → Open) stay put.\n\n"
+                "Pass `node_ids` for exact removal. `names` is a convenience "
+                "lookup against the accumulator (case-insensitive)."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "node_ids": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "Exact node IDs to remove.",
+                    },
+                    "names": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "Node names to remove (case-insensitive).",
+                    },
+                    "api_url": {"type": "string"},
+                    "source": {"type": "string", "default": "delete_nodes"},
                 },
             },
         ),
@@ -550,6 +825,14 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
         )
 
     if name == "add_node":
+        # Block kind dispatch — keep create_package_node's path for explicit
+        # callers, but let add_node grow a package too via block_kind='package'.
+        if (arguments.get("block_kind") or "code").lower() == "package":
+            pkg_args = dict(arguments)
+            pkg_args["block_kind"] = "code"  # avoid recursion if downstream re-reads
+            pkg_args.setdefault("source", "add_node")
+            return await call_tool("create_package_node", pkg_args)
+
         spec = _node_specs_from_payload([arguments])[0]
         api_url = (
             arguments.get("api_url")
@@ -683,6 +966,329 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
                     ),
                 }
             )
+
+    if name == "create_package_node":
+        pkg_name = arguments.get("name", "").strip()
+        if not pkg_name:
+            return _result({"error": "name is required"})
+        code = arguments.get("code")
+        if not isinstance(code, str) or not code.strip():
+            return _result({"error": "code is required"})
+        api_url = _resolve_api_url(arguments.get("api_url"))
+
+        # Position to the right of existing canvas (same as add_node).
+        arch = await _fetch_accumulator(api_url)
+        existing_node_models: dict[str, dict[str, Any]] = {}
+        existing_max_x = 0.0
+        if arch:
+            layers = (arch.get("editor") or {}).get("layers") or []
+            node_layer = next(
+                (L for L in layers if L.get("type") == "diagram-nodes"), None
+            )
+            if node_layer:
+                existing_node_models = node_layer.get("models") or {}
+                if existing_node_models:
+                    existing_max_x = max(
+                        float(n.get("x") or 0) for n in existing_node_models.values()
+                    )
+        new_x = (existing_max_x + 320) if existing_node_models else 200
+        new_y = 150
+
+        new_built = build_package_node(
+            name=pkg_name,
+            description=str(arguments.get("description", "")),
+            input_labels=[str(s) for s in (arguments.get("inputs") or []) if s],
+            output_labels=[str(s) for s in (arguments.get("outputs") or []) if s],
+            constants=list(arguments.get("constants") or []),
+            code=code,
+            x=new_x,
+            y=new_y,
+        )
+
+        # Auto-wire outer ports against the canvas.
+        link_models, wires_list = {}, []
+        if arguments.get("auto_wire", True) and existing_node_models:
+            link_models, wires_list = wire_against_existing(
+                new_built,
+                existing_node_models,
+                mode=arguments.get("wire_mode", "nearest"),
+            )
+
+        bundle = {
+            "editor": {
+                "layers": [
+                    {
+                        "type": "diagram-nodes",
+                        "models": {new_built["node_id"]: new_built["node_model"]},
+                    },
+                    {"type": "diagram-links", "models": link_models},
+                ],
+            },
+            "design": {
+                "board": "Python3-Noetic",
+                "graph": {"blocks": [new_built["block"]], "wires": wires_list},
+            },
+            "dependencies": {new_built["dependency_id"]: new_built["dependency"]},
+        }
+
+        push_result: Any = None
+        if arguments.get("auto_push", True):
+            try:
+                async with httpx.AsyncClient(timeout=30) as client:
+                    push_resp = await client.post(
+                        f"{api_url}/api/architecture/load",
+                        json={
+                            "architecture": bundle,
+                            "source": arguments.get("source", "create_package_node"),
+                        },
+                        headers={"Content-Type": "application/json"},
+                    )
+                push_resp.raise_for_status()
+                push_result = {
+                    "ok": True,
+                    "status": push_resp.status_code,
+                    "body": push_resp.json(),
+                }
+            except httpx.HTTPError as exc:
+                logger.exception("create_package_node: push failed")
+                push_result = {"ok": False, "error": str(exc)}
+
+        return _result(
+            {
+                "node": {
+                    "node_id": new_built["node_id"],
+                    "dependency_id": new_built["dependency_id"],
+                    "name": pkg_name,
+                    "kind": "block.package",
+                    "outer_ports": {
+                        "in": [
+                            p["label"]
+                            for p in new_built["node_model"]["ports"]
+                            if p.get("in")
+                        ],
+                        "out": [
+                            p["label"]
+                            for p in new_built["node_model"]["ports"]
+                            if not p.get("in")
+                        ],
+                    },
+                    "inner_block_count": len(
+                        new_built["dependency"]["design"]["graph"]["blocks"]
+                    ),
+                    "inner_wire_count": len(
+                        new_built["dependency"]["design"]["graph"]["wires"]
+                    ),
+                },
+                "wires_added": len(wires_list),
+                "wire_targets": [
+                    {
+                        "to_node": (
+                            w["target"]["block"]
+                            if w["source"]["block"] == new_built["node_id"]
+                            else w["source"]["block"]
+                        ),
+                        "via": w["source"]["name"],
+                    }
+                    for w in wires_list
+                ],
+                "push_result": push_result,
+            }
+        )
+
+    if name == "update_node":
+        if not arguments.get("node_id") and not arguments.get("name"):
+            return _result(
+                {"error": "either node_id or name is required to identify the node"}
+            )
+        api_url = _resolve_api_url(arguments.get("api_url"))
+        arch = await _fetch_accumulator(api_url)
+        if not arch:
+            return _result(
+                {
+                    "error": (
+                        "canvas state is empty or API is unreachable — "
+                        "nothing to update"
+                    ),
+                    "api_url": api_url,
+                }
+            )
+
+        match = _find_node(arch, node_id=arguments.get("node_id"), name=arguments.get("name"))
+        if not match:
+            return _result(
+                {
+                    "error": "no matching node",
+                    "criteria": {
+                        "node_id": arguments.get("node_id"),
+                        "name": arguments.get("name"),
+                    },
+                }
+            )
+        node_id, node = match
+
+        # Apply per-instance updates on node.data (and mirror to design.graph.block).
+        data = node.setdefault("data", {})
+        changed: list[str] = []
+        if "code" in arguments:
+            data["code"] = arguments["code"]
+            changed.append("code")
+        if "frequency" in arguments:
+            data["frequency"] = str(arguments["frequency"])
+            changed.append("frequency")
+        if "params" in arguments:
+            data["params"] = list(arguments["params"] or [])
+            changed.append("params")
+        if "description" in arguments:
+            data["aiDescription"] = str(arguments["description"])
+            changed.append("description")
+
+        # Mirror to design.graph.blocks (same block id == node id).
+        block_for_patch: dict[str, Any] | None = None
+        for b in (arch.get("design") or {}).get("graph", {}).get("blocks", []) or []:
+            if b.get("id") == node_id:
+                b.setdefault("data", {})
+                for key in ("code", "frequency", "params", "aiDescription"):
+                    if key in data:
+                        b["data"][key] = data[key]
+                block_for_patch = b
+                break
+
+        # Touch the shared dependency only when this node is its sole user
+        # — otherwise we'd silently mutate sibling instances.
+        dep_id = (node.get("extras") or {}).get("dependency_id") or node.get("type")
+        deps = arch.setdefault("dependencies", {})
+        all_models = (
+            next(
+                (
+                    L
+                    for L in (arch.get("editor") or {}).get("layers", [])
+                    if L.get("type") == "diagram-nodes"
+                ),
+                {},
+            ).get("models")
+            or {}
+        )
+        users = [
+            n
+            for n in all_models.values()
+            if ((n.get("extras") or {}).get("dependency_id") or n.get("type")) == dep_id
+        ]
+        dep_touched = False
+        if isinstance(dep_id, str) and dep_id in deps and len(users) == 1:
+            dep = deps[dep_id]
+            if isinstance(dep, dict):
+                if "code" in arguments:
+                    dep["code"] = arguments["code"]
+                if "params" in arguments:
+                    dep["parameters"] = list(arguments["params"] or [])
+                if "description" in arguments:
+                    dep["description"] = str(arguments["description"])[:280]
+                dep_touched = True
+
+        # Patch-append rather than full replace: only the touched node /
+        # block / dep is in the bundle. Other canvas nodes (including those
+        # the accumulator never saw, e.g. File → Open project) are untouched.
+        dep_patch = (
+            (dep_id, deps[dep_id])
+            if dep_touched and isinstance(dep_id, str) and dep_id in deps
+            else None
+        )
+        push_result = await _push_patch(
+            api_url,
+            node_model=node,
+            block=block_for_patch,
+            dependency=dep_patch,
+            source=arguments.get("source") or "update_node",
+        )
+        return _result(
+            {
+                "node_id": node_id,
+                "node_name": (node.get("extras") or {}).get("name"),
+                "changed_fields": changed,
+                "dependency_updated": dep_touched,
+                "dependency_id": dep_id,
+                "dependency_users": len(users),
+                "push_result": push_result,
+            }
+        )
+
+    if name == "delete_nodes":
+        ids = set(arguments.get("node_ids") or [])
+        names_arg = [
+            s.strip().lower()
+            for s in (arguments.get("names") or [])
+            if isinstance(s, str)
+        ]
+        if not ids and not names_arg:
+            return _result({"error": "either node_ids[] or names[] is required"})
+
+        api_url = _resolve_api_url(arguments.get("api_url"))
+
+        # Resolve names → ids by consulting the accumulator. Names are
+        # case-insensitive matches on extras.name. node_ids are passed
+        # through verbatim — the server-side remove is idempotent for
+        # unknown ids, so passing an id that isn't in the accumulator
+        # just no-ops (useful if the renderer has nodes the accumulator
+        # never saw).
+        resolved: list[dict[str, Any]] = []
+        if names_arg:
+            arch = await _fetch_accumulator(api_url)
+            if arch:
+                layers = (arch.get("editor") or {}).get("layers") or []
+                nodes_layer = next(
+                    (L for L in layers if L.get("type") == "diagram-nodes"), None
+                )
+                node_models = (nodes_layer or {}).get("models") or {}
+                for nid, n in node_models.items():
+                    name_lc = ((n.get("extras") or {}).get("name") or "").strip().lower()
+                    if name_lc and name_lc in names_arg:
+                        ids.add(nid)
+                        resolved.append({"id": nid, "name": (n.get("extras") or {}).get("name")})
+
+        if not ids:
+            return _result(
+                {
+                    "error": "no matching nodes",
+                    "criteria": arguments,
+                    "hint": (
+                        "If the node only exists in the renderer (loaded via "
+                        "File → Open) and never went through MCP, pass its "
+                        "exact node_id rather than name — the server will "
+                        "propagate the removal to the bridge regardless."
+                    ),
+                }
+            )
+
+        # Hit the dedicated remove endpoint. The service updates its
+        # accumulator AND appends to the deletion log; the bridge polls
+        # /deletions and applies editor.removeNode locally — no full
+        # canvas reload, so other nodes / wires stay put.
+        try:
+            async with httpx.AsyncClient(timeout=30) as client:
+                resp = await client.post(
+                    f"{api_url}/api/architecture/remove-nodes",
+                    json={"node_ids": sorted(ids)},
+                    headers={"Content-Type": "application/json"},
+                )
+            resp.raise_for_status()
+            api_result = resp.json()
+        except httpx.HTTPError as exc:
+            logger.exception("delete_nodes: remove call failed")
+            return _result(
+                {
+                    "error": f"could not reach {api_url}/api/architecture/remove-nodes: {exc}",
+                    "requested_ids": sorted(ids),
+                }
+            )
+
+        return _result(
+            {
+                "removed_ids": sorted(ids),
+                "removed_count": len(ids),
+                "resolved_by_name": resolved,
+                "api_result": api_result,
+            }
+        )
 
     if name == "generate_with_backend_ai":
         backend = (

@@ -104,16 +104,59 @@ def _summarise_architecture(
     for dep_id, dep in deps.items():
         if not isinstance(dep, dict):
             continue
-        entry = {
-            "id": dep_id,
-            "type": dep.get("type"),
-            "description": dep.get("description"),
-            "inputs": dep.get("inputs", []),
-            "outputs": dep.get("outputs", []),
-            "parameters": dep.get("parameters", []),
-        }
-        if include_code:
-            entry["code"] = dep.get("code") or ""
+        # Two dep shapes coexist:
+        #   1. flat   {type, description, inputs, outputs, parameters, code}
+        #      — what MCP's create_node / add_node emit (a single basic.code).
+        #   2. nested {package, design.graph.{blocks, wires}, dependencies}
+        #      — what the UI emits for block.package nodes (e.g. PID).
+        is_package = "design" in dep and isinstance(dep.get("design"), dict)
+        if is_package:
+            pkg = dep.get("package") or {}
+            graph = (dep.get("design") or {}).get("graph") or {}
+            inner_blocks = graph.get("blocks") or []
+            inner_wires = graph.get("wires") or []
+            entry: dict[str, Any] = {
+                "id": dep_id,
+                "kind": "package",
+                "name": pkg.get("name"),
+                "description": pkg.get("description"),
+                "inner_block_count": len(inner_blocks),
+                "inner_wire_count": len(inner_wires),
+                "sub_deps": list((dep.get("dependencies") or {}).keys()),
+            }
+            # Type histogram for a quick read.
+            type_counts: dict[str, int] = {}
+            for b in inner_blocks:
+                t = str(b.get("type") or "?")
+                type_counts[t] = type_counts.get(t, 0) + 1
+            entry["inner_block_types"] = type_counts
+            # Per-block summary — names + (optionally) code.
+            entry["inner_blocks"] = []
+            for b in inner_blocks:
+                b_data = b.get("data") or {}
+                b_entry = {
+                    "id": b.get("id"),
+                    "type": b.get("type"),
+                    "name": b_data.get("name"),
+                }
+                if b.get("type") == "basic.constant":
+                    b_entry["value"] = b_data.get("value")
+                if include_code and b.get("type") == "basic.code":
+                    b_entry["code"] = b_data.get("code") or ""
+                entry["inner_blocks"].append(b_entry)
+            entry["inner_wires"] = inner_wires
+        else:
+            entry = {
+                "id": dep_id,
+                "kind": "code",
+                "type": dep.get("type"),
+                "description": dep.get("description"),
+                "inputs": dep.get("inputs", []),
+                "outputs": dep.get("outputs", []),
+                "parameters": dep.get("parameters", []),
+            }
+            if include_code:
+                entry["code"] = dep.get("code") or ""
         dep_summaries.append(entry)
 
     return {
