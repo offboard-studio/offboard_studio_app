@@ -21,6 +21,7 @@ that forwards prompts to the Django backend's
 | `nest_nodes`               | Wrap a sub-graph as ONE packaged node (node-in-node).        |
 | `validate_architecture`    | Structural sanity check.                                     |
 | `save_architecture`        | Persist a bundle to disk, ready for File → Open.             |
+| `push_to_app`              | POST to the running NestJS API (`:3333`); renderer auto-loads it over Socket.IO. |
 | `generate_with_backend_ai` | Proxy to Django `/api/v1/ai/generate-architecture`.          |
 
 All bundles share the exact JSON shape `Editor.loadProject` already
@@ -74,6 +75,7 @@ config at the `offboard-mcp` executable.
 | --------------------------- | ------------------------------------------------------------------ |
 | `OFFBOARD_BACKEND_URL`      | Where `generate_with_backend_ai` POSTs. Default `http://localhost:8000`. |
 | `OFFBOARD_BACKEND_TOKEN`    | Optional bearer token added to the proxy request.                  |
+| `OFFBOARD_API_URL`          | Where `push_to_app` POSTs. Default `http://localhost:3333` (the NestJS API the Electron app exposes). |
 | `OFFBOARD_MCP_OUTPUT_DIR`   | Default output dir for `save_architecture`. Defaults to CWD.       |
 | `OFFBOARD_MCP_LOG`          | Python logging level. Default `INFO`.                              |
 

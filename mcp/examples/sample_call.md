@@ -61,7 +61,23 @@ Forwards to Django `/api/v1/ai/generate-architecture`. Server-side it walks
 through `ai_service` provider abstraction (Anthropic / OpenAI / Ollama) and
 returns the same shape `create_architecture` returns.
 
-## 5. Save to disk for File → Open
+## 5. Live push into the running app
+
+Tool: `push_to_app` — send the bundle to the NestJS API that runs inside the
+Electron app, which then broadcasts it over Socket.IO to the renderer. The
+graph appears in the editor without any user action.
+
+```json
+{
+  "architecture": { ... output of create_architecture ... },
+  "source": "claude-code-session-42"
+}
+```
+
+Requires the desktop app to be running (so `http://localhost:3333/api` is
+reachable). On success the response is `{ "ok": true, "status": 202, ... }`.
+
+## 6. Save to disk for File → Open
 
 Tool: `save_architecture`
 ```json

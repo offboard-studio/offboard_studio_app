@@ -215,6 +215,33 @@ async def list_tools() -> list[Tool]:
             },
         ),
         Tool(
+            name="push_to_app",
+            description=(
+                "POST an architecture bundle to the running NestJS API "
+                "(`/api/architecture/load`). The renderer is listening over "
+                "Socket.IO and will auto-load the result — use this when the "
+                "Offboard Studio app is running and you want to see the graph "
+                "immediately. The architecture must include editor + design + "
+                "dependencies (e.g. the output of create_architecture)."
+            ),
+            inputSchema={
+                "type": "object",
+                "required": ["architecture"],
+                "properties": {
+                    "architecture": {"type": "object"},
+                    "api_url": {
+                        "type": "string",
+                        "description": "Override OFFBOARD_API_URL env. Default http://localhost:3333.",
+                    },
+                    "source": {
+                        "type": "string",
+                        "description": "Free-form tag included in the renderer notification.",
+                        "default": "mcp",
+                    },
+                },
+            },
+        ),
+        Tool(
             name="generate_with_backend_ai",
             description=(
                 "Ask the Django backend (`/api/v1/ai/generate-architecture`) to "
@@ -309,6 +336,36 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             encoding="utf-8",
         )
         return _result({"path": str(path)})
+
+    if name == "push_to_app":
+        architecture = arguments.get("architecture")
+        if not isinstance(architecture, dict) or not architecture:
+            return _result({"error": "architecture (object) is required"})
+        api_url = (
+            arguments.get("api_url")
+            or os.environ.get("OFFBOARD_API_URL")
+            or "http://localhost:3333"
+        ).rstrip("/")
+        source = arguments.get("source", "mcp")
+        try:
+            async with httpx.AsyncClient(timeout=30) as client:
+                resp = await client.post(
+                    f"{api_url}/api/architecture/load",
+                    json={"architecture": architecture, "source": source},
+                    headers={"Content-Type": "application/json"},
+                )
+            resp.raise_for_status()
+            return _result({"ok": True, "status": resp.status_code, "body": resp.json()})
+        except httpx.HTTPError as exc:
+            logger.exception("push_to_app failed")
+            return _result(
+                {
+                    "error": (
+                        f"could not reach NestJS API at {api_url}/api/architecture/load: "
+                        f"{exc}. Is the Offboard Studio app running?"
+                    ),
+                }
+            )
 
     if name == "generate_with_backend_ai":
         backend = (

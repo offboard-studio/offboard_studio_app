@@ -5,6 +5,7 @@
       "args": [],
       "env": {
         "OFFBOARD_BACKEND_URL": "http://localhost:8000",
+        "OFFBOARD_API_URL": "http://localhost:3333",
         "OFFBOARD_MCP_OUTPUT_DIR": "/Users/harunkurtdev/Desktop/offboard_studio_app/release/ai-generated"
       }
     }
