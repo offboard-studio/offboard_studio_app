@@ -17,4 +17,6 @@
 set -euo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export PYTHONPATH="${HERE}/src:${PYTHONPATH:-}"
-exec python -m offboard_mcp.server "$@"
+PY="${HERE}/.venv/bin/python"
+[ -x "$PY" ] || PY="$(command -v python3 || command -v python)"
+exec "$PY" -m offboard_mcp.server "$@"

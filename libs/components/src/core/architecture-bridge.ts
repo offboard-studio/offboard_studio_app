@@ -55,6 +55,8 @@ function resolveApiUrl(): string {
 function normaliseBundle(bundle: Record<string, unknown>): void {
     const editor = bundle.editor as { layers?: Array<Record<string, unknown>> } | undefined;
     const layers = editor?.layers;
+    const dependencies =
+        (bundle.dependencies as Record<string, Record<string, unknown>> | undefined) ?? {};
     if (Array.isArray(layers)) {
         for (const layer of layers) {
             const models = layer?.models as Record<string, Record<string, unknown>> | undefined;
@@ -62,10 +64,17 @@ function normaliseBundle(bundle: Record<string, unknown>): void {
             if (layer.type === 'diagram-nodes') {
                 for (const node of Object.values(models)) {
                     const t = node.type;
+                    let depId: string | undefined;
                     if (typeof t === 'string' && t.startsWith('basic.code.')) {
                         const extras = (node.extras ??= {}) as Record<string, unknown>;
                         if (extras.dependency_id == null) extras.dependency_id = t;
+                        depId = t;
                         node.type = 'basic.code';
+                    } else {
+                        const extras = node.extras as Record<string, unknown> | undefined;
+                        if (extras && typeof extras.dependency_id === 'string') {
+                            depId = extras.dependency_id;
+                        }
                     }
                     const ports = node.ports as Array<Record<string, unknown>> | undefined;
                     if (Array.isArray(ports)) {
@@ -75,20 +84,36 @@ function normaliseBundle(bundle: Record<string, unknown>): void {
                             }
                         }
                     }
-                    if (!node.data || typeof node.data !== 'object') {
-                        const portsIn = (Array.isArray(ports) ? ports : []).filter((p) => p.in);
-                        const portsOut = (Array.isArray(ports) ? ports : []).filter((p) => !p.in);
-                        node.data = {
-                            code: '',
-                            aiDescription: '',
-                            frequency: '1',
-                            params: [],
-                            ports: {
-                                in: portsIn.map((p) => ({ name: String(p.name ?? p.label ?? '') })),
-                                out: portsOut.map((p) => ({ name: String(p.name ?? p.label ?? '') })),
-                            },
+                    const dep = depId ? dependencies[depId] : undefined;
+                    const data = (node.data && typeof node.data === 'object'
+                        ? (node.data as Record<string, unknown>)
+                        : null) ?? {};
+                    if (dep) {
+                        if (typeof data.code !== 'string' || data.code === '') {
+                            if (typeof dep.code === 'string') data.code = dep.code;
+                        }
+                        if (data.aiDescription == null && typeof dep.description === 'string') {
+                            data.aiDescription = dep.description;
+                        }
+                        if (!Array.isArray(data.params) && Array.isArray(dep.parameters)) {
+                            data.params = (dep.parameters as unknown[]).map((p) =>
+                                typeof p === 'string' ? { name: p } : p,
+                            );
+                        }
+                    }
+                    const portsIn = (Array.isArray(ports) ? ports : []).filter((p) => p.in);
+                    const portsOut = (Array.isArray(ports) ? ports : []).filter((p) => !p.in);
+                    data.code ??= '';
+                    data.aiDescription ??= '';
+                    data.frequency ??= '1';
+                    data.params ??= [];
+                    if (!data.ports || typeof data.ports !== 'object') {
+                        data.ports = {
+                            in: portsIn.map((p) => ({ name: String(p.name ?? p.label ?? '') })),
+                            out: portsOut.map((p) => ({ name: String(p.name ?? p.label ?? '') })),
                         };
                     }
+                    node.data = data;
                 }
             } else if (layer.type === 'diagram-links') {
                 const nodeLayer = layers.find((l) => l.type === 'diagram-nodes');
@@ -322,6 +347,50 @@ async function pollOnce(apiUrl: string): Promise<void> {
     }
 }
 
+/**
+ * Push the renderer's current editor state to /api/architecture/sync so the
+ * server-side accumulator (used by MCP tools like `add_node`) reflects what
+ * the user actually sees. Called when our local canvas has nodes but the
+ * server's accumulator is empty — i.e. after an API restart.
+ */
+async function syncIfDrifted(apiUrl: string): Promise<void> {
+    try {
+        const stateResp = await fetch(`${apiUrl}/api/architecture/state`, {
+            method: 'GET',
+            headers: { Accept: 'application/json' },
+        });
+        if (!stateResp.ok) return;
+        const state = (await stateResp.json()) as {
+            architecture: AnyRec | null;
+        };
+
+        const serverNodeCount = countNodes(state?.architecture ?? null);
+        const local = Editor.getInstance().serialise() as AnyRec;
+        const localNodeCount = countNodes(local);
+
+        // Only seed when the server is empty (or wildly out of sync). Don't
+        // overwrite a populated accumulator — the server's view may be ahead
+        // (e.g. another client just pushed).
+        if (localNodeCount > 0 && serverNodeCount < localNodeCount) {
+            await fetch(`${apiUrl}/api/architecture/sync`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ architecture: local }),
+            });
+        }
+    } catch {
+        // API offline — nothing to seed against.
+    }
+}
+
+function countNodes(arch: AnyRec | null): number {
+    if (!arch) return 0;
+    const editor = arch.editor as { layers?: AnyRec[] } | undefined;
+    const layer = editor?.layers?.find((l) => l.type === 'diagram-nodes');
+    const models = (layer?.models as AnyRec | undefined) ?? {};
+    return Object.keys(models).length;
+}
+
 export function startArchitectureBridge(
     apiUrl: string = resolveApiUrl(),
     onLoadedCallback?: (message: LoadedArchitecture) => void,
@@ -334,6 +403,9 @@ export function startArchitectureBridge(
     const url = apiUrl.replace(/\/$/, '');
     // Prime once so a freshly-opened renderer picks up an already-pushed graph.
     void pollOnce(url);
+    // After a delay (let any project file finish loading first) push our
+    // current canvas to the server-side accumulator if it's behind us.
+    setTimeout(() => void syncIfDrifted(url), 2500);
     timer = setInterval(() => void pollOnce(url), pollIntervalMs);
     return stopArchitectureBridge;
 }

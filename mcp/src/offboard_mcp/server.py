@@ -34,7 +34,7 @@ from offboard_mcp.core.architecture import build_architecture
 from offboard_mcp.core.context import gather as gather_context
 from offboard_mcp.core.nested import nest_subgraph
 from offboard_mcp.core.nodes import NodeSpec, PortSpec, build_node
-from offboard_mcp.core.wiring import auto_wire, validate_architecture
+from offboard_mcp.core.wiring import auto_wire, validate_architecture, wire_against_existing
 
 logger = logging.getLogger("offboard_mcp")
 logging.basicConfig(level=os.environ.get("OFFBOARD_MCP_LOG", "INFO"))
@@ -296,6 +296,48 @@ async def list_tools() -> list[Tool]:
             },
         ),
         Tool(
+            name="add_node",
+            description=(
+                "Add ONE node to the currently-running app: build the node, "
+                "fetch the live canvas, auto-wire its ports against existing "
+                "nodes (label + data_type compatibility), and POST the result "
+                "to `/api/architecture/load` in append mode. Use this when the "
+                "user wants to grow the graph incrementally — it does the "
+                "create_node + auto-wire + push_to_app round-trip in one call."
+            ),
+            inputSchema={
+                "type": "object",
+                "required": ["name"],
+                "properties": {
+                    **node_schema["properties"],
+                    "wire_mode": {
+                        "type": "string",
+                        "enum": ["nearest", "broadcast"],
+                        "default": "nearest",
+                        "description": (
+                            "'nearest' wires each new port to its first match. "
+                            "'broadcast' fans out — every match gets a link."
+                        ),
+                    },
+                    "auto_wire": {
+                        "type": "boolean",
+                        "default": True,
+                        "description": "Set false to add the node without wiring.",
+                    },
+                    "auto_push": {
+                        "type": "boolean",
+                        "default": True,
+                        "description": (
+                            "Set false to return the built node + computed wires "
+                            "without POSTing. Caller can push manually later."
+                        ),
+                    },
+                    "api_url": {"type": "string"},
+                    "source": {"type": "string", "default": "add_node"},
+                },
+            },
+        ),
+        Tool(
             name="generate_with_backend_ai",
             description=(
                 "Ask the Django backend (`/api/v1/ai/generate-architecture`) to "
@@ -494,6 +536,111 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
                     "backend_ai_available": (snapshot.get("backend_ai") or {}).get("available"),
                 },
                 "ai_response": ai_response,
+                "push_result": push_result,
+            }
+        )
+
+    if name == "add_node":
+        spec = _node_specs_from_payload([arguments])[0]
+        api_url = (
+            arguments.get("api_url")
+            or os.environ.get("OFFBOARD_API_URL")
+            or "http://localhost:3333"
+        ).rstrip("/")
+
+        # Fetch the accumulated canvas state so we can place the new node to
+        # the right of existing ones and discover compatible ports to wire
+        # against. `/state` is the server-side merged snapshot — `/latest`
+        # only returns the most recent push and would miss earlier nodes.
+        existing_node_models: dict[str, dict[str, Any]] = {}
+        existing_max_x = 0.0
+        canvas_status: dict[str, Any] = {"available": False}
+        try:
+            async with httpx.AsyncClient(timeout=10) as client:
+                resp = await client.get(f"{api_url}/api/architecture/state")
+            if resp.status_code == 200:
+                body = resp.json()
+                arch = body.get("architecture") or {}
+                layers = (arch.get("editor") or {}).get("layers") or []
+                node_layer = next(
+                    (L for L in layers if L.get("type") == "diagram-nodes"), None
+                )
+                if node_layer:
+                    existing_node_models = node_layer.get("models") or {}
+                    if existing_node_models:
+                        existing_max_x = max(
+                            float(n.get("x") or 0) for n in existing_node_models.values()
+                        )
+                canvas_status = {
+                    "available": True,
+                    "node_count": len(existing_node_models),
+                }
+        except httpx.HTTPError as exc:
+            canvas_status = {"available": False, "error": str(exc)}
+
+        new_x = (existing_max_x + 320) if existing_node_models else 200
+        new_y = 150
+        new_built = build_node(spec, x=new_x, y=new_y)
+
+        wire_mode = arguments.get("wire_mode", "nearest")
+        if arguments.get("auto_wire", True) and existing_node_models:
+            link_models, wires = wire_against_existing(
+                new_built, existing_node_models, mode=wire_mode
+            )
+        else:
+            link_models, wires = {}, []
+
+        bundle: dict[str, Any] = {
+            "editor": {
+                "layers": [
+                    {
+                        "type": "diagram-nodes",
+                        "models": {new_built["node_id"]: new_built["node_model"]},
+                    },
+                    {"type": "diagram-links", "models": link_models},
+                ],
+            },
+            "design": {
+                "board": "Python3-Noetic",
+                "graph": {"blocks": [new_built["block"]], "wires": wires},
+            },
+            "dependencies": {new_built["dependency_id"]: new_built["dependency"]},
+        }
+
+        push_result: Any = None
+        if arguments.get("auto_push", True):
+            source = arguments.get("source", "add_node")
+            try:
+                async with httpx.AsyncClient(timeout=30) as client:
+                    push_resp = await client.post(
+                        f"{api_url}/api/architecture/load",
+                        json={"architecture": bundle, "source": source},
+                        headers={"Content-Type": "application/json"},
+                    )
+                push_resp.raise_for_status()
+                push_result = {
+                    "ok": True,
+                    "status": push_resp.status_code,
+                    "body": push_resp.json(),
+                }
+            except httpx.HTTPError as exc:
+                logger.exception("add_node: push failed")
+                push_result = {"ok": False, "error": str(exc)}
+
+        return _result(
+            {
+                "node": new_built,
+                "wires_added": len(wires),
+                "wire_targets": [
+                    {
+                        "to_node": w["target"]["block"]
+                        if w["source"]["block"] == new_built["node_id"]
+                        else w["source"]["block"],
+                        "via": w["source"]["name"],
+                    }
+                    for w in wires
+                ],
+                "canvas": canvas_status,
                 "push_result": push_result,
             }
         )
