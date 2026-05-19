@@ -3,6 +3,8 @@ import throttle from 'lodash/throttle';
 import { ICollaborationService } from './interfaces/collaboration.service.interface';
 import { firebaseCollaborationService } from '../infrastructure/firebase/firebase.collaboration.service';
 import * as htmlToImage from 'html-to-image';
+import { reportError } from './errors/errorReporter';
+import { ErrorCode } from './errors/AppError';
 import {
   COLLAB_SYNC_THROTTLE_MS,
   SCREENSHOT_THROTTLE_MS,
@@ -238,7 +240,9 @@ class CollaborationManager {
       // Trigger screenshot in background
       this.debouncedScreenshot();
     } catch (error) {
-      console.error('[CollaborationManager] Sync failed:', error);
+      reportError(error, ErrorCode.COLLAB_SYNC_FAILED, {
+        projectId: this.currentProjectId,
+      });
     }
   }, COLLAB_SYNC_THROTTLE_MS);
 

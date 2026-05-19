@@ -20,6 +20,10 @@
 dist
 tmp
 /out-tsc
+*.tsbuildinfo
+
+# experimental Python sandbox
+/python_deneme
 
 # misc
 .DS_Store
