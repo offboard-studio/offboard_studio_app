@@ -17,12 +17,14 @@ import {
 
 import { AuthProvider, useAuth } from '@components/auth/AuthProvider';
 import { ErrorBoundary, NotificationProvider, theme, QUERY_STALE_TIME_MS, QUERY_RETRY_COUNT } from '@components';
+import { startArchitectureBridge } from '@components/core/architecture-bridge';
 import { Navigate } from 'react-router-dom';
 
 import './App.module.scss';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider, CssBaseline } from '@mui/material';
 import { JSX } from 'react/jsx-runtime';
+import { useEffect } from 'react';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -99,19 +101,33 @@ const handleError = (error: Error, errorInfo: React.ErrorInfo): void => {
   console.error('Error Info:', errorInfo);
 };
 
-const App = (): JSX.Element => (
-  <ErrorBoundary onError={handleError}>
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <NotificationProvider>
-          <AuthProvider>
-            <RouterProvider router={router} />
-          </AuthProvider>
-        </NotificationProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
-  </ErrorBoundary>
-);
+const App = (): JSX.Element => {
+  useEffect(() => {
+    const stop = startArchitectureBridge(undefined, (message) => {
+      if (!window.location.hash.startsWith('#/board')) {
+        window.location.hash = '#/board';
+      }
+      // Surface a hint for the user — toast handler is wired via NotificationProvider.
+      // eslint-disable-next-line no-console
+      console.info('[architecture-bridge] loaded from', message.source);
+    });
+    return () => stop();
+  }, []);
+
+  return (
+    <ErrorBoundary onError={handleError}>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <NotificationProvider>
+            <AuthProvider>
+              <RouterProvider router={router} />
+            </AuthProvider>
+          </NotificationProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
+  );
+};
 
 export default App;
