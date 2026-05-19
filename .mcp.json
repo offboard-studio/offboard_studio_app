@@ -1,7 +1,7 @@
 {
   "mcpServers": {
     "offboard-studio": {
-      "command": "offboard-mcp",
+      "command": "./mcp/run.sh",
       "env": {
         "OFFBOARD_BACKEND_URL": "http://localhost:8000",
         "OFFBOARD_API_URL": "http://localhost:3333",

@@ -61,6 +61,28 @@ Forwards to Django `/api/v1/ai/generate-architecture`. Server-side it walks
 through `ai_service` provider abstraction (Anthropic / OpenAI / Ollama) and
 returns the same shape `create_architecture` returns.
 
+## 4.5. Context-aware planning (recommended)
+
+Tool: `assist_project_request` — gathers the running app's live state
+(current architecture, block catalog, available AI providers) and threads
+it through the Django backend AI before pushing the result.
+
+```json
+{
+  "prompt": "Add an obstacle-avoidance layer on top of the current arm controller. Reuse the existing camera feed if it's already wired."
+}
+```
+
+By default `auto_push: true`, so the new architecture appears in the
+renderer in one step. To inspect first set `auto_push: false`.
+
+Manual two-step variant — useful when the user is iterating:
+
+1. Tool `gather_project_context` → returns the snapshot.
+2. Tool `create_architecture` (or `generate_with_backend_ai`) using that
+   snapshot to inform your NodeSpec list.
+3. Tool `push_to_app` to send it in.
+
 ## 5. Live push into the running app
 
 Tool: `push_to_app` — send the bundle to the NestJS API that runs inside the

@@ -21,25 +21,47 @@ that forwards prompts to the Django backend's
 | `nest_nodes`               | Wrap a sub-graph as ONE packaged node (node-in-node).        |
 | `validate_architecture`    | Structural sanity check.                                     |
 | `save_architecture`        | Persist a bundle to disk, ready for File → Open.             |
-| `push_to_app`              | POST to the running NestJS API (`:3333`); renderer auto-loads it over Socket.IO. |
-| `generate_with_backend_ai` | Proxy to Django `/api/v1/ai/generate-architecture`.          |
+| `push_to_app`              | POST to the running NestJS API (`:3333`); renderer auto-loads it. |
+| `gather_project_context`   | Snapshot live app state: current architecture + block catalog + AI providers. |
+| `assist_project_request`   | One-shot: gather context → ask backend AI (enriched prompt) → push to app. |
+| `generate_with_backend_ai` | Plain proxy to Django `/api/v1/ai/generate-architecture`.    |
 
 All bundles share the exact JSON shape `Editor.loadProject` already
 accepts, so the renderer doesn't need to learn anything new.
 
 ## Install
 
+The server needs **Python 3.10 or newer** because the `mcp` SDK does. On
+macOS you usually already have a modern Python via Homebrew
+(`/opt/homebrew/bin/python3.13` or similar). Don't use the system
+`python3` shipped with Xcode — that's still 3.9.
+
+### Quick path (no editable install, no shell entry point)
+
 ```bash
 cd mcp
-python -m venv .venv
+python3.13 -m venv .venv
 source .venv/bin/activate
-pip install -e .
+pip install --upgrade pip
+pip install -r requirements.txt
+./run.sh                  # starts the server on stdio
 ```
 
-Verify the entry point works:
+`run.sh` sets `PYTHONPATH=src` and runs `python -m offboard_mcp.server`,
+so the package doesn't have to be installed.
+
+### Editable install (puts `offboard-mcp` on PATH)
+
+Requires `pip >= 21.3` (PEP 660). If your pip is older, run
+`pip install --upgrade pip` first.
 
 ```bash
-offboard-mcp --help 2>/dev/null || echo "ready — server speaks stdio, no help flag"
+cd mcp
+python3.13 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
+pip install -e .
+offboard-mcp              # starts the server on stdio
 ```
 
 ## Register with an MCP client

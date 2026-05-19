@@ -31,6 +31,7 @@ from mcp.server.stdio import stdio_server
 from mcp.types import TextContent, Tool
 
 from offboard_mcp.core.architecture import build_architecture
+from offboard_mcp.core.context import gather as gather_context
 from offboard_mcp.core.nested import nest_subgraph
 from offboard_mcp.core.nodes import NodeSpec, PortSpec, build_node
 from offboard_mcp.core.wiring import auto_wire, validate_architecture
@@ -215,6 +216,59 @@ async def list_tools() -> list[Tool]:
             },
         ),
         Tool(
+            name="gather_project_context",
+            description=(
+                "Collect a live snapshot of the running Offboard Studio app: "
+                "the architecture currently loaded in the editor, the block "
+                "catalog exposed by the components-store, any singleton data, "
+                "and which AI providers the Django backend can reach. Call "
+                "this BEFORE planning a project so suggestions reference real "
+                "block types and don't duplicate what's already on the canvas."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "api_url": {"type": "string"},
+                    "catalog_url": {"type": "string"},
+                    "backend_url": {"type": "string"},
+                    "include_catalog": {"type": "boolean", "default": True},
+                    "expand_catalog_groups": {
+                        "type": "boolean",
+                        "default": False,
+                        "description": "If true, fetch every group's block list too. Heavier.",
+                    },
+                },
+            },
+        ),
+        Tool(
+            name="assist_project_request",
+            description=(
+                "End-to-end helper: gather live project context, ask the "
+                "Django backend AI to plan the requested project (prompt is "
+                "automatically enriched with the current architecture and "
+                "block catalog), then optionally push the result into the "
+                "running app. Use this when the user describes what they "
+                "want in natural language."
+            ),
+            inputSchema={
+                "type": "object",
+                "required": ["prompt"],
+                "properties": {
+                    "prompt": {"type": "string"},
+                    "auto_push": {
+                        "type": "boolean",
+                        "default": True,
+                        "description": "POST the result to /api/architecture/load.",
+                    },
+                    "include_catalog": {"type": "boolean", "default": True},
+                    "expand_catalog_groups": {"type": "boolean", "default": False},
+                    "api_url": {"type": "string"},
+                    "backend_url": {"type": "string"},
+                    "auth_token": {"type": "string"},
+                },
+            },
+        ),
+        Tool(
             name="push_to_app",
             description=(
                 "POST an architecture bundle to the running NestJS API "
@@ -336,6 +390,113 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             encoding="utf-8",
         )
         return _result({"path": str(path)})
+
+    if name == "gather_project_context":
+        snapshot = await gather_context(
+            api_url=arguments.get("api_url"),
+            catalog_url=arguments.get("catalog_url"),
+            backend_url=arguments.get("backend_url"),
+            include_catalog=arguments.get("include_catalog", True),
+            expand_catalog_groups=arguments.get("expand_catalog_groups", False),
+        )
+        return _result(snapshot)
+
+    if name == "assist_project_request":
+        prompt = arguments.get("prompt", "").strip()
+        if not prompt:
+            return _result({"error": "prompt is required"})
+        snapshot = await gather_context(
+            api_url=arguments.get("api_url"),
+            backend_url=arguments.get("backend_url"),
+            include_catalog=arguments.get("include_catalog", True),
+            expand_catalog_groups=arguments.get("expand_catalog_groups", False),
+        )
+
+        # Build an enriched prompt the backend AI can use.
+        context_blob = json.dumps(
+            {
+                "current_architecture": snapshot.get("current_architecture"),
+                "catalog": snapshot.get("catalog"),
+            },
+            ensure_ascii=False,
+        )[:12000]
+        enriched = (
+            f"{prompt}\n\nLIVE PROJECT CONTEXT (JSON):\n{context_blob}\n\n"
+            "Use the live context above when designing the architecture. "
+            "Prefer block types that already exist in the catalog. If the "
+            "current_architecture already has nodes, decide whether to extend "
+            "them or replace; describe your choice in the explanation."
+        )
+
+        backend = (
+            arguments.get("backend_url")
+            or os.environ.get("OFFBOARD_BACKEND_URL")
+            or "http://localhost:8000"
+        ).rstrip("/")
+        headers = {"Content-Type": "application/json"}
+        token = arguments.get("auth_token") or os.environ.get("OFFBOARD_BACKEND_TOKEN")
+        if token:
+            headers["Authorization"] = f"Bearer {token}"
+
+        try:
+            async with httpx.AsyncClient(timeout=180) as client:
+                resp = await client.post(
+                    f"{backend}/api/v1/ai/generate-architecture",
+                    json={"prompt": enriched, "include_catalog": False},
+                    headers=headers,
+                )
+            resp.raise_for_status()
+            ai_response = resp.json()
+        except httpx.HTTPError as exc:
+            logger.exception("assist: backend AI call failed")
+            return _result(
+                {
+                    "context": snapshot,
+                    "ai_error": f"backend AI call failed: {exc}",
+                    "hint": (
+                        "If the Django backend is not running, fall back to "
+                        "create_architecture with hand-crafted node specs."
+                    ),
+                }
+            )
+
+        push_result: Any = None
+        if arguments.get("auto_push", True) and isinstance(ai_response, dict):
+            architecture = ai_response.get("architecture")
+            if isinstance(architecture, dict) and architecture:
+                api_url = (
+                    arguments.get("api_url")
+                    or os.environ.get("OFFBOARD_API_URL")
+                    or "http://localhost:3333"
+                ).rstrip("/")
+                try:
+                    async with httpx.AsyncClient(timeout=30) as client:
+                        push_resp = await client.post(
+                            f"{api_url}/api/architecture/load",
+                            json={
+                                "architecture": architecture,
+                                "source": "assist_project_request",
+                            },
+                            headers={"Content-Type": "application/json"},
+                        )
+                    push_resp.raise_for_status()
+                    push_result = {"ok": True, "status": push_resp.status_code, "body": push_resp.json()}
+                except httpx.HTTPError as exc:
+                    logger.exception("assist: push_to_app failed")
+                    push_result = {"ok": False, "error": str(exc)}
+
+        return _result(
+            {
+                "context_summary": {
+                    "app_running": snapshot.get("app_running"),
+                    "current_architecture": snapshot.get("current_architecture"),
+                    "catalog_available": (snapshot.get("catalog") or {}).get("available"),
+                    "backend_ai_available": (snapshot.get("backend_ai") or {}).get("available"),
+                },
+                "ai_response": ai_response,
+                "push_result": push_result,
+            }
+        )
 
     if name == "push_to_app":
         architecture = arguments.get("architecture")

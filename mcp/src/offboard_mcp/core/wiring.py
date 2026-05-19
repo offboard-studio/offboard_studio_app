@@ -46,14 +46,42 @@ def auto_wire(
             chosen = matches if mode == "broadcast" else matches[:1]
             for tgt, tgt_port in chosen:
                 link_id = str(uuid.uuid4())
+                # react-diagrams expects at least two points on every link
+                # (source endpoint, target endpoint). Empty arrays crash
+                # PortModel.setPosition → link.getPointForPort(...) returns
+                # undefined on the first canvasReady tick.
+                src_pos = (src["node_model"]["x"], src["node_model"]["y"])
+                tgt_pos = (tgt["node_model"]["x"], tgt["node_model"]["y"])
                 link_models[link_id] = {
+                    # "default" matches CustomLinkFactory (extends
+                    # DefaultLinkFactory) registered in editor.ts.
                     "id": link_id,
-                    "type": "diagram-default",
+                    "type": "default",
                     "source": src["node_id"],
                     "sourcePort": src_port["id"],
                     "target": tgt["node_id"],
                     "targetPort": tgt_port["id"],
-                    "points": [],
+                    "points": [
+                        {
+                            "id": str(uuid.uuid4()),
+                            "type": "point",
+                            "x": src_pos[0],
+                            "y": src_pos[1],
+                            "selected": False,
+                        },
+                        {
+                            "id": str(uuid.uuid4()),
+                            "type": "point",
+                            "x": tgt_pos[0],
+                            "y": tgt_pos[1],
+                            "selected": False,
+                        },
+                    ],
+                    "labels": [],
+                    "width": 1,
+                    "color": "rgba(255,255,255,0.5)",
+                    "curvyness": 50,
+                    "selectedColor": "rgb(0,192,255)",
                 }
                 wires.append(
                     {

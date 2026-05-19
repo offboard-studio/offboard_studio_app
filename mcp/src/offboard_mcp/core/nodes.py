@@ -32,9 +32,12 @@ class PortSpec:
     port_type: str = "any"
 
     def to_model(self) -> dict[str, Any]:
+        # Port `type` must match a renderer-registered factory:
+        # port.input / port.output / port.parameter (see BasePort*Factory).
+        port_type_key = "port.input" if self.direction == "in" else "port.output"
         return {
             "id": str(uuid.uuid4()),
-            "type": "diagram-default",
+            "type": port_type_key,
             "label": self.label,
             "name": self.label,
             "in": self.direction == "in",
@@ -84,20 +87,44 @@ def build_node(spec: NodeSpec, *, x: float = 0, y: float = 0) -> dict[str, Any]:
     in_ports = [p.to_model() for p in spec.inputs if p.direction == "in"]
     out_ports = [p.to_model() for p in spec.outputs if p.direction == "out"]
 
+    # node_model.type must match a registered react-diagrams factory in the
+    # renderer (e.g. CodeBlockFactory binds to "basic.code"). The dependency_id
+    # — which encodes the per-spec hash — lives in the dependencies map below,
+    # not on the node's diagram type.
+    #
+    # `data` shape mirrors CodeBlockData (libs/.../code-model.ts) — its
+    # deserialize() copies event.data.data verbatim, and CodeBlockWidget
+    # crashes if it's absent.
+    block_data = {
+        "code": spec.code,
+        "aiDescription": spec.description,
+        "frequency": "1",
+        "params": [
+            {"name": (p.get("name") if isinstance(p, dict) else str(p))}
+            for p in spec.parameters
+        ],
+        "ports": {
+            "in": [{"name": p.label} for p in spec.inputs],
+            "out": [{"name": p.label} for p in spec.outputs],
+        },
+        "name": spec.name,
+        "dependency_id": dep_id,
+    }
     node_model = {
         "id": node_id,
-        "type": dep_id,
+        "type": spec.block_type,
         "x": x,
         "y": y,
         "ports": in_ports + out_ports,
         "selected": False,
-        "extras": {"name": spec.name},
+        "extras": {"name": spec.name, "dependency_id": dep_id},
+        "data": block_data,
     }
     block = {
         "id": node_id,
-        "type": dep_id,
+        "type": spec.block_type,
         "position": {"x": x, "y": y},
-        "data": {"name": spec.name},
+        "data": block_data,
     }
     dependency = {
         "type": spec.block_type,

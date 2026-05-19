@@ -11,6 +11,10 @@ const MiniMapWidget: React.FC<MiniMapWidgetProps> = ({ editor }) => {
   const [viewPort, setViewPort] = useState({ x: 0, y: 0, width: 0, height: 0 });
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 }); // World dimensions
   const [minBounds, setMinBounds] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const worldRef = useRef({ minX: 0, minY: 0, width: 0, height: 0 });
 
   const MINI_MAP_SIZE = 150;
 
@@ -51,6 +55,7 @@ const MiniMapWidget: React.FC<MiniMapWidgetProps> = ({ editor }) => {
       const worldWidth = maxX - minX;
       const worldHeight = maxY - minY;
 
+      worldRef.current = { minX, minY, width: worldWidth, height: worldHeight };
       setDimensions({ width: worldWidth, height: worldHeight });
 
       // Calculate Viewport relative to World
@@ -103,8 +108,56 @@ const MiniMapWidget: React.FC<MiniMapWidgetProps> = ({ editor }) => {
   const aspectRatio = safeHeight / safeWidth;
   const mapHeight = MINI_MAP_SIZE * aspectRatio;
 
+  const panToClientPoint = (clientX: number, clientY: number) => {
+    const el = containerRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    if (rect.width === 0 || rect.height === 0) return;
+
+    const { minX, minY, width: worldW, height: worldH } = worldRef.current;
+    if (worldW === 0 || worldH === 0) return;
+
+    // Minimap → world coordinates of the clicked point.
+    const relX = (clientX - rect.left) / rect.width;
+    const relY = (clientY - rect.top) / rect.height;
+    const worldX = minX + relX * worldW;
+    const worldY = minY + relY * worldH;
+
+    const model = editor.activeModel;
+    const zoom = model.getZoomLevel() / 100;
+
+    // We want the clicked world point to land at the centre of the viewport.
+    // Screen->world is: world = (screen - offset) / zoom  ⇒  offset = screenCentre - world * zoom.
+    const screenCx = window.innerWidth / 2;
+    const screenCy = window.innerHeight / 2;
+    model.setOffsetX(screenCx - worldX * zoom);
+    model.setOffsetY(screenCy - worldY * zoom);
+    editor.engine.repaintCanvas();
+  };
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+    panToClientPoint(e.clientX, e.clientY);
+  };
+
+  useEffect(() => {
+    if (!isDragging) return;
+    const handleMove = (e: MouseEvent) => panToClientPoint(e.clientX, e.clientY);
+    const handleUp = () => setIsDragging(false);
+    window.addEventListener('mousemove', handleMove);
+    window.addEventListener('mouseup', handleUp);
+    return () => {
+      window.removeEventListener('mousemove', handleMove);
+      window.removeEventListener('mouseup', handleUp);
+    };
+  }, [isDragging]);
+
   return (
     <div
+      ref={containerRef}
+      onMouseDown={handleMouseDown}
       style={{
         position: 'fixed',
         bottom: 20,
@@ -117,7 +170,8 @@ const MiniMapWidget: React.FC<MiniMapWidgetProps> = ({ editor }) => {
         zIndex: 1000,
         overflow: 'hidden',
         boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
-        pointerEvents: 'none' // Making interactive requires reverse mapping math (click -> setOffset)
+        cursor: isDragging ? 'grabbing' : 'pointer',
+        userSelect: 'none'
       }}
     >
       {/* Render Nodes as small dots */}
@@ -140,7 +194,8 @@ const MiniMapWidget: React.FC<MiniMapWidgetProps> = ({ editor }) => {
               height: `${Math.max(nH * 100, 2)}%`,
               backgroundColor: '#BB86FC',
               borderRadius: 2,
-              opacity: 0.6
+              opacity: 0.6,
+              pointerEvents: 'none'
             }}
           />
         );
@@ -155,7 +210,8 @@ const MiniMapWidget: React.FC<MiniMapWidgetProps> = ({ editor }) => {
         height: `${viewPort.height * 100}%`,
         border: '2px solid #03DAC6',
         backgroundColor: 'rgba(3, 218, 198, 0.15)',
-        boxSizing: 'border-box'
+        boxSizing: 'border-box',
+        pointerEvents: 'none'
       }} />
     </div>
   );

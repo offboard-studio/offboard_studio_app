@@ -23,6 +23,7 @@ import { PackageBlockModel } from '../package/package-model';
 import { BaseInputPortModel, BaseOutputPortModel, BaseParameterPortModel, BasePortModelOptions } from './base-port/port-model';
 import cloneDeep from 'lodash.clonedeep';
 import CodeBlockCreatorAI from '../../../code_block_creator';
+import { buildProjectContext } from '../../../code_block_creator/project-context';
 import Editor from '../../../core/editor';
 
 
@@ -266,7 +267,21 @@ export const editAIBlock = async (node: NodeModel) => {
 
             const baseurl = editor.getBaseUrl();
             const aiModel = editor.getAiModel();
-            const codeBlock = await new CodeBlockCreatorAI(data, block1, apiKey, baseurl, aiModel).generateCodeBlock(codeBlockData);
+
+            const projectContext = buildProjectContext({
+                model: editor.activeModel,
+                currentNodeId: node.getID(),
+                projectName: editor.getName(),
+                currentBlockOverride: {
+                    aiDescription: data.aiDescription,
+                    inputs: data.inputs ?? [],
+                    outputs: data.outputs ?? [],
+                    params: data.params ?? [],
+                },
+            });
+
+            const codeBlock = await new CodeBlockCreatorAI(data, block1, apiKey, baseurl, aiModel)
+                .generateCodeBlock(codeBlockData, projectContext);
 
 
             const codeBlockString = await extractMainPythonFunctionBlock(codeBlock);
@@ -378,56 +393,7 @@ function extractFunctionCalls(code: string) {
 
 
 async function extractMainPythonFunctionBlock(markdown: string): Promise<string> {
-    const lines = markdown.split("\n");
-
-    let insideBoxed = false;
-    let insidePythonCode = false;
-    let codeBuffer: string[] = [];
-
-    for (const line of lines) {
-        const trimmed = line.trim();
-
-
-        // Tek satırda açılan durum: \boxed{```python
-        if (trimmed.startsWith("\\boxed{```python")) {
-            insideBoxed = true;
-            insidePythonCode = true;
-            continue;
-        }
-
-        // Eğer ayrı ayrıysa: \boxed{ satırı
-        if (trimmed.startsWith("\\boxed{") || trimmed.startsWith("\\box{")) {
-            insideBoxed = true;
-            continue;
-        }
-
-        // Kod bloğu başlangıcı
-        if (insideBoxed && trimmed === "```python") {
-            insidePythonCode = true;
-            continue;
-        }
-
-        // Kod bloğu sonu (``` veya ```})
-        if (insidePythonCode && (trimmed === "```" || trimmed === "```}")) {
-            insidePythonCode = false;
-            insideBoxed = false;
-            continue;
-        }
-
-        // Kod içeriğini topla
-        if (insidePythonCode) {
-            codeBuffer.push(line);
-        }
-    }
-
-    const code = codeBuffer.join("\n");
-
-    if (code.includes("def main(")) {
-        return code;
-    }
-
-    // Eğer bulunamazsa bir iskelet dön
-    return [
+    const FALLBACK = [
         "from lib.utils import Synchronise",
         "from lib.inputs import Inputs",
         "from lib.outputs import Outputs",
@@ -436,6 +402,37 @@ async function extractMainPythonFunctionBlock(markdown: string): Promise<string>
         "def main(inputs: Inputs, outputs: Outputs, parameters: Parameters, synchronise: Synchronise):",
         "    pass"
     ].join("\n");
+
+    if (!markdown) return FALLBACK;
+
+    const collect = (re: RegExp): string[] => {
+        const out: string[] = [];
+        let m: RegExpExecArray | null;
+        while ((m = re.exec(markdown)) !== null) out.push(m[1]);
+        return out;
+    };
+
+    // ```python ... ``` (also matches when the model wraps the fence in \boxed{ ... }).
+    let fences = collect(/```(?:python|py)\b[^\n]*\r?\n([\s\S]*?)```/gi);
+
+    // No python-tagged fence — accept any fenced block as a last resort.
+    if (fences.length === 0) {
+        fences = collect(/```[^\n]*\r?\n([\s\S]*?)```/g);
+    }
+
+    // Prefer the fence that actually defines main(); otherwise take the first one.
+    let code = fences.find((c) => c.includes("def main(")) ?? fences[0] ?? "";
+
+    // Model returned bare code with no fences at all.
+    if (!code && markdown.includes("def main(")) {
+        code = markdown;
+    }
+
+    if (code.includes("def main(")) {
+        return code.replace(/\s+$/, "");
+    }
+
+    return FALLBACK;
 }
 
 

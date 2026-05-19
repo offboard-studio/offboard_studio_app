@@ -1,0 +1,13 @@
+.venv
+.__pycache__
+*.pyc
+*.pyo
+./src/mcp/__pycache__
+./src/mcp/*.pyc
+./src/mcp/*.pyo
+./src/mcp/venv
+./src/offboard_mcp/__pycache__
+./src/offboard_mcp/*.pyc
+./src/offboard_mcp/core/*.pyc
+./src/offboard_mcp/core/_pycache__/*.pyc
+./src/offboard_mcp/core/_pycache__/

@@ -310,23 +310,36 @@ export default class CodeBlockCreatorAI {
    * @returns {Promise<string>} The generated code block.
    */
 
-  public async generateCodeBlock(block: CodeBlockData): Promise<string> {
+  public async generateCodeBlock(block: CodeBlockData, projectContext?: string): Promise<string> {
+    const data = this.codeBlockModel?.getData();
+    const userParts: string[] = [
+      `Task description for the TARGET block: ${data?.aiDescription ?? ''}`,
+      '',
+      'Previous code on this block (extend or replace as fits the task):',
+      '```python',
+      (data?.code ?? '').toString(),
+      '```',
+      '',
+      'Ports declared on the TARGET block:',
+      `- inputs:  ${JSON.stringify(data?.ports?.in ?? [])}`,
+      `- outputs: ${JSON.stringify(data?.ports?.out ?? [])}`,
+      `- params:  ${JSON.stringify(data?.params ?? [])}`,
+    ];
+
+    if (projectContext && projectContext.trim()) {
+      userParts.push('');
+      userParts.push('---');
+      userParts.push(
+        'Below is the rest of the project graph. Use it to keep your generated code consistent with neighbouring blocks — match the read/share type of upstream outputs, reuse the exact port names that other blocks wire into yours, and do not re-implement logic that another block already owns.'
+      );
+      userParts.push('');
+      userParts.push(projectContext);
+    }
+
     const response = await this.openai.chat.completions.create({
       messages: [
         { role: 'system', content: this.SYSTEM_PROMPT_CODE_BLOCK },
-        {
-          role: 'user',
-          content:
-            'Generate description for the following : ' +
-            this.codeBlockModel?.getData().aiDescription +
-            ' generate previous code from this can follow : ' +
-            this.codeBlockModel?.getData().code +
-            '\t' +
-            'Generate code python for the following inputs and outputs: ' +
-            JSON.stringify(this.codeBlockModel?.getData()?.ports?.in || []) +
-            ' and ' +
-            JSON.stringify(this.codeBlockModel?.getData()?.ports?.out || []),
-        },
+        { role: 'user', content: userParts.join('\n') },
       ],
       model: this.model || "qwen2.5-coder"
     });

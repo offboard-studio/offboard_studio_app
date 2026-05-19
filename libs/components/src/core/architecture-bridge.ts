@@ -1,13 +1,11 @@
 /**
- * Listens to the NestJS API's `/architecture` Socket.IO namespace and loads
- * any architecture pushed there into the running Editor.
+ * Polls the NestJS API for architectures pushed in over `/api/architecture/load`
+ * and loads any new bundle into the running Editor singleton.
  *
- * The MCP server (or any other tool) only has to POST to
- * `/api/architecture/load`; this module makes the result appear in the
- * renderer without the user clicking anything.
+ * This is intentionally polling-based (not WebSocket) so the renderer has
+ * zero extra dependencies — the MCP server only needs `http://localhost:3333`
+ * reachable. Default cadence is 2s, which is plenty for an editor-side push.
  */
-
-import { io, Socket } from 'socket.io-client';
 
 import Editor from './editor';
 import { reportError } from './errors/errorReporter';
@@ -31,17 +29,221 @@ interface LoadedArchitecture {
 }
 
 const DEFAULT_API_URL = 'http://localhost:3333';
+const DEFAULT_POLL_MS = 2000;
 
-let socket: Socket | null = null;
+let timer: ReturnType<typeof setInterval> | null = null;
+let lastReceivedAt: string | null = null;
 let onLoaded: ((message: LoadedArchitecture) => void) | null = null;
 
 function resolveApiUrl(): string {
-    return (
+    const url =
         import.meta.env.VITE_NODE_API_URL ||
         (import.meta.env.VITE_NODE_API_PORT
             ? `http://localhost:${import.meta.env.VITE_NODE_API_PORT}`
-            : DEFAULT_API_URL)
-    );
+            : DEFAULT_API_URL);
+    return url.replace(/\/$/, '');
+}
+
+/**
+ * Some pushers (notably older MCP server builds) emit node/port/link `type`
+ * fields that don't match the factories the renderer registers — e.g.
+ * `basic.code.<hash>` for nodes (the hash is really the dependency id),
+ * `diagram-default` for links/ports. react-diagrams aborts the whole
+ * deserialise on the first unknown type, so we normalise here before
+ * handing the bundle to the Editor.
+ */
+function normaliseBundle(bundle: Record<string, unknown>): void {
+    const editor = bundle.editor as { layers?: Array<Record<string, unknown>> } | undefined;
+    const layers = editor?.layers;
+    if (Array.isArray(layers)) {
+        for (const layer of layers) {
+            const models = layer?.models as Record<string, Record<string, unknown>> | undefined;
+            if (!models) continue;
+            if (layer.type === 'diagram-nodes') {
+                for (const node of Object.values(models)) {
+                    const t = node.type;
+                    if (typeof t === 'string' && t.startsWith('basic.code.')) {
+                        const extras = (node.extras ??= {}) as Record<string, unknown>;
+                        if (extras.dependency_id == null) extras.dependency_id = t;
+                        node.type = 'basic.code';
+                    }
+                    const ports = node.ports as Array<Record<string, unknown>> | undefined;
+                    if (Array.isArray(ports)) {
+                        for (const p of ports) {
+                            if (p.type === 'diagram-default' || typeof p.type !== 'string') {
+                                p.type = p.in ? 'port.input' : 'port.output';
+                            }
+                        }
+                    }
+                    if (!node.data || typeof node.data !== 'object') {
+                        const portsIn = (Array.isArray(ports) ? ports : []).filter((p) => p.in);
+                        const portsOut = (Array.isArray(ports) ? ports : []).filter((p) => !p.in);
+                        node.data = {
+                            code: '',
+                            aiDescription: '',
+                            frequency: '1',
+                            params: [],
+                            ports: {
+                                in: portsIn.map((p) => ({ name: String(p.name ?? p.label ?? '') })),
+                                out: portsOut.map((p) => ({ name: String(p.name ?? p.label ?? '') })),
+                            },
+                        };
+                    }
+                }
+            } else if (layer.type === 'diagram-links') {
+                const nodeLayer = layers.find((l) => l.type === 'diagram-nodes');
+                const nodeIndex = new Map<string, { x: number; y: number }>();
+                const nodeModels = nodeLayer?.models as Record<string, Record<string, unknown>> | undefined;
+                if (nodeModels) {
+                    for (const [, n] of Object.entries(nodeModels)) {
+                        nodeIndex.set(String(n.id), {
+                            x: Number(n.x) || 0,
+                            y: Number(n.y) || 0,
+                        });
+                    }
+                }
+                for (const link of Object.values(models)) {
+                    if (link.type === 'diagram-default' || typeof link.type !== 'string') {
+                        link.type = 'default';
+                    }
+                    let pts = link.points as Array<Record<string, unknown>> | undefined;
+                    if (!Array.isArray(pts) || pts.length < 2) {
+                        const src = nodeIndex.get(String(link.source)) ?? { x: 0, y: 0 };
+                        const tgt = nodeIndex.get(String(link.target)) ?? { x: 0, y: 0 };
+                        pts = [
+                            { id: cryptoRandomId(), type: 'point', x: src.x, y: src.y, selected: false },
+                            { id: cryptoRandomId(), type: 'point', x: tgt.x, y: tgt.y, selected: false },
+                        ];
+                        link.points = pts;
+                    }
+                    link.labels ??= [];
+                }
+            }
+        }
+    }
+}
+
+function cryptoRandomId(): string {
+    if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+        return crypto.randomUUID();
+    }
+    return `pt_${Math.random().toString(36).slice(2)}_${Date.now().toString(36)}`;
+}
+
+type AnyRec = Record<string, unknown>;
+
+function getLayer(bundle: AnyRec | undefined, layerType: string): AnyRec | undefined {
+    const editor = bundle?.editor as { layers?: AnyRec[] } | undefined;
+    return editor?.layers?.find((l) => l.type === layerType);
+}
+
+function getModels(bundle: AnyRec | undefined, layerType: string): Record<string, AnyRec> {
+    const layer = getLayer(bundle, layerType);
+    return (layer?.models as Record<string, AnyRec>) ?? {};
+}
+
+/**
+ * Merge `incoming` into `current` so successive pushes append nodes/links
+ * instead of wiping the canvas. Incoming nodes are shifted to the right of
+ * the existing graph so they don't overlap, and the link points are shifted
+ * by the same amount to keep the wires visually attached.
+ */
+function mergeBundles(
+    current: AnyRec,
+    incoming: AnyRec,
+    message: LoadedArchitecture,
+): {
+    editor: unknown;
+    design: unknown;
+    dependencies: Record<string, unknown>;
+    package: unknown;
+} {
+    const existingNodes = Object.values(getModels(current, 'diagram-nodes'));
+    const incomingNodes = Object.values(getModels(incoming, 'diagram-nodes'));
+
+    let dx = 0;
+    if (existingNodes.length && incomingNodes.length) {
+        const existingMaxX = Math.max(...existingNodes.map((n) => Number(n.x) || 0));
+        const incomingMinX = Math.min(...incomingNodes.map((n) => Number(n.x) || 0));
+        dx = existingMaxX + 320 - incomingMinX;
+        if (dx < 0) dx = 0;
+    }
+
+    const mergedEditor: AnyRec = JSON.parse(JSON.stringify(current.editor ?? {}));
+    if (!Array.isArray(mergedEditor.layers)) mergedEditor.layers = [];
+    const layers = mergedEditor.layers as AnyRec[];
+    const incomingLayers = (incoming.editor as { layers?: AnyRec[] })?.layers ?? [];
+
+    for (const incomingLayer of incomingLayers) {
+        const targetLayer =
+            layers.find((l) => l.type === incomingLayer.type) ??
+            (() => {
+                const fresh: AnyRec = { type: incomingLayer.type, models: {} };
+                layers.push(fresh);
+                return fresh;
+            })();
+        const targetModels = (targetLayer.models as Record<string, AnyRec>) ?? {};
+        const incomingModels = (incomingLayer.models as Record<string, AnyRec>) ?? {};
+        if (incomingLayer.type === 'diagram-nodes' && dx !== 0) {
+            for (const n of Object.values(incomingModels)) {
+                n.x = (Number(n.x) || 0) + dx;
+            }
+        }
+        if (incomingLayer.type === 'diagram-links' && dx !== 0) {
+            for (const link of Object.values(incomingModels)) {
+                const pts = link.points as AnyRec[] | undefined;
+                if (Array.isArray(pts)) {
+                    for (const p of pts) p.x = (Number(p.x) || 0) + dx;
+                }
+            }
+        }
+        Object.assign(targetModels, incomingModels);
+        targetLayer.models = targetModels;
+    }
+
+    const currentDesign = (current.design as AnyRec) ?? {};
+    const currentGraph = (currentDesign.graph as AnyRec) ?? {};
+    const incomingDesign = (incoming.design as AnyRec) ?? {};
+    const incomingGraph = (incomingDesign.graph as AnyRec) ?? {};
+    const incomingBlocks = (incomingGraph.blocks as AnyRec[]) ?? [];
+    if (dx !== 0) {
+        for (const b of incomingBlocks) {
+            const pos = b.position as AnyRec | undefined;
+            if (pos) pos.x = (Number(pos.x) || 0) + dx;
+        }
+    }
+    const mergedDesign: AnyRec = {
+        board: currentDesign.board ?? incomingDesign.board ?? 'Python3-Noetic',
+        graph: {
+            blocks: [...((currentGraph.blocks as AnyRec[]) ?? []), ...incomingBlocks],
+            wires: [
+                ...((currentGraph.wires as AnyRec[]) ?? []),
+                ...((incomingGraph.wires as AnyRec[]) ?? []),
+            ],
+        },
+    };
+
+    const mergedDeps: Record<string, unknown> = {
+        ...((current.dependencies as Record<string, unknown>) ?? {}),
+        ...((incoming.dependencies as Record<string, unknown>) ?? {}),
+    };
+
+    const pkg =
+        (current.package as AnyRec) ??
+        (incoming.package as AnyRec) ?? {
+            name: `MCP push (${message.source})`,
+            version: '0.0.1',
+            description: `Pushed at ${message.receivedAt}`,
+            author: '',
+            image: '',
+        };
+
+    return {
+        editor: mergedEditor,
+        design: mergedDesign,
+        dependencies: mergedDeps,
+        package: pkg,
+    };
 }
 
 function applyToEditor(message: LoadedArchitecture): void {
@@ -49,22 +251,45 @@ function applyToEditor(message: LoadedArchitecture): void {
     if (!bundle || typeof bundle !== 'object') {
         return;
     }
+    normaliseBundle(bundle as AnyRec);
+
+    // Honour an opt-out: payload may carry `mode: 'replace'` to wipe the canvas.
+    // Default behaviour is append — successive pushes add to the existing graph
+    // instead of replacing it.
+    const mode = (bundle as { mode?: string }).mode ?? 'append';
     const editor = Editor.getInstance();
     try {
+        if (mode === 'replace') {
+            editor.loadProject(
+                {
+                    editor: (bundle as { editor: unknown }).editor,
+                    design: (bundle as { design: unknown }).design,
+                    dependencies:
+                        ((bundle as { dependencies?: Record<string, unknown> })
+                            .dependencies as never) ?? {},
+                    package:
+                        ((bundle as { package?: unknown }).package as never) ??
+                        ({
+                            name: `MCP push (${message.source})`,
+                            version: '0.0.1',
+                            description: `Pushed at ${message.receivedAt}`,
+                            author: '',
+                            image: '',
+                        } as never),
+                },
+                `mcp_push_${Date.now()}`,
+            );
+            return;
+        }
+
+        const current = editor.serialise() as AnyRec;
+        const merged = mergeBundles(current, bundle as AnyRec, message);
         editor.loadProject(
             {
-                editor: (bundle as { editor: unknown }).editor,
-                design: (bundle as { design: unknown }).design,
-                dependencies:
-                    ((bundle as { dependencies?: Record<string, unknown> })
-                        .dependencies as never) ?? {},
-                package: ((bundle as { package?: unknown }).package as never) ?? ({
-                    name: `MCP push (${message.source})`,
-                    version: '0.0.1',
-                    description: `Pushed at ${message.receivedAt}`,
-                    author: '',
-                    image: '',
-                } as never),
+                editor: merged.editor as never,
+                design: merged.design as never,
+                dependencies: merged.dependencies as never,
+                package: merged.package as never,
             },
             `mcp_push_${Date.now()}`,
         );
@@ -79,49 +304,49 @@ function applyToEditor(message: LoadedArchitecture): void {
     }
 }
 
+async function pollOnce(apiUrl: string): Promise<void> {
+    try {
+        const resp = await fetch(`${apiUrl}/api/architecture/latest`, {
+            method: 'GET',
+            headers: { Accept: 'application/json' },
+        });
+        if (!resp.ok) return;
+        const body = (await resp.json()) as LoadedArchitecture | { latest: null };
+        if (!('receivedAt' in body) || !body.receivedAt) return;
+        if (body.receivedAt === lastReceivedAt) return;
+        lastReceivedAt = body.receivedAt;
+        applyToEditor(body);
+        onLoaded?.(body);
+    } catch {
+        // Backend probably off — silent. Don't spam the console.
+    }
+}
+
 export function startArchitectureBridge(
     apiUrl: string = resolveApiUrl(),
     onLoadedCallback?: (message: LoadedArchitecture) => void,
+    pollIntervalMs: number = DEFAULT_POLL_MS,
 ): () => void {
-    if (socket) {
+    if (timer) {
         return stopArchitectureBridge;
     }
     onLoaded = onLoadedCallback ?? null;
     const url = apiUrl.replace(/\/$/, '');
-    socket = io(`${url}/architecture`, {
-        transports: ['websocket', 'polling'],
-        reconnectionAttempts: Infinity,
-        reconnectionDelay: 2000,
-        autoConnect: true,
-    });
-
-    socket.on('connect', () => {
-        socket?.emit('architecture:request-latest');
-    });
-
-    socket.on('architecture:load', (message: LoadedArchitecture) => {
-        applyToEditor(message);
-        onLoaded?.(message);
-    });
-
-    socket.on('connect_error', (err) => {
-        // Don't toast — backend may simply be off during dev. Log only.
-        // eslint-disable-next-line no-console
-        console.warn('[architecture-bridge] connect_error:', err.message);
-    });
-
+    // Prime once so a freshly-opened renderer picks up an already-pushed graph.
+    void pollOnce(url);
+    timer = setInterval(() => void pollOnce(url), pollIntervalMs);
     return stopArchitectureBridge;
 }
 
 export function stopArchitectureBridge(): void {
-    if (socket) {
-        socket.removeAllListeners();
-        socket.disconnect();
-        socket = null;
+    if (timer) {
+        clearInterval(timer);
+        timer = null;
     }
     onLoaded = null;
+    lastReceivedAt = null;
 }
 
-export function isArchitectureBridgeConnected(): boolean {
-    return socket?.connected ?? false;
+export function isArchitectureBridgeActive(): boolean {
+    return timer !== null;
 }
