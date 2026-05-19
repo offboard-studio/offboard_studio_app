@@ -36,7 +36,8 @@ export class DeploymentService {
         try {
           connectConfig.privateKey = fs.readFileSync(config.ssh.privateKeyPath);
         } catch (e) {
-          reject(`Failed to read private key: ${e.message}`);
+          const msg = e instanceof Error ? e.message : String(e);
+          reject(`Failed to read private key: ${msg}`);
           return;
         }
       } else {

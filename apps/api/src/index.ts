@@ -25,6 +25,7 @@ export class ServerController {
       this.app = await NestFactory.create(AppModule);
       console.log('✅ NestJS application created');
 
+      this.app.enableCors({ origin: true, credentials: false });
       this.app.setGlobalPrefix(this.globalPrefix);
 
       const config = new DocumentBuilder()

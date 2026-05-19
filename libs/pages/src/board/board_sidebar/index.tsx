@@ -5,7 +5,11 @@ import logo from '@assets/logo.png';
 import staticCategories from '@pages/board/board_sidebar/statics_categroies';
 import { BlockItem, Category, SidebarLayer, BoardSideBarProps, BlockDetail } from '@pages/board/board_sidebar/interfaces';
 
-const API_BASE_URL = 'https://offboard-studio-components-store.vercel.app/api';
+const COMPONENTS_STORE_BASE =
+  (import.meta.env.VITE_COMPONENTS_STORE_URL as string | undefined)
+    ?.replace(/\/$/, '')
+  || 'http://localhost:3000';
+const API_BASE_URL = `${COMPONENTS_STORE_BASE}/api`;
 
 const BoardSidebar: React.FC<BoardSideBarProps> = ({ editor }) => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);

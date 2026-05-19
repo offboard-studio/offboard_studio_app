@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "offboard-studio": {
+      "command": "offboard-mcp",
+      "env": {
+        "OFFBOARD_BACKEND_URL": "http://localhost:8000",
+        "OFFBOARD_MCP_OUTPUT_DIR": "./release/ai-generated"
+      }
+    }
+  }
+}
