@@ -714,10 +714,9 @@ export default class ElectronApp {
   waitForDjangoServer = async (retries: number = 30, delay: number = 5000) => {
     for (let i = 0; i < retries; i++) {
       try {
+        const djangoHost = process.env.DJANGO_HOST || '127.0.0.1';
         const response = await axios.get(
-          'http://127.0.0.1:' +
-          this.djangoServerPort.toString() +
-          '/api/healthcheck',
+          `http://${djangoHost}:${this.djangoServerPort}/api/healthcheck`,
           {
             withCredentials: false, // Change to false for local development
             timeout: 3000, // Add timeout
@@ -770,13 +769,14 @@ export default class ElectronApp {
     console.log('venvPath', venvPath);
     console.log('getBoardAPI', this.getBoardAPI());
 
+    const djangoHost = process.env.DJANGO_HOST || '127.0.0.1';
     // Add environment variables for Django
     const env = {
       ...process.env,
       DJANGO_SETTINGS_MODULE: 'your_project.settings', // Replace with your actual settings module
       PYTHONPATH: this.getBoardAPI(),
-      // Allow all hosts for development
-      DJANGO_ALLOWED_HOSTS: '127.0.0.1,localhost',
+      DJANGO_ALLOWED_HOSTS:
+        process.env.DJANGO_ALLOWED_HOSTS || '127.0.0.1,localhost',
       // Disable CSRF for local development if needed
       DJANGO_DEBUG: 'True',
     };
@@ -786,7 +786,7 @@ export default class ElectronApp {
       [
         'manage.py',
         'runserver',
-        `127.0.0.1:${this.djangoServerPort}`, // Explicitly bind to 127.0.0.1
+        `${djangoHost}:${this.djangoServerPort}`,
         '--noreload', // Prevent auto-reloading which can cause issues
         '--insecure', // Serve static files even if DEBUG=False
       ],

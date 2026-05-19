@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
+import { setErrorReporter } from '../../core/errors/errorReporter';
+import { getErrorMessage } from '../../core/errors/AppError';
 import {
   Snackbar,
   Alert,
@@ -226,6 +228,14 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({ childr
     showInfo,
     showCollaboration,
   };
+
+  useEffect(() => {
+    setErrorReporter((appError) => {
+      const friendly = getErrorMessage(appError.code);
+      showError(appError.message || friendly, friendly);
+    });
+    return () => setErrorReporter(null);
+  }, [showError]);
 
   return (
     <NotificationContext.Provider value={value}>

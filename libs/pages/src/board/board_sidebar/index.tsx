@@ -264,6 +264,18 @@ const BoardSidebar: React.FC<BoardSideBarProps> = ({ editor }) => {
       case 'drivers':
         return renderGroupBlocks('drivers');
 
+      case 'toolbox':
+        return renderGroupBlocks('toolbox');
+
+      case 'analytics':
+        return renderGroupBlocks('analytics');
+
+      case 'iot':
+        return renderGroupBlocks('iot');
+
+      case 'media':
+        return renderGroupBlocks('media');
+
       default:
         return (
           <div style={{ padding: '16px' }}>

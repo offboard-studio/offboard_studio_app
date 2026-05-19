@@ -269,18 +269,18 @@ export class AppService {
     return { about: 'Offboard Studio is a platform for managing and processing data.' };
   }
   getDocs(): { docs: string } {
-    return { docs: 'https://docs.offboardstudio.com' };
+    return { docs: process.env.DOCS_URL || 'https://docs.offboardstudio.com' };
   }
   getSupport(): { support: string } {
-    return { support: 'https://support.offboardstudio.com' };
+    return { support: process.env.SUPPORT_URL || 'https://support.offboardstudio.com' };
   }
   getContact(): { contact: string } {
-    return { contact: 'https://contact.offboardstudio.com' };
+    return { contact: process.env.CONTACT_URL || 'https://contact.offboardstudio.com' };
   }
   getPrivacy(): { privacy: string } {
-    return { privacy: 'https://privacy.offboardstudio.com' };
+    return { privacy: process.env.PRIVACY_URL || 'https://privacy.offboardstudio.com' };
   }
   getTerms(): { terms: string } {
-    return { terms: 'https://terms.offboardstudio.com' };
+    return { terms: process.env.TERMS_URL || 'https://terms.offboardstudio.com' };
   }
 }
