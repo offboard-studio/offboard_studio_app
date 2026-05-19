@@ -39,14 +39,33 @@ async def _get_json(client: httpx.AsyncClient, url: str) -> Any:
         return None
 
 
-def _summarise_architecture(latest: Any) -> dict[str, Any]:
-    if not isinstance(latest, dict):
+def _summarise_architecture(
+    state: Any, *, include_code: bool = True
+) -> dict[str, Any]:
+    """Summarise the canvas snapshot returned by `/api/architecture/state`.
+
+    Falls back to the older `/api/architecture/latest` shape (which wraps the
+    bundle under `payload`) so this is safe against either endpoint.
+
+    When `include_code` is True the per-node and per-dependency code is
+    surfaced in full (not truncated). The accumulator usually has a handful
+    of small basic.code blocks, so the cost is modest. Set False from a
+    caller that only needs metadata (port shapes, names, IDs).
+    """
+    if not isinstance(state, dict):
         return {"available": False}
-    payload = latest.get("payload") or {}
-    arch = payload.get("architecture") if isinstance(payload, dict) else None
-    bundle = arch if isinstance(arch, dict) else payload
+    # `/state` shape: {receivedAt, architecture}
+    # `/latest` shape: {source, receivedAt, payload: {architecture?, ...}}
+    if "architecture" in state and "payload" not in state:
+        bundle = state.get("architecture") if isinstance(state.get("architecture"), dict) else None
+        source = None
+    else:
+        payload = state.get("payload") or {}
+        arch = payload.get("architecture") if isinstance(payload, dict) else None
+        bundle = arch if isinstance(arch, dict) else payload
+        source = state.get("source")
     if not isinstance(bundle, dict):
-        return {"available": False, "raw": latest}
+        return {"available": False, "raw": state}
 
     layers = (bundle.get("editor") or {}).get("layers") or []
     nodes_layer = next((l for l in layers if l.get("type") == "diagram-nodes"), {})
@@ -58,35 +77,54 @@ def _summarise_architecture(latest: Any) -> dict[str, Any]:
     node_summaries = []
     for node in node_models.values():
         ports = node.get("ports", []) or []
-        node_summaries.append(
-            {
-                "id": node.get("id"),
-                "type": node.get("type"),
-                "name": (node.get("extras") or {}).get("name"),
-                "inputs": [p["label"] for p in ports if p.get("in")],
-                "outputs": [p["label"] for p in ports if not p.get("in")],
-                "position": {"x": node.get("x"), "y": node.get("y")},
-            }
-        )
+        data = node.get("data") or {}
+        entry: dict[str, Any] = {
+            "id": node.get("id"),
+            "type": node.get("type"),
+            "dependency_id": (node.get("extras") or {}).get("dependency_id"),
+            "name": (node.get("extras") or {}).get("name"),
+            "inputs": [p["label"] for p in ports if p.get("in")],
+            "outputs": [p["label"] for p in ports if not p.get("in")],
+            "position": {"x": node.get("x"), "y": node.get("y")},
+            "frequency": data.get("frequency"),
+            "params": data.get("params") or [],
+        }
+        if include_code:
+            # Prefer the node's own data.code (per-instance), fall back to
+            # the shared dependency's code so we always show *something*.
+            code = data.get("code")
+            if not code:
+                dep = deps.get(entry["dependency_id"]) or {}
+                if isinstance(dep, dict):
+                    code = dep.get("code")
+            entry["code"] = code or ""
+        node_summaries.append(entry)
+
+    dep_summaries = []
+    for dep_id, dep in deps.items():
+        if not isinstance(dep, dict):
+            continue
+        entry = {
+            "id": dep_id,
+            "type": dep.get("type"),
+            "description": dep.get("description"),
+            "inputs": dep.get("inputs", []),
+            "outputs": dep.get("outputs", []),
+            "parameters": dep.get("parameters", []),
+        }
+        if include_code:
+            entry["code"] = dep.get("code") or ""
+        dep_summaries.append(entry)
 
     return {
         "available": True,
-        "source": latest.get("source"),
-        "receivedAt": latest.get("receivedAt"),
+        "source": source,
+        "receivedAt": state.get("receivedAt"),
         "node_count": len(node_models),
         "link_count": len(link_models),
         "dependency_count": len(deps),
         "nodes": node_summaries,
-        "dependencies": [
-            {
-                "id": dep_id,
-                "type": (dep or {}).get("type"),
-                "inputs": (dep or {}).get("inputs", []),
-                "outputs": (dep or {}).get("outputs", []),
-                "code_preview": ((dep or {}).get("code") or "")[:240],
-            }
-            for dep_id, dep in deps.items()
-        ],
+        "dependencies": dep_summaries,
     }
 
 
@@ -127,9 +165,15 @@ async def gather(
     backend_url: str | None = None,
     include_catalog: bool = True,
     expand_catalog_groups: bool = False,
+    include_code: bool = True,
 ) -> dict[str, Any]:
     """Collect the live snapshot. Each missing endpoint produces a
-    `{"available": False, ...}` slot instead of failing the whole call."""
+    `{"available": False, ...}` slot instead of failing the whole call.
+
+    Reads `/api/architecture/state` (the accumulated snapshot) so callers
+    see the full canvas, not just the most recent push. Falls back to
+    `/api/architecture/latest` if `state` is unavailable (older API builds).
+    """
 
     api = (api_url or os.environ.get("OFFBOARD_API_URL") or "http://localhost:3333").rstrip("/")
     catalog = (
@@ -148,8 +192,17 @@ async def gather(
         snapshot["app_running"] = api_health is not None
         snapshot["api_health"] = api_health
 
-        latest = await _get_json(client, f"{api}/api/architecture/latest")
-        snapshot["current_architecture"] = _summarise_architecture(latest)
+        state = await _get_json(client, f"{api}/api/architecture/state")
+        if state and (state.get("architecture") is not None):
+            snapshot["current_architecture"] = _summarise_architecture(
+                state, include_code=include_code
+            )
+        else:
+            # Older API builds, or accumulator empty — fall back to /latest.
+            latest = await _get_json(client, f"{api}/api/architecture/latest")
+            snapshot["current_architecture"] = _summarise_architecture(
+                latest, include_code=include_code
+            )
 
         singleton = await _get_json(client, f"{api}/api/singleton-data")
         snapshot["singleton_data"] = singleton

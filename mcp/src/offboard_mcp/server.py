@@ -237,6 +237,14 @@ async def list_tools() -> list[Tool]:
                         "default": False,
                         "description": "If true, fetch every group's block list too. Heavier.",
                     },
+                    "include_code": {
+                        "type": "boolean",
+                        "default": True,
+                        "description": (
+                            "Include the full Python source of every node + dependency. "
+                            "Set false for a lighter metadata-only snapshot."
+                        ),
+                    },
                 },
             },
         ),
@@ -440,6 +448,7 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             backend_url=arguments.get("backend_url"),
             include_catalog=arguments.get("include_catalog", True),
             expand_catalog_groups=arguments.get("expand_catalog_groups", False),
+            include_code=arguments.get("include_code", True),
         )
         return _result(snapshot)
 
