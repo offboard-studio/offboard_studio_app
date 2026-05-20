@@ -88,30 +88,6 @@ def _find_node(
     return None
 
 
-async def _push_replace(
-    api_url: str, architecture: dict[str, Any], source: str
-) -> dict[str, Any]:
-    """POST a full architecture bundle in `replace` mode so the renderer
-    re-loads from scratch and the server accumulator is overwritten.
-
-    Destructive — wipes any node/link that isn't in `architecture`. Prefer
-    `_push_patch` when changing a single node.
-    """
-    architecture = {**architecture, "mode": "replace"}
-    try:
-        async with httpx.AsyncClient(timeout=30) as client:
-            resp = await client.post(
-                f"{api_url}/api/architecture/load",
-                json={"architecture": architecture, "source": source},
-                headers={"Content-Type": "application/json"},
-            )
-        resp.raise_for_status()
-        return {"ok": True, "status": resp.status_code, "body": resp.json()}
-    except httpx.HTTPError as exc:
-        logger.exception("push_replace failed (source=%s)", source)
-        return {"ok": False, "error": str(exc)}
-
-
 async def _push_patch(
     api_url: str,
     *,
@@ -481,6 +457,38 @@ async def list_tools() -> list[Tool]:
                     },
                     "api_url": {"type": "string"},
                     "source": {"type": "string", "default": "add_node"},
+                },
+            },
+        ),
+        Tool(
+            name="start_new_project",
+            description=(
+                "Begin a fresh project on a clean canvas. In one call: "
+                "surgically removes every node currently in the accumulator "
+                "(no full canvas reload), then updates Project Settings with "
+                "the supplied name / description / author / version. Use "
+                "this when the user requests a project on a clearly different "
+                "domain than what's already on the board — wheeled robot to "
+                "USV, USV to arm, arm to drone, etc. — instead of piling new "
+                "nodes on top of an old graph.\n\n"
+                "If the user is *extending* the current project (\"ekle\", "
+                "\"bağla\", \"buna ek olarak\"), DON'T call this — just keep "
+                "adding nodes with create_package_node / add_node."
+            ),
+            inputSchema={
+                "type": "object",
+                "required": ["name"],
+                "properties": {
+                    "name": {"type": "string"},
+                    "description": {"type": "string"},
+                    "author": {"type": "string"},
+                    "version": {"type": "string", "default": "0.1.0"},
+                    "image": {"type": "string"},
+                    "api_url": {"type": "string"},
+                    "source": {
+                        "type": "string",
+                        "default": "start_new_project",
+                    },
                 },
             },
         ),
@@ -1011,6 +1019,88 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
                     ),
                 }
             )
+
+    if name == "start_new_project":
+        pkg_name = (arguments.get("name") or "").strip()
+        if not pkg_name:
+            return _result({"error": "name is required"})
+        api_url = _resolve_api_url(arguments.get("api_url"))
+
+        # Step 1 — collect every node id currently on the canvas, then
+        # surgical-remove them. Renderer applies removeNode locally on the
+        # next poll cycle, so anything else (project tabs, panels) stays.
+        arch = await _fetch_accumulator(api_url)
+        node_ids: list[str] = []
+        if isinstance(arch, dict):
+            layers = (arch.get("editor") or {}).get("layers") or []
+            nodes_layer = next(
+                (L for L in layers if L.get("type") == "diagram-nodes"), None
+            )
+            if nodes_layer:
+                node_ids = sorted((nodes_layer.get("models") or {}).keys())
+
+        remove_result: dict[str, Any] = {"removed_count": 0}
+        if node_ids:
+            try:
+                async with httpx.AsyncClient(timeout=30) as client:
+                    resp = await client.post(
+                        f"{api_url}/api/architecture/remove-nodes",
+                        json={"node_ids": node_ids},
+                        headers={"Content-Type": "application/json"},
+                    )
+                resp.raise_for_status()
+                remove_result = resp.json()
+            except httpx.HTTPError as exc:
+                logger.exception("start_new_project: remove call failed")
+                return _result(
+                    {
+                        "error": f"could not clear canvas: {exc}",
+                        "requested_remove": node_ids,
+                    }
+                )
+
+        # Step 2 — push fresh project settings.
+        new_pkg = {
+            "name": pkg_name,
+            "description": str(arguments.get("description", "")),
+            "author": str(arguments.get("author", "")),
+            "version": str(arguments.get("version") or "0.1.0"),
+            "image": str(arguments.get("image", "")),
+        }
+        settings_bundle = {
+            "editor": {"layers": []},
+            "design": {"graph": {"blocks": [], "wires": []}},
+            "dependencies": {},
+            "package": new_pkg,
+        }
+        try:
+            async with httpx.AsyncClient(timeout=30) as client:
+                resp = await client.post(
+                    f"{api_url}/api/architecture/load",
+                    json={
+                        "architecture": settings_bundle,
+                        "source": arguments.get("source") or "start_new_project",
+                    },
+                    headers={"Content-Type": "application/json"},
+                )
+            resp.raise_for_status()
+            settings_result = {
+                "ok": True,
+                "status": resp.status_code,
+                "body": resp.json(),
+            }
+        except httpx.HTTPError as exc:
+            logger.exception("start_new_project: settings push failed")
+            settings_result = {"ok": False, "error": str(exc)}
+
+        return _result(
+            {
+                "cleared_node_ids": node_ids,
+                "remove_result": remove_result,
+                "new_settings": new_pkg,
+                "settings_result": settings_result,
+            }
+        )
 
     if name == "update_project_settings":
         api_url = _resolve_api_url(arguments.get("api_url"))
