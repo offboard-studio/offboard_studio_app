@@ -559,7 +559,22 @@ async def list_tools() -> list[Tool]:
                     },
                     "code": {
                         "type": "string",
-                        "description": "Python source for the inner basic.code block. Inputs/constants arrive as named ports on the block.",
+                        "description": "Python source for the inner basic.code block. Inputs/constants arrive as named ports on the block. Optional — omit to build a wiring-only composer package whose logic lives entirely in nested_packages.",
+                    },
+                    "nested_packages": {
+                        "type": "array",
+                        "items": {"type": "object"},
+                        "description": (
+                            "Recursive: each entry is the same shape as this "
+                            "tool's arguments (name, description, inputs, "
+                            "outputs, constants, code, nested_packages). The "
+                            "sub-package is embedded as a block.package "
+                            "instance inside this one; the auto-wirer "
+                            "connects its outer ports to the parent's other "
+                            "inner blocks by label match. The full dependency "
+                            "tree is rolled up so the runtime can resolve any "
+                            "depth from one top-level node."
+                        ),
                     },
                     "auto_wire": {
                         "type": "boolean",
@@ -1072,8 +1087,15 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
         if not pkg_name:
             return _result({"error": "name is required"})
         code = arguments.get("code")
-        if not isinstance(code, str) or not code.strip():
-            return _result({"error": "code is required"})
+        nested = arguments.get("nested_packages") or []
+        if (not isinstance(code, str) or not code.strip()) and not nested:
+            return _result(
+                {
+                    "error": "either `code` (Python source) or `nested_packages` (at least one sub-package) is required",
+                }
+            )
+        if isinstance(code, str) and not code.strip():
+            code = None  # let builder skip the basic.code block
         api_url = _resolve_api_url(arguments.get("api_url"))
 
         # Position to the right of existing canvas (same as add_node).
@@ -1101,6 +1123,7 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             output_labels=[str(s) for s in (arguments.get("outputs") or []) if s],
             constants=list(arguments.get("constants") or []),
             code=code,
+            nested_packages=list(arguments.get("nested_packages") or []),
             x=new_x,
             y=new_y,
         )
