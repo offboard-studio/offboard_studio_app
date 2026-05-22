@@ -1,0 +1,3 @@
+- [Start a new MCP project when the topic shifts](feedback_new_project_on_topic_shift.md) — wipe accumulator + set fresh settings when the new request is a different domain; "ekle/bağla/değiştir" means continuation.
+- [Offboard MCP architecture & push pipeline](reference_mcp_architecture.md) — how MCP → API accumulator → renderer bridge → editor fit together; build/push helpers; when to use add_node vs create_package_node vs update_node vs delete_nodes vs start_new_project.
+- [Never hard-code local user paths in shared artifacts](feedback_no_local_paths_in_shared_artifacts.md) — `.claude/`, routine prompts, repo docs must use repo-relative paths or "the repo root"; never embed any developer's home directory.
